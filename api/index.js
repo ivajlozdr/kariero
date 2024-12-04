@@ -29,18 +29,20 @@ app.use(cors(corsOptions));
 
 let verificationCodes = {};
 
-// Create a transporter object using SMTP transport
+const SECRET_KEY = "1a2b3c4d5e6f7g8h9i0jklmnopqrstuvwxyz123456";
+const EMAIL_USER = "no-reply@kariero.noit.eu";
+const EMAIL_PASS = "Noit_2025";
+
+// Създаване на транспортерен обект с използване на SMTP транспорт
 const transporter = nodemailer.createTransport({
-  service: "gmail", // or any other email service
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: "kariero.noit.eu", // Заменете с вашия cPanel mail сървър
+  port: 587, // Използвайте 465 за SSL или 587 за TLS
+  secure: false, // true за SSL (порт 465), false за TLS (порт 587)
   auth: {
-    user: process.env.EMAIL_USER, // Your email address
-    pass: process.env.EMAIL_PASS // Your email password
+    user: EMAIL_USER, // Вашият имейл адрес
+    pass: EMAIL_PASS // Вашата имейл парола
   },
-  debug: true,
-  logger: true
+  debug: true // По избор, логва SMTP комуникацията за откриване на проблеми
 });
 
 // Signup Route
@@ -70,7 +72,7 @@ app.post("/signup", (req, res) => {
     };
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: EMAIL_USER,
       to: email,
       subject: "Код за регистрация",
       html: `<p>Вашият код за регистрация е: <strong>${verificationCode}</strong>. Кодът е активен за 15 минути.</p>`
@@ -139,7 +141,7 @@ app.post("/resend-code", (req, res) => {
   };
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: EMAIL_USER,
     to: email,
     subject: "Код за регистрация",
     html: `<p>Вашият код за регистрация е: <strong>${verificationCode}</strong>. Кодът е активен за 15 минути.</p>`
@@ -171,7 +173,7 @@ app.post("/signin", (req, res) => {
         .status(400)
         .json({ error: "Въведената парола е грешна или непълна!" });
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ id: user.id }, SECRET_KEY, {
       expiresIn: rememberMe ? "7d" : "1h"
     });
     res.json({ message: "Успешно влизане", token });
@@ -196,20 +198,16 @@ app.post("/password-reset-request", (req, res) => {
     const user = results[0];
 
     // Generate a JWT token for resetting the password
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: "15m" // Token is valid for 15 minutes
-      }
-    );
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      expiresIn: "15m" // Token is valid for 15 minutes
+    });
 
     // Create a reset link with the token
     const resetLink = `http://localhost:5173/auth/resetpassword/${token}`;
 
     // Send email with reset link
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: EMAIL_USER,
       to: email,
       subject: "Потвърждение за нулиране на парола",
       html: `<p>Натиснете <a href="${resetLink}">тук</a> за да обновите вашата парола. Този линк е валиден само за 15 минути.</p>`
@@ -232,7 +230,7 @@ app.post("/password-reset", (req, res) => {
   const { token, newPassword } = req.body;
 
   // Verify the JWT token to get the user ID
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err)
       return res.status(400).json({ error: "Невалиден или изтекъл token" });
 
@@ -273,7 +271,7 @@ app.post("/password-reset", (req, res) => {
 app.post("/token-validation", (req, res) => {
   const { token } = req.body;
 
-  jwt.verify(token, process.env.SECRET_KEY, (err) => {
+  jwt.verify(token, SECRET_KEY, (err) => {
     if (err) return res.json({ valid: false });
     res.json({ valid: true });
   });
@@ -287,7 +285,7 @@ app.get("/user-data", (req, res) => {
     return res.status(401).json({ error: "Token-ът не е подаден" });
   }
 
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) return res.status(401).json({ error: "Невалиден token" });
 
     const userId = decoded.id;
