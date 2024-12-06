@@ -29,13 +29,16 @@ const Resetbasic: FC<ResetbasicProps> = () => {
   useEffect(() => {
     const validateToken = async () => {
       try {
-        const response = await fetch("http://localhost:5000/token-validation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ token })
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/token-validation`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token })
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Token validation failed");
@@ -90,16 +93,19 @@ const Resetbasic: FC<ResetbasicProps> = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/password-reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          token, // The token from the URL
-          newPassword // New password to reset
-        })
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/password-reset`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token, // The token from the URL
+            newPassword // New password to reset
+          })
+        }
+      );
 
       const result = await response.json();
 

@@ -58,13 +58,16 @@ const Twostepbasic: FC<TwostepbasicProps> = () => {
       inputRefs.six.current.value;
 
     try {
-      const response = await fetch("http://localhost:5000/verify-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, verificationCode })
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/verify-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, verificationCode })
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -98,13 +101,16 @@ const Twostepbasic: FC<TwostepbasicProps> = () => {
   const handleResendCode = async () => {
     setIsResending(true);
     try {
-      const response = await fetch("http://localhost:5000/resend-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email })
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/resend-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

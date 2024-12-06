@@ -45,11 +45,14 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/user-data", {
-          headers: {
-            authorization: `Bearer ${token}`
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/user-data`,
+          {
+            headers: {
+              authorization: `Bearer ${token}`
+            }
           }
-        });
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
