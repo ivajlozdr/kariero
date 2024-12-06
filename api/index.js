@@ -203,7 +203,7 @@ app.post("/password-reset-request", (req, res) => {
     });
 
     // Create a reset link with the token
-    const resetLink = `http://localhost:5173/auth/resetpassword/${token}`;
+    const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
 
     // Send email with reset link
     const mailOptions = {

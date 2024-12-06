@@ -195,9 +195,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
                         >
                           Парола
                           <Link
-                            to={`${
-                              import.meta.env.BASE_URL
-                            }resetpassword/request`}
+                            to={`${import.meta.env.BASE_URL}resetpassword`}
                             className="ltr:float-right rtl:float-left text-danger"
                           >
                             Забравена парола?

@@ -1,10 +1,10 @@
 import { FC, Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { MENUITEMS } from "./sidemenu/sidemenu";
+import { MENUITEMS } from "./menuitems";
 import { ThemeChanger } from "../../../redux/action";
 import store from "../../../redux/store";
-import logo1 from "../../../assets/images/brand-logos/desktop-logo.svg";
+import logo1 from "../../../assets/images/brand-logos/desktop-logo.png";
 import logo2 from "../../../assets/images/brand-logos/toggle-logo.png";
 import logo3 from "../../../assets/images/brand-logos/desktop-dark.png";
 import logo4 from "../../../assets/images/brand-logos/toggle-dark.png";
@@ -12,6 +12,10 @@ import logo5 from "../../../assets/images/brand-logos/desktop-white.png";
 import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
+
+import gradientDark from "../../../assets/images/menu-bg-images/low-poly-grid-haikei-dark.svg";
+import gradientLight from "../../../assets/images/menu-bg-images/low-poly-grid-haikei-light.svg";
+
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
@@ -37,6 +41,16 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
   // const location = useLocation();
   const location = useLocation();
 
+  function Onhover() {
+    const theme = store.getState();
+    if (
+      (theme.toggled == "icon-overlay-close" ||
+        theme.toggled == "detached-close") &&
+      theme.iconOverlay != "open"
+    ) {
+      ThemeChanger({ ...theme, iconOverlay: "open" });
+    }
+  }
   function Outhover() {
     const theme = store.getState();
     if (
@@ -97,196 +111,6 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
         });
       }
     }
-  }
-
-  function switcherArrowFn(): void {
-    // Used to remove is-expanded class and remove class on clicking arrow buttons
-    function slideClick(): void {
-      const slide = document.querySelectorAll<HTMLElement>(".slide");
-      const slideMenu = document.querySelectorAll<HTMLElement>(".slide-menu");
-
-      slide.forEach((element) => {
-        if (element.classList.contains("is-expanded")) {
-          element.classList.remove("is-expanded");
-        }
-      });
-
-      slideMenu.forEach((element) => {
-        if (element.classList.contains("open")) {
-          element.classList.remove("open");
-          element.style.display = "none";
-        }
-      });
-    }
-
-    slideClick();
-  }
-
-  function slideRight(): void {
-    const menuNav = document.querySelector<HTMLElement>(".main-menu");
-    const mainContainer1 = document.querySelector<HTMLElement>(".main-sidebar");
-
-    if (menuNav && mainContainer1) {
-      const marginLeftValue = Math.ceil(
-        Number(
-          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
-        )
-      );
-      const marginRightValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
-      );
-      const check = menuNav.scrollWidth - mainContainer1.offsetWidth;
-      let mainContainer1Width = mainContainer1.offsetWidth;
-
-      if (menuNav.scrollWidth > mainContainer1.offsetWidth) {
-        if (!(local_varaiable.dataVerticalStyle.dir === "rtl")) {
-          if (Math.abs(check) > Math.abs(marginLeftValue)) {
-            menuNav.style.marginInlineEnd = "0";
-
-            if (
-              !(
-                Math.abs(check) >
-                Math.abs(marginLeftValue) + mainContainer1Width
-              )
-            ) {
-              mainContainer1Width = Math.abs(check) - Math.abs(marginLeftValue);
-              const slideRightButton =
-                document.querySelector<HTMLElement>("#slide-right");
-              if (slideRightButton) {
-                slideRightButton.classList.add("hidden");
-              }
-            }
-
-            menuNav.style.marginInlineStart =
-              Number(menuNav.style.marginInlineStart.split("px")[0]) -
-              Math.abs(mainContainer1Width) +
-              "px";
-
-            const slideRightButton =
-              document.querySelector<HTMLElement>("#slide-right");
-            if (slideRightButton) {
-              slideRightButton.classList.remove("hidden");
-            }
-          }
-        } else {
-          if (Math.abs(check) > Math.abs(marginRightValue)) {
-            menuNav.style.marginInlineEnd = "0";
-
-            if (
-              !(
-                Math.abs(check) >
-                Math.abs(marginRightValue) + mainContainer1Width
-              )
-            ) {
-              mainContainer1Width =
-                Math.abs(check) - Math.abs(marginRightValue);
-              const slideRightButton =
-                document.querySelector<HTMLElement>("#slide-right");
-              if (slideRightButton) {
-                slideRightButton.classList.add("hidden");
-              }
-            }
-
-            menuNav.style.marginInlineStart =
-              Number(menuNav.style.marginInlineStart.split("px")[0]) -
-              Math.abs(mainContainer1Width) +
-              "px";
-
-            const slideLeftButton =
-              document.querySelector<HTMLElement>("#slide-left");
-            if (slideLeftButton) {
-              slideLeftButton.classList.remove("hidden");
-            }
-          }
-        }
-      }
-
-      const element = document.querySelector<HTMLElement>(
-        ".main-menu > .slide.open"
-      );
-      const element1 = document.querySelector<HTMLElement>(
-        ".main-menu > .slide.open > ul"
-      );
-      if (element) {
-        element.classList.remove("active");
-      }
-      if (element1) {
-        element1.style.display = "none";
-      }
-    }
-
-    switcherArrowFn();
-  }
-
-  function slideLeft(): void {
-    const menuNav = document.querySelector<HTMLElement>(".main-menu");
-    const mainContainer1 = document.querySelector<HTMLElement>(".main-sidebar");
-
-    if (menuNav && mainContainer1) {
-      const marginLeftValue = Math.ceil(
-        Number(
-          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
-        )
-      );
-      const marginRightValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
-      );
-      const check = menuNav.scrollWidth - mainContainer1.offsetWidth;
-      let mainContainer1Width = mainContainer1.offsetWidth;
-
-      if (menuNav.scrollWidth > mainContainer1.offsetWidth) {
-        if (!(local_varaiable.dataVerticalStyle.dir === "rtl")) {
-          if (Math.abs(check) <= Math.abs(marginLeftValue)) {
-            menuNav.style.marginInlineStart = "0px";
-          }
-        } else {
-          if (Math.abs(check) > Math.abs(marginRightValue)) {
-            menuNav.style.marginInlineStart = "0";
-
-            if (
-              !(
-                Math.abs(check) >
-                Math.abs(marginRightValue) + mainContainer1Width
-              )
-            ) {
-              mainContainer1Width =
-                Math.abs(check) - Math.abs(marginRightValue);
-              const slideRightButton =
-                document.querySelector<HTMLElement>("#slide-right");
-              if (slideRightButton) {
-                slideRightButton.classList.add("hidden");
-              }
-            }
-
-            menuNav.style.marginInlineStart =
-              Number(menuNav.style.marginInlineStart.split("px")[0]) -
-              Math.abs(mainContainer1Width) +
-              "px";
-
-            const slideLeftButton =
-              document.querySelector<HTMLElement>("#slide-left");
-            if (slideLeftButton) {
-              slideLeftButton.classList.remove("hidden");
-            }
-          }
-        }
-      }
-
-      const element = document.querySelector<HTMLElement>(
-        ".main-menu > .slide.open"
-      );
-      const element1 = document.querySelector<HTMLElement>(
-        ".main-menu > .slide.open > ul"
-      );
-      if (element) {
-        element.classList.remove("active");
-      }
-      if (element1) {
-        element1.style.display = "none";
-      }
-    }
-
-    switcherArrowFn();
   }
 
   const Topup = () => {
@@ -628,7 +452,17 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
       <aside
         className="app-sidebar"
         id="sidebar"
+        onMouseEnter={() => Onhover()}
         onMouseLeave={() => Outhover()}
+        style={{
+          backgroundImage:
+            local_varaiable.class === "dark"
+              ? `url(${gradientDark})`
+              : `url(${gradientLight})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          transition: "background-image 0.3s ease"
+        }}
       >
         <div className="main-sidebar-header">
           <a
@@ -645,24 +479,6 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
         </div>
         <SimpleBar className="main-sidebar" id="sidebar-scroll">
           <nav className="main-menu-container nav nav-pills flex-column sub-open">
-            <div
-              className="slide-left"
-              id="slide-left"
-              onClick={() => {
-                slideLeft();
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#7b8191"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
-              </svg>
-            </div>
-
             <ul className="main-menu" onClick={() => Sideclick()}>
               {MENUITEMS.map((levelone: any) => (
                 <Fragment key={Math.random()}>
@@ -733,23 +549,6 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
                 </Fragment>
               ))}
             </ul>
-            <div
-              className="slide-right"
-              id="slide-right"
-              onClick={() => {
-                slideRight();
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#7b8191"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
-              </svg>
-            </div>
           </nav>
         </SimpleBar>
       </aside>

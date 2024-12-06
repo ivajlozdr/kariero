@@ -236,22 +236,6 @@ const Resetbasic: FC<ResetbasicProps> = () => {
                           ></i>
                         </button>
                       </div>
-                      <div className="mt-4">
-                        <div className="form-check !ps-0">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="defaultCheck1"
-                          />
-                          <label
-                            className="form-check-label text-[#8c9097] dark:text-white/50 font-normal"
-                            htmlFor="defaultCheck1"
-                          >
-                            Запомни паролата?
-                          </label>
-                        </div>
-                      </div>
                     </div>
                     <div className="xl:col-span-12 col-span-12 grid mt-2">
                       <button
@@ -262,43 +246,6 @@ const Resetbasic: FC<ResetbasicProps> = () => {
                         {isSubmitting ? "Изпращане..." : "Обновяване"}
                       </button>
                     </div>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
-                      Имате профил?{" "}
-                      <Link
-                        to={`${import.meta.env.BASE_URL}signin`}
-                        className="text-primary"
-                      >
-                        Влезте
-                      </Link>
-                    </p>
-                  </div>
-                  <div className="text-center my-4 authentication-barrier">
-                    <span>ИЛИ</span>
-                  </div>
-                  <div className="btn-list text-center">
-                    <button
-                      type="button"
-                      aria-label="button"
-                      className="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"
-                    >
-                      <i className="ri-facebook-line font-bold text-dark opacity-[0.7]"></i>
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="button"
-                      className="ti-btn ti-btn-icon ti-btn-light me-[0.365rem]"
-                    >
-                      <i className="ri-google-line font-bold text-dark opacity-[0.7]"></i>
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="button"
-                      className="ti-btn ti-btn-icon ti-btn-light"
-                    >
-                      <i className="ri-twitter-line font-bold text-dark opacity-[0.7]"></i>
-                    </button>
                   </div>
                 </div>
               </div>

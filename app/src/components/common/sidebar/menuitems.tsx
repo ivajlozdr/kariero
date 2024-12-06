@@ -15,7 +15,7 @@ export const MENUITEMS = [
   },
   {
     path: `${import.meta.env.BASE_URL}app/quiz`,
-    icon: <i className="side-menu__icon bx bx-envelope"></i>,
+    icon: <i className="side-menu__icon bx bx-briefcase-alt-2"></i>,
     type: "link",
     Name: "",
     active: false,

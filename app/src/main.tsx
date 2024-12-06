@@ -37,7 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
           <Route path="/" element={<Authenticationlayout />}>
             <Route
-              path="resetpassword/resetcover/:token"
+              path="resetpassword/resetbasic/:token"
               element={<Resetbasic />}
             />
             <Route path="resetpassword" element={<ResetRequest />} />

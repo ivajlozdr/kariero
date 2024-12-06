@@ -53,7 +53,6 @@ const Switcher: FC<SwitcherProps> = ({
           icon-overlay={local_varaiable.iconOverlay}
           bg-img={local_varaiable.bgImg}
           icon-text={local_varaiable.iconText}
-          //Styles
           style={customStyles}
         ></html>
       </Helmet>
