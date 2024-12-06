@@ -11,8 +11,8 @@ import {
   Totaldeals,
   Totalrevenue
 } from "./crmdata";
-import face10 from "../../../assets/images/faces/10.jpg";
-import face12 from "../../../assets/images/faces/12.jpg";
+import face10 from "../../assets/images/faces/10.jpg";
+import face12 from "../../assets/images/faces/12.jpg";
 
 interface CrmProps {}
 
