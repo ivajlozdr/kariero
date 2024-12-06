@@ -25,7 +25,7 @@ const Undermaintanace: FC<UndermaintanaceProps> = () => {
                     <div className="mb-2 flex justify-center">
                       <Link
                         aria-label="anchor"
-                        to={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                        to={`${import.meta.env.BASE_URL}app/home/`}
                       >
                         <img
                           src={togglelogo}

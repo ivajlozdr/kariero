@@ -1,6 +1,5 @@
 import { FC, Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import desktoplogo from "../../../assets/images/brand-logos/desktop-logo.svg";
 import desktopdarklogo from "../../../assets/images/brand-logos/desktop-dark.png";
 
@@ -71,7 +70,7 @@ const ResetRequest: FC<ResetRequestProps> = () => {
             <div className="mb-4 text-center">
               <Link
                 aria-label="anchor"
-                to={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                to={`${import.meta.env.BASE_URL}app/home/`}
               >
                 <img
                   src={desktoplogo}
@@ -133,7 +132,7 @@ const ResetRequest: FC<ResetRequestProps> = () => {
                 <p className="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
                   Имате профил?{" "}
                   <Link
-                    to={`${import.meta.env.BASE_URL}auth/signin`}
+                    to={`${import.meta.env.BASE_URL}signin`}
                     className="text-primary"
                   >
                     Влезте тук!

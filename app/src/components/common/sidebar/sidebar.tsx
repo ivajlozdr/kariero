@@ -37,16 +37,6 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
   // const location = useLocation();
   const location = useLocation();
 
-  function Onhover() {
-    const theme = store.getState();
-    if (
-      (theme.toggled == "icon-overlay-close" ||
-        theme.toggled == "detached-close") &&
-      theme.iconOverlay != "open"
-    ) {
-      ThemeChanger({ ...theme, iconOverlay: "open" });
-    }
-  }
   function Outhover() {
     const theme = store.getState();
     if (
@@ -642,7 +632,7 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
       >
         <div className="main-sidebar-header">
           <a
-            href={`${import.meta.env.BASE_URL}dashboards/crm/`}
+            href={`${import.meta.env.BASE_URL}app/home/`}
             className="header-logo"
           >
             <img src={logo1} alt="logo" className="desktop-logo" />

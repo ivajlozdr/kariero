@@ -49,7 +49,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Loader />;
   }
 
-  return isValid ? children : <Navigate to="/auth/signin" />;
+  return isValid ? children : <Navigate to="/signin" />;
 };
 
 export default ProtectedRoute;

@@ -29,7 +29,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
       localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
       // Redirect to the app if token exists
-      navigate(`${import.meta.env.BASE_URL}dashboards/crm/`);
+      navigate(`${import.meta.env.BASE_URL}app/home/`);
     }
   }, [navigate]);
 
@@ -124,7 +124,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
       }
 
       // Redirect to the verification page
-      navigate(`${import.meta.env.BASE_URL}auth/twostepverification`, {
+      navigate(`${import.meta.env.BASE_URL}twostepverification`, {
         state: { email: formData.email }
       });
     } catch (error: any) {
@@ -155,7 +155,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-3 sm:col-span-2"></div>
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-6 sm:col-span-8 col-span-12">
               <div className="my-[2.5rem] flex justify-center">
-                <Link to={`${import.meta.env.BASE_URL}dashboards/crm/`}>
+                <Link to={`${import.meta.env.BASE_URL}app/home/`}>
                   <img src={desktoplogo} alt="logo" className="desktop-logo" />
                   <img
                     src={desktopdarklogo}
@@ -312,7 +312,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
                     <p className="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
                       Имате профил?{" "}
                       <Link
-                        to={`${import.meta.env.BASE_URL}auth/signin`}
+                        to={`${import.meta.env.BASE_URL}signin`}
                         className="text-primary"
                       >
                         Влезте тук!

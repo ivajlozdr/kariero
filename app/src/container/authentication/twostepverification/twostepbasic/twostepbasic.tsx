@@ -29,7 +29,7 @@ const Twostepbasic: FC<TwostepbasicProps> = () => {
       localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
       // Redirect to the app if token exists
-      navigate(`${import.meta.env.BASE_URL}dashboards/crm/`);
+      navigate(`${import.meta.env.BASE_URL}app/home/`);
     }
   }, [navigate]);
 
@@ -85,7 +85,7 @@ const Twostepbasic: FC<TwostepbasicProps> = () => {
       ]);
 
       setTimeout(() => {
-        navigate(`${import.meta.env.BASE_URL}auth/signin`);
+        navigate(`${import.meta.env.BASE_URL}signin`);
       }, 1000);
     } catch (error: any) {
       setAlerts([
@@ -143,7 +143,7 @@ const Twostepbasic: FC<TwostepbasicProps> = () => {
     <Fragment>
       <div className="container h-screen flex flex-col items-center justify-center">
         <div className="my-8 flex justify-center">
-          <Link to={`${import.meta.env.BASE_URL}dashboards/crm/`}>
+          <Link to={`${import.meta.env.BASE_URL}app/home/`}>
             <img src={desktoplogo} alt="logo" className="desktop-logo" />
             <img src={desktopdarklogo} alt="logo" className="desktop-dark" />
           </Link>

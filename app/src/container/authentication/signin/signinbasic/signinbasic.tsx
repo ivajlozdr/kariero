@@ -45,19 +45,19 @@ const Signinbasic: FC<SigninbasicProps> = () => {
           const result = await response.json();
 
           if (result.valid) {
-            navigate(`${import.meta.env.BASE_URL}dashboards/crm`);
+            navigate(`${import.meta.env.BASE_URL}app/home`);
           } else {
             console.log("Invalid token");
             localStorage.removeItem("authToken");
             sessionStorage.removeItem("authToken");
-            navigate("/auth/signin");
+            navigate("/signin");
           }
         } catch (error) {
           console.error("Error validating token:", error);
-          navigate("/auth/signin");
+          navigate("/signin");
         }
       } else {
-        navigate("/auth/signin");
+        navigate("/signin");
       }
     };
 
@@ -123,7 +123,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
         sessionStorage.setItem("authToken", data.token);
       }
 
-      navigate(`${import.meta.env.BASE_URL}dashboards/crm`);
+      navigate(`${import.meta.env.BASE_URL}app/home`);
     } catch (error: any) {
       setAlerts([
         {
@@ -143,7 +143,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-3 sm:col-span-2"></div>
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-6 sm:col-span-8 col-span-12">
               <div className="my-[2.5rem] flex justify-center">
-                <Link to={`${import.meta.env.BASE_URL}dashboards/crm`}>
+                <Link to={`${import.meta.env.BASE_URL}app/home`}>
                   <img src={desktoplogo} alt="logo" className="desktop-logo" />
                   <img
                     src={desktopdarklogo}
@@ -197,7 +197,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
                           <Link
                             to={`${
                               import.meta.env.BASE_URL
-                            }auth/resetpassword/request`}
+                            }resetpassword/request`}
                             className="ltr:float-right rtl:float-left text-danger"
                           >
                             Забравена парола?
@@ -259,7 +259,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
                     <p className="text-[0.75rem] text-[#8c9097] dark:text-white/50 mt-4">
                       Нямате профил?{" "}
                       <Link
-                        to={`${import.meta.env.BASE_URL}auth/signup`}
+                        to={`${import.meta.env.BASE_URL}signup`}
                         className="text-primary"
                       >
                         Създадете тук!
