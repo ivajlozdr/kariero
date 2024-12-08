@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("./database");
+const { spawn } = require("child_process");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,14 +16,16 @@ require("dotenv").config();
 const whitelist = ["http://localhost:5173"];
 const corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionSuccessStatus: 200
+  optionSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
@@ -303,6 +306,36 @@ app.get("/user-data", (req, res) => {
       const user = results[0];
       res.json(user);
     });
+  });
+});
+
+app.get("/run-python-script", (req, res) => {
+  const pythonProcess = spawn("python", ["scraper.py"]);
+
+  let response = "";
+
+  // Collect data from Python script
+  pythonProcess.stdout.on("data", (data) => {
+    response += data.toString();
+  });
+
+  pythonProcess.stderr.on("data", (data) => {
+    console.error(`Error from Python script: ${data.toString()}`);
+  });
+
+  pythonProcess.on("close", (code) => {
+    if (code !== 0) {
+      return res.status(500).json({ error: "Python scraper failed" });
+    }
+
+    // Attempt to parse the response as JSON
+    try {
+      const jsonResponse = JSON.parse(response.trim()); // Remove any extra spaces
+      res.json(jsonResponse); // Send Python's output as JSON response
+    } catch (err) {
+      console.error("Failed to parse Python script output as JSON:", response);
+      res.status(500).json({ error: "Invalid JSON from Python script" });
+    }
   });
 });
 
