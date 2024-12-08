@@ -314,7 +314,7 @@ app.get("/run-python-script", (req, res) => {
 
   let response = "";
 
-  // Collect data from Python script
+  // Capture data from the Python script
   pythonProcess.stdout.on("data", (data) => {
     response += data.toString();
   });
@@ -328,14 +328,10 @@ app.get("/run-python-script", (req, res) => {
       return res.status(500).json({ error: "Python scraper failed" });
     }
 
-    // Attempt to parse the response as JSON
-    try {
-      const jsonResponse = JSON.parse(response.trim()); // Remove any extra spaces
-      res.json(jsonResponse); // Send Python's output as JSON response
-    } catch (err) {
-      console.error("Failed to parse Python script output as JSON:", response);
-      res.status(500).json({ error: "Invalid JSON from Python script" });
-    }
+    const parsedResponse = JSON.parse(response.trim());
+
+    // Optionally send a success response if needed
+    res.status(200).json(parsedResponse);
   });
 });
 

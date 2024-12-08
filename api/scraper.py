@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import json
 import sys
@@ -42,8 +45,14 @@ for cookie in cookies:
 URL = "https://www.jobs.bg/front_job_search.php?s_c%5B0%5D=1168"
 driver.get(URL)
 
-# Wait for the page to load (adjust as needed)
-driver.implicitly_wait(10)
+# Wait for the job listings to load (adjust the condition as needed)
+try:
+    job_list_locator = (By.CSS_SELECTOR, "ul.page-1 > li")  # Adjust selector if necessary
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))
+except Exception as e:
+    print(f"Error waiting for page elements: {e}", file=sys.stderr)
+    driver.quit()
+    sys.exit(1)
 
 # Step 5: Fetch the page source
 page_source = driver.page_source
@@ -52,7 +61,7 @@ page_source = driver.page_source
 soup = BeautifulSoup(page_source, 'html.parser')
 
 # Step 7: Find all job listing elements
-job_list = soup.select("ul.page-1 > li")  # Adjust selector based on the actual page structure
+job_list = soup.select("ul.page-1 > li")  # Ensure this selector matches the structure of the page
 
 job_offers = []
 
@@ -64,7 +73,7 @@ for job in job_list:
         job_location_salary = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
         job_url = job.select_one("a.black-link-b")['href']
         additional_params = job.get('additional-params', '{}')  # Extract JSON-like string
-        additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict
+        additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict safely
 
         # Append to results
         job_offers.append({
@@ -82,9 +91,11 @@ output_file = "job_offers.json"
 try:
     with open(output_file, "w", encoding="utf-8") as file:
         json.dump(job_offers, file, ensure_ascii=False, indent=4)
-    print(f"Job offers saved to {output_file}")
 except Exception as e:
     print(f"Error saving to file: {e}", file=sys.stderr)
+
+# Return the job offers as output (this is the part that will be used in the Node.js app)
+print(json.dumps(job_offers))  # Print job offers in JSON format
 
 # Step 9: Quit the browser
 driver.quit()
