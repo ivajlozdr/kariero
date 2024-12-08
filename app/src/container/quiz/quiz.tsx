@@ -1,370 +1,203 @@
 import React, { useState } from "react";
-
-// Define types for question mappings and scores
-type QuestionMapping = {
-  id: number;
-  question: string;
-  category: string;
-  field: string;
-  answerType: "Likert" | "MultipleChoice" | "YesNo" | "Numeric";
-  options?: string[]; // For multiple-choice questions
-};
-
-interface Scores {
-  [key: string]: {
-    [field: string]: number | Record<string, number> | string[];
-  };
-}
+import { Scores, PreferenceKeys, WorkStyleKeys } from "./quiz-types";
+import { likertScale, questions } from "./quiz-data";
 
 // Initial score structure
 const initialScores: Scores = {
   RIASEC: {
-    Realistic: { HandsOn: 0 },
-    Investigative: { ProblemSolving: 0 },
-    Artistic: { Creative: 0 },
+    Realistic: {},
+    Investigative: {},
+    Artistic: {},
     Social: {},
     Enterprising: {},
     Conventional: {}
   },
   Preferences: {},
   WorkStyle: {
-    StructurePreference: 0,
-    Collaboration: 0
+    StructurePreference: "",
+    Collaboration: "",
+    WorkEnvironment: ""
   }
 };
 
 const QuizComponent: React.FC = () => {
   const [scores, setScores] = useState<Scores>(initialScores);
+  const [userResponses, setUserResponses] = useState<
+    { question: string; answer: string }[]
+  >([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
-  // Updated questions array with the new questions
-  const questions: QuestionMapping[] = [
-    {
-      id: 1,
-      question: "Обичате ли да работите с ръцете си или да изграждате неща?",
-      category: "RIASEC",
-      field: "HandsOn",
-      answerType: "Likert"
-    },
-    {
-      id: 2,
-      question:
-        "Обичате ли да решавате сложни проблеми или да анализирате данни?",
-      category: "RIASEC",
-      field: "ProblemSolving",
-      answerType: "Likert"
-    },
-    {
-      id: 3,
-      question:
-        "Често ли се чудите как работят нещата или защо се случват определени явления?",
-      category: "RIASEC",
-      field: "Curiosity",
-      answerType: "Likert"
-    },
-    {
-      id: 4,
-      question:
-        "Обичате ли да създавате неща, като например да пишете, рисувате или проектирате?",
-      category: "RIASEC",
-      field: "Creative",
-      answerType: "Likert"
-    },
-    {
-      id: 5,
-      question:
-        "Чувствате ли се заредени с енергия, когато помагате на други хора или обучавате нови умения?",
-      category: "RIASEC",
-      field: "Social",
-      answerType: "Likert"
-    },
-    {
-      id: 6,
-      question:
-        "Бихте ли се наслаждавали на работа с хора за съвместно решаване на проблеми?",
-      category: "RIASEC",
-      field: "Collaboration",
-      answerType: "Likert"
-    },
-    {
-      id: 7,
-      question:
-        "Обичате ли да ръководите проекти или да убеждавате другите да възприемат вашите идеи?",
-      category: "RIASEC",
-      field: "Enterprising",
-      answerType: "Likert"
-    },
-    {
-      id: 8,
-      question:
-        "Бихте ли предпочели да вземате решения в лидерска роля вместо да следвате план?",
-      category: "RIASEC",
-      field: "Enterprising",
-      answerType: "Likert"
-    },
-    {
-      id: 9,
-      question:
-        "Обичате ли да организирате данни, да създавате графици или да работите с детайлни системи?",
-      category: "RIASEC",
-      field: "Conventional",
-      answerType: "Likert"
-    },
-    {
-      id: 10,
-      question: "Бихте ли предпочели структурирана работна среда пред гъвкава?",
-      category: "WorkStyle",
-      field: "StructurePreference",
-      answerType: "Likert"
-    },
-    {
-      id: 11,
-      question:
-        "Кое от тези най-добре ви описва? (Изберете всички, които се отнасят): Аналитичен мислител, Креативен решавач на проблеми, Емпатичен слушател, Организиран до детайли, Уверен лидер, Практически ориентиран работник",
-      category: "Preferences",
-      field: "PersonalityTypes",
-      answerType: "MultipleChoice",
-      options: [
-        "Аналитичен мислител",
-        "Креативен решавач на проблеми",
-        "Емпатичен слушател",
-        "Организиран до детайли",
-        "Уверен лидер",
-        "Практически ориентиран работник"
-      ]
-    },
-    {
-      id: 12,
-      question:
-        "Колко удобно се чувствате при работа с технологии, инструменти или машини?",
-      category: "RIASEC",
-      field: "TechComfort",
-      answerType: "Likert"
-    },
-    {
-      id: 13,
-      question:
-        "Бихте ли предпочели да работите на открито, в офис или в творческо студио?",
-      category: "Preferences",
-      field: "WorkEnvironment",
-      answerType: "MultipleChoice",
-      options: ["Открито", "Офис", "Творческо студио"]
-    },
-    {
-      id: 14,
-      question:
-        "Обичате ли да работите в екип или предпочитате индивидуални задачи?",
-      category: "WorkStyle",
-      field: "Collaboration",
-      answerType: "MultipleChoice",
-      options: ["Екип", "Индивидуални задачи"]
-    },
-    {
-      id: 15,
-      question:
-        "Кое е по-важно за вас в една работа: креативност, стабилност или да помагате на другите?",
-      category: "Preferences",
-      field: "JobPriority",
-      answerType: "MultipleChoice",
-      options: ["Креативност", "Стабилност", "Помагане на другите"]
-    },
-    {
-      id: 16,
-      question:
-        "Развивате ли се най-добре в бърза и динамична среда, или предпочитате стабилен и предсказуем ритъм на работа?",
-      category: "WorkStyle",
-      field: "WorkEnvironment",
-      answerType: "MultipleChoice",
-      options: ["Бърза и динамична", "Стабилен и предсказуем"]
-    },
-    {
-      id: 17,
-      question:
-        "Какво е най-високото ниво на образование, което сте завършили?",
-      category: "Preferences",
-      field: "EducationLevel",
-      answerType: "MultipleChoice",
-      options: ["Основно", "Средно", "Висше", "Магистър", "Доктор"]
-    },
-    {
-      id: 18,
-      question:
-        "Къде виждате себе си професионално след 5 години? (Лидерска роля, технически експерт, креативна позиция и т.н.)",
-      category: "Preferences",
-      field: "CareerGoals",
-      answerType: "MultipleChoice",
-      options: ["Лидерска роля", "Технически експерт", "Креативна позиция"]
-    },
-    {
-      id: 19,
-      question:
-        "Какъв тип работа ви носи най-голямо удовлетворение: да помагате на другите, да решавате проблеми или да създавате нещо осезаемо?",
-      category: "RIASEC",
-      field: "JobSatisfaction",
-      answerType: "MultipleChoice",
-      options: [
-        "Помагате на другите",
-        "Решавате проблеми",
-        "Създавате нещо осезаемо"
-      ]
-    },
-    {
-      id: 20,
-      question:
-        "Ако можехте да имате каквато и да е работа, без да се притеснявате за пари или квалификации, каква би била тя?",
-      category: "Preferences",
-      field: "IdealJob",
-      answerType: "MultipleChoice",
-      options: ["Изберете вашия идеален тип работа"]
-    }
-  ];
-
-  // Likert scale options with weights
-  const likertScale = [
-    { label: "Strongly Agree", weight: 3 },
-    { label: "Agree", weight: 2 },
-    { label: "Slightly Agree", weight: 1 },
-    { label: "Neutral", weight: 0 },
-    { label: "Slightly Disagree", weight: -1 },
-    { label: "Disagree", weight: -2 },
-    { label: "Strongly Disagree", weight: -3 }
-  ];
-
-  const handleAnswer = (weight: number) => {
+  // Handle Likert scale answers
+  const handleLikertAnswer = (weight: number) => {
     const currentQuestion = questions[currentQuestionIndex];
-    if (currentQuestion) {
-      const { category, field } = currentQuestion;
 
-      // Log the current score before updating
-      console.log(
-        `Before update - Category: ${category}, Field: ${field}, Current Score:`,
-        scores[category][field]
-      );
+    if (currentQuestion.category === "RIASEC") {
+      const category = currentQuestion.field;
 
-      setScores((prevScores) => {
-        const currentFieldValue =
-          typeof prevScores[category][field] === "number"
-            ? (prevScores[category][field] as number)
-            : 0;
+      // RIASEC category mapping based on the question's field
+      const riasecCategoryMap: { [key: string]: string } = {
+        HandsOn: "Realistic",
+        ProblemSolving: "Investigative",
+        Curiosity: "Investigative",
+        Creative: "Artistic",
+        Social: "Social",
+        Collaboration: "Social",
+        Enterprising: "Enterprising",
+        TechComfort: "Realistic",
+        JobSatisfaction: "Enterprising", // Adjust based on your preference for mapping
+        Conventional: "Conventional"
+      };
 
-        const newScores = {
+      const riasecType = riasecCategoryMap[category];
+
+      if (riasecType) {
+        // Update RIASEC score with the corresponding weight
+        setScores((prevScores) => ({
           ...prevScores,
-          [category]: {
-            ...prevScores[category],
-            [field]: currentFieldValue + weight
+          RIASEC: {
+            ...prevScores.RIASEC,
+            [riasecType]: {
+              ...prevScores.RIASEC[riasecType],
+              [category]: weight
+            }
           }
-        };
-
-        // Log the new score after update
-        console.log(
-          `After update - Category: ${category}, Field: ${field}, New Score:`,
-          newScores[category][field]
-        );
-
-        return newScores;
-      });
-
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        }));
+      }
     }
+
+    // Store response
+    const updatedResponses = [
+      ...userResponses,
+      {
+        question: currentQuestion.question,
+        answer:
+          likertScale.find((option) => option.weight === weight)?.label ||
+          "No Answer"
+      }
+    ];
+    setUserResponses(updatedResponses);
+
+    nextQuestion();
   };
 
-  const handleMultipleChoiceAnswer = (option: string) => {
+  const handleMultipleChoiceAnswer = (answer: string) => {
     const currentQuestion = questions[currentQuestionIndex];
-
-    if (currentQuestion) {
-      const { category, field, answerType, options } = currentQuestion;
-
-      // Log the current score before updating
-      console.log(
-        `Before update - Category: ${category}, Field: ${field}, Current Score:`,
-        scores[category]?.[field]
+    // For RIASEC-related questions, handle answers accordingly
+    if (currentQuestion.category === "RIASEC") {
+      const category = currentQuestion.field; // E.g., "HandsOn", "ProblemSolving"
+      const riasecType = Object.keys(initialScores.RIASEC).find((type) =>
+        Object.keys(initialScores.RIASEC[type]).includes(category)
       );
 
-      setScores((prevScores) => {
-        // Check if the answer type is MultipleChoice
-        if (answerType === "MultipleChoice") {
-          // Ensure the options are stored as an array, and toggle the selected answer
-          const selectedOptions = prevScores[category]?.[field] || [];
+      if (riasecType) {
+        // Ensure the answer is a numeric value (as required for RIASEC)
+        const numericAnswer = parseInt(answer, 10); // Converts answer string to number
 
-          // Check if selectedOptions is an array
-          if (Array.isArray(selectedOptions)) {
-            // If the option is already selected, remove it; otherwise, add it
-            const newSelectedOptions = selectedOptions.includes(option)
-              ? selectedOptions.filter((item) => item !== option)
-              : [...selectedOptions, option];
-
-            return {
-              ...prevScores,
-              [category]: {
-                ...prevScores[category],
-                [field]: newSelectedOptions // Store the selected options
-              }
-            };
-          } else {
-            // If the value isn't an array, initialize it as an empty array or handle it differently
-            return {
-              ...prevScores,
-              [category]: {
-                ...prevScores[category],
-                [field]: [option] // Start with the selected option as the first entry
-              }
-            };
-          }
-        } else if (answerType === "Likert") {
-          // For Likert-type questions, store the string answer as the score (or adjust for numeric values)
-          return {
-            ...prevScores,
-            [category]: {
-              ...prevScores[category],
-              [field]: option // Assuming `option` is a Likert value (e.g., "Agree", "Strongly Agree")
+        setScores((prevScores) => ({
+          ...prevScores,
+          RIASEC: {
+            ...prevScores.RIASEC,
+            [riasecType]: {
+              ...prevScores.RIASEC[riasecType],
+              [category]: numericAnswer // Set the numeric value for the RIASEC category
             }
-          };
+          }
+        }));
+      }
+    }
+    // For Preferences-related questions, handle fields like PersonalityTypes, WorkEnvironment, etc.
+    if (currentQuestion.category === "Preferences") {
+      const field = currentQuestion.field as PreferenceKeys; // Assert field as a valid PreferenceKeys
+
+      // Handle non-numeric fields like PersonalityTypes, WorkEnvironment, etc.
+      setScores((prevScores) => ({
+        ...prevScores,
+        Preferences: {
+          ...prevScores.Preferences,
+          [field]: [
+            ...(prevScores.Preferences[field] || []), // Ensure field is an array or initialize as an empty array
+            answer
+          ]
         }
+      }));
+    }
+    if (currentQuestion.category === "WorkStyle") {
+      const field = currentQuestion.field as keyof WorkStyleKeys; // Assert field as a valid WorkStyle key
+      console.log("answer: ", answer);
+      setScores((prevScores) => ({
+        ...prevScores,
+        WorkStyle: {
+          ...prevScores.WorkStyle,
+          [field]: answer // Update the specific field with the new answer
+        }
+      }));
+      console.log("WorkStyle: ", scores.WorkStyle);
+    }
 
-        return prevScores;
-      });
+    // Store response
+    const updatedResponses = [
+      ...userResponses,
+      { question: currentQuestion.question, answer }
+    ];
+    setUserResponses(updatedResponses);
 
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    nextQuestion();
+  };
+
+  // Move to next question
+  const nextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      alert("You have completed the quiz!");
+      // Log final scores and user responses
+      console.log("Final Scores:", scores);
+      console.log("User Responses:", userResponses);
     }
   };
+
+  const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <div>
-      {questions[currentQuestionIndex] ? (
+      <h1>Career Quiz</h1>
+      <h2>{currentQuestion.question}</h2>
+
+      {currentQuestion.answerType === "Likert" ? (
         <div>
-          <h2>{questions[currentQuestionIndex].question}</h2>
-          {questions[currentQuestionIndex].answerType === "Likert" && (
-            <div>
-              {likertScale.map((option) => (
-                <button
-                  key={option.weight}
-                  onClick={() => handleAnswer(option.weight)}
-                  className="button"
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          )}
-          {questions[currentQuestionIndex].answerType === "MultipleChoice" && (
-            <div>
-              {questions[currentQuestionIndex].options?.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => handleMultipleChoiceAnswer(option)}
-                  className="button"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          )}
+          {likertScale.map((option) => (
+            <button
+              className="button"
+              key={option.label}
+              onClick={() => handleLikertAnswer(option.weight)}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
       ) : (
         <div>
-          <h2>Благодарим ви за попълването на въпросника!</h2>
+          {currentQuestion.options?.map((option) => (
+            <button
+              className="button"
+              key={option}
+              onClick={() => handleMultipleChoiceAnswer(option)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       )}
+      <button
+        className="button"
+        style={{ marginTop: "80px" }}
+        onClick={() => console.log(userResponses)}
+      >
+        print userResponses
+      </button>
+      <button className="button" onClick={() => console.log(scores)}>
+        print scores
+      </button>
     </div>
   );
 };
