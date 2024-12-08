@@ -52,10 +52,10 @@ for cookie in cookies:
 # Step 4: Open the target page using the passed URL
 driver.get(URL)
 
-# Wait for the job listings to load (adjust the condition as needed)
+# Wait for the job listings to load (wait for specific elements to appear)
 try:
     job_list_locator = (By.CSS_SELECTOR, "ul.page-1 > li")  # Adjust selector if necessary
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))  # Wait for job list to be present
 except Exception as e:
     print(f"Error waiting for page elements: {e}", file=sys.stderr)
     driver.quit()
