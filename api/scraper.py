@@ -77,8 +77,14 @@ for job in job_list:
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)  # Log errors to stderr
 
-# Step 8: Output results to stdout in JSON format
-print(json.dumps(job_offers, ensure_ascii=False, indent=4))  # JSON output to stdout
+# Step 8: Save results to a JSON file
+output_file = "job_offers.json"
+try:
+    with open(output_file, "w", encoding="utf-8") as file:
+        json.dump(job_offers, file, ensure_ascii=False, indent=4)
+    print(f"Job offers saved to {output_file}")
+except Exception as e:
+    print(f"Error saving to file: {e}", file=sys.stderr)
 
 # Step 9: Quit the browser
 driver.quit()
