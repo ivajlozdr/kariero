@@ -1,3 +1,4 @@
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -6,7 +7,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import json
-import sys
+
+# Check if a URL argument is passed
+if len(sys.argv) < 2:
+    print("Error: URL is required.")
+    sys.exit(1)
+
+# Get the URL from command-line argument
+URL = sys.argv[1]
 
 # Path to your local chromedriver executable
 chromedriver_path = "chromedriver.exe"  # Update with your actual path
@@ -41,8 +49,7 @@ cookies = [
 for cookie in cookies:
     driver.add_cookie(cookie)
 
-# Step 4: Open the target page
-URL = "https://www.jobs.bg/front_job_search.php?s_c%5B0%5D=1168"
+# Step 4: Open the target page using the passed URL
 driver.get(URL)
 
 # Wait for the job listings to load (adjust the condition as needed)

@@ -309,8 +309,14 @@ app.get("/user-data", (req, res) => {
   });
 });
 
-app.get("/run-python-script", (req, res) => {
-  const pythonProcess = spawn("python", ["scraper.py"]);
+app.post("/run-python-script", (req, res) => {
+  const { url } = req.body; // Get the URL from the request body
+
+  if (!url) {
+    return res.status(400).json({ error: "URL is required" });
+  }
+
+  const pythonProcess = spawn("python", ["scraper.py", url]); // Pass URL to the Python script
 
   let response = "";
 
@@ -328,10 +334,15 @@ app.get("/run-python-script", (req, res) => {
       return res.status(500).json({ error: "Python scraper failed" });
     }
 
-    const parsedResponse = JSON.parse(response.trim());
-
-    // Optionally send a success response if needed
-    res.status(200).json(parsedResponse);
+    try {
+      const parsedResponse = JSON.parse(response.trim());
+      res.status(200).json(parsedResponse);
+    } catch (error) {
+      console.error("Error parsing Python script response:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to parse Python script output" });
+    }
   });
 });
 
