@@ -36,3 +36,25 @@ export type WorkStyleKeys =
   | "StructurePreference"
   | "Collaboration"
   | "WorkEnvironment";
+
+  export  interface Career {
+    career: string;
+    reason: string;
+  }
+  
+ export  interface CareerRecommendation {
+    careerPath: string;
+    reason: string;
+    listOfCareers: Career[];
+  }
+  
+  export type UserProfileData = {
+    Abilities: string[];
+    Skills: string[];
+    Knowledge: string[];
+    Interests: string[];
+    WorkStyle: string[];
+    WorkValues: string[];
+    TechnologySkills: string[];
+    CareerRecommendations: CareerRecommendation[];
+  };
