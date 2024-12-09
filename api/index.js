@@ -36,6 +36,9 @@ let verificationCodes = {};
 const SECRET_KEY = "1a2b3c4d5e6f7g8h9i0jklmnopqrstuvwxyz123456";
 const EMAIL_USER = "no-reply@kariero.noit.eu";
 const EMAIL_PASS = "Noit_2025";
+const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
+const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
+const CX = "160b0be643d1045a6";
 
 // Създаване на транспортерен обект с използване на SMTP транспорт
 const transporter = nodemailer.createTransport({
@@ -312,7 +315,6 @@ app.get("/user-data", (req, res) => {
 
 app.post("/run-python-script", (req, res) => {
   const { url } = req.body; // Get the URL from the request body
-
   if (!url) {
     return res.status(400).json({ error: "URL is required" });
   }
@@ -389,7 +391,7 @@ app.get("/onet", async (req, res) => {
         }
       }
     );
-
+    // ^^^^^^^ FULL DETAILS, DONT DELETE
     const translateResponse = await axios.get(
       `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
         keyword
@@ -398,7 +400,7 @@ app.get("/onet", async (req, res) => {
 
     const translatedKeyword = translateResponse.data[0][0][0]; // Extract the translated keyword from the response
 
-    // Step 2: Search for job listings on jobs.bg using Google Custom Search
+    // Step 1: Search for profession-related job listings on jobs.bg using Google Custom Search
     const searchEngineResponse = await axios.get(
       `https://customsearch.googleapis.com/customsearch/v1`,
       {
@@ -410,21 +412,33 @@ app.get("/onet", async (req, res) => {
       }
     );
 
-    // Check if search results are returned
     const items = searchEngineResponse.data.items;
     if (!items || items.length === 0) {
       return res
         .status(404)
         .send("No job listings found for the given profession.");
     }
-    const responseData = {
-      originalKeyword: keyword,
-      translatedKeyword: translatedKeyword,
-      jobListings: items
-    };
 
-    // Send the response with job listings and debug info
-    res.status(detailsResponse.status).send(responseData);
+    // Filter to only include URLs that match the front job search pattern
+    const frontJobSearchUrls = items
+      .map((item) => item.link)
+      .filter((url) => url.includes("front_job_search.php")); // We filter URLs containing 'front_job_search.php'
+
+    if (frontJobSearchUrls.length === 0) {
+      return res.status(404).send("No valid front job search URLs found.");
+    }
+
+    // Use the first valid URL (since we only need one) and call your /run-python-script endpoint
+    const urlToSend = frontJobSearchUrls[0];
+
+    // Step 2: Call your /run-python-script endpoint with the URL as the body
+    const pythonScriptResponse = await axios.post(
+      "http://localhost:5001/run-python-script", // Replace with your actual API URL
+      { url: urlToSend } // Send the URL in the request body
+    );
+
+    // Return the response from your /run-python-script endpoint
+    res.status(pythonScriptResponse.status).send(pythonScriptResponse.data);
   } catch (error) {
     // Handle errors from either request
     console.error("Error fetching data from ONET API:", error);
