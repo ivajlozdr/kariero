@@ -1,9 +1,21 @@
+import re
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import json
-import sys
+
+# Check if a URL argument is passed
+if len(sys.argv) < 2:
+    print("Error: URL is required.")
+    sys.exit(1)
+
+# Get the URL from command-line argument
+URL = sys.argv[1]
 
 # Path to your local chromedriver executable
 chromedriver_path = "chromedriver.exe"  # Update with your actual path
@@ -12,7 +24,7 @@ chromedriver_path = "chromedriver.exe"  # Update with your actual path
 options = Options()
 
 # Add a User-Agent to mimic a real browser
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0"
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 options.add_argument(f"user-agent={user_agent}")
 
 # Optional: Run in headless mode
@@ -30,20 +42,25 @@ cookies = [
     {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
     {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
     {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-    {"name": "__cf_bm", "value": "_xBochdDo2cjp3VyGzU.VwMTgIrBnLuomqNvRi77ooc-1733647761-1.0.1.1-KPZtGU.pgUdu7FSPtC9xHixrZLIFi.n9iC1mZuGhnfEDKXQaEZem82HB.pL6U6WTeV3Y0ACNjn0Z.dRD8qM5FA", "domain": ".jobs.bg", "path": "/"},
-    {"name": "TS01caf967", "value": "01855380b02314502e83d2661215bc7cec304967f6f5ab6b6869f98a2bd3ffe0d551c1d45652da36f3b7cbe782459ce76f13c65119", "domain": ".jobs.bg", "path": "/"},
-    {"name": "datadome", "value": "DXoZRcj_xB4LYjVnPQ8tl6pL2Si0hSXHWyxCZdYsdoQ_lq0wyJv7vMt4vQchrG4_tRl~e6Q6hToCQc41EUZHwjM75JmYC9Q7uMS2FOozVdT1oy7cxTGjnvtV~tiuQK1e", "domain": ".jobs.bg", "path": "/"},
+    {"name": "__cf_bm", "value": "4x.Jx6K32RVOgIJ4K.qK1iJIPWgFkml0svmXk.KPUpU-1733754813-1.0.1.1-IHT2bQdz04Ty5ZKWCSUBFDR8_DcxyKi2emvpAd3WNJboPODOEcTC0Q9tIsvIeY5Pw6Xw9uvom3nHMQqb6eSthg", "domain": ".jobs.bg", "path": "/"},
+    {"name": "TS01caf967", "value": "01855380b065adb5b3ed516d024a5de452adb256a6083741c777fff1922e781c2da34d26bbe143415c616805ac0f06100691b0c2d1", "domain": ".jobs.bg", "path": "/"},
+    {"name": "datadome", "value": "t7O1tzGP4CsM7FlZ_m92L7F978fCSFevzFku1C9tuj~AQA8NfsUexHyRSiGWwyQrkLtFtDTfyQS0RvuqfUC9sZamDFWqgw6h5_Cr3p39h7H_CwENnkeG3YeS3wUCjUkk", "domain": ".jobs.bg", "path": "/"}
 ]
 
 for cookie in cookies:
     driver.add_cookie(cookie)
 
-# Step 4: Open the target page
-URL = "https://www.jobs.bg/front_job_search.php?s_c%5B0%5D=1168"
+# Step 4: Open the target page using the passed URL
 driver.get(URL)
 
-# Wait for the page to load (adjust as needed)
-driver.implicitly_wait(10)
+# Wait for the job listings to load
+try:
+    job_list_locator = (By.CSS_SELECTOR, "ul.page-1 > li")  # Adjust selector if necessary
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))
+except Exception as e:
+    print(f"Error waiting for page elements: {e}", file=sys.stderr)
+    driver.quit()
+    sys.exit(1)
 
 # Step 5: Fetch the page source
 page_source = driver.page_source
@@ -52,26 +69,50 @@ page_source = driver.page_source
 soup = BeautifulSoup(page_source, 'html.parser')
 
 # Step 7: Find all job listing elements
-job_list = soup.select("ul.page-1 > li")  # Adjust selector based on the actual page structure
+job_list = soup.select("ul.page-1 > li")  # Ensure this selector matches the structure of the page
 
 job_offers = []
 
 for job in job_list:
     try:
         # Extract data
-        job_title = job.select_one("div.card-title span:last-child").get_text(strip=True)
+        job_title_element = job.select_one(
+            "div.card-title > span:not(:has(.material-icons)):not(:empty)"
+        )
+        job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
+
         company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
-        job_location_salary = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
-        job_url = job.select_one("a.black-link-b")['href']
+        offer_details = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
+        offer_url = job.select_one("a.black-link-b")['href']
         additional_params = job.get('additional-params', '{}')  # Extract JSON-like string
-        additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict
+        additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict safely
+
+        # Extract salary information
+        salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+BGN|от\s+\d+\s+BGN|до\s+\d+\s+BGN|[\d,]+\s+BGN)\b", offer_details)
+        salary = salary_match.group(0) if salary_match else "N/A"
+
+        # Check for the presence of "Бруто" and "Нето" in the offer details
+        if "Бруто" in offer_details:
+            salary = f"{salary} (Бруто)"
+        elif "Нето" in offer_details:
+            salary = f"{salary} (Нето)"
+
+        # Extract off days days
+        off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
+        off_days = off_days_match.group(1) if off_days_match else "N/A"
+
+        # For off days days with range, format it properly (e.g., "от 48 до 56 дни")
+        if off_days.startswith("от"):
+            off_days = off_days.replace("от", "").strip()
 
         # Append to results
         job_offers.append({
             "title": job_title,
             "company": company_name,
-            "details": job_location_salary,
-            "url": job_url,
+            "details": offer_details,
+            "salary": salary,
+            "off_days": off_days,
+            "url": offer_url,
             "additional_data": additional_data
         })
     except Exception as e:
@@ -82,9 +123,11 @@ output_file = "job_offers.json"
 try:
     with open(output_file, "w", encoding="utf-8") as file:
         json.dump(job_offers, file, ensure_ascii=False, indent=4)
-    print(f"Job offers saved to {output_file}")
 except Exception as e:
     print(f"Error saving to file: {e}", file=sys.stderr)
+
+# Return the job offers as output
+print(json.dumps(job_offers))  # Print job offers in JSON format
 
 # Step 9: Quit the browser
 driver.quit()
