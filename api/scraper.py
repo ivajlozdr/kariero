@@ -75,17 +75,26 @@ job_offers = []
 
 for job in job_list:
     try:
-        # Extract data
+        # Extract job title
         job_title_element = job.select_one(
             "div.card-title > span:not(:has(.material-icons)):not(:empty)"
         )
         job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
 
+        # Extract company name
         company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
+        
+        # Extract location (city)
+        city_element = job.select_one("span.location")  # Adjust this selector based on your HTML structure
+        city = city_element.get_text(strip=True) if city_element else "N/A"
+
+        # Extract offer details
         offer_details = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
         offer_url = job.select_one("a.black-link-b")['href']
-        additional_params = job.get('additional-params', '{}')  # Extract JSON-like string
-        additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict safely
+        
+        # Extract additional data (JSON-like string)
+        additional_params = job.get('additional-params', '{}')
+        additional_data = json.loads(additional_params.replace('&quot;', '"'))
 
         # Extract salary information
         salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+BGN|от\s+\d+\s+BGN|до\s+\d+\s+BGN|[\d,]+\s+BGN)\b", offer_details)
@@ -97,18 +106,23 @@ for job in job_list:
         elif "Нето" in offer_details:
             salary = f"{salary} (Нето)"
 
-        # Extract off days days
+        # Extract off days
         off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
         off_days = off_days_match.group(1) if off_days_match else "N/A"
 
-        # For off days days with range, format it properly (e.g., "от 48 до 56 дни")
+        # For off days with range, format it properly (e.g., "от 48 до 56 дни")
         if off_days.startswith("от"):
             off_days = off_days.replace("от", "").strip()
+
+        # Extract city from details (assuming it's one of the mentioned cities)
+        city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград)", offer_details)
+        city = city_match.group(0) if city_match else "N/A"
 
         # Append to results
         job_offers.append({
             "title": job_title,
             "company": company_name,
+            "city": city,
             "details": offer_details,
             "salary": salary,
             "off_days": off_days,
