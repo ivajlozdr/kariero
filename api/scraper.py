@@ -1,3 +1,4 @@
+import re
 import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -80,23 +81,34 @@ for job in job_list:
         )
         job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
 
-        
         company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
-        job_location_salary = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
-        job_url = job.select_one("a.black-link-b")['href']
+        offer_details = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
+        offer_url = job.select_one("a.black-link-b")['href']
         additional_params = job.get('additional-params', '{}')  # Extract JSON-like string
         additional_data = json.loads(additional_params.replace('&quot;', '"'))  # Convert to dict safely
+
+        # Extract salary information
+        salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+BGN|от\s+\d+\s+BGN|до\s+\d+\s+BGN|[\d,]+\s+BGN)\b", offer_details)
+        salary = salary_match.group(0) if salary_match else "N/A"
+
+        # Check for the presence of "Бруто" and "Нето" in the offer details
+        if "Бруто" in offer_details:
+            salary = f"{salary} (Бруто)"
+        elif "Нето" in offer_details:
+            salary = f"{salary} (Нето)"
 
         # Append to results
         job_offers.append({
             "title": job_title,
             "company": company_name,
-            "details": job_location_salary,
-            "url": job_url,
+            "details": offer_details,
+            "salary": salary,
+            "url": offer_url,
             "additional_data": additional_data
         })
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)  # Log errors to stderr
+
 
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
