@@ -97,18 +97,26 @@ for job in job_list:
         elif "Нето" in offer_details:
             salary = f"{salary} (Нето)"
 
+        # Extract off days days
+        off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
+        off_days = off_days_match.group(1) if off_days_match else "N/A"
+
+        # For off days days with range, format it properly (e.g., "от 48 до 56 дни")
+        if off_days.startswith("от"):
+            off_days = off_days.replace("от", "").strip()
+
         # Append to results
         job_offers.append({
             "title": job_title,
             "company": company_name,
             "details": offer_details,
             "salary": salary,
+            "off_days": off_days,
             "url": offer_url,
             "additional_data": additional_data
         })
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)  # Log errors to stderr
-
 
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
