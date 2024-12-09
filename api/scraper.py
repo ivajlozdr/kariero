@@ -23,7 +23,7 @@ chromedriver_path = "chromedriver.exe"  # Update with your actual path
 options = Options()
 
 # Add a User-Agent to mimic a real browser
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0"
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 options.add_argument(f"user-agent={user_agent}")
 
 # Optional: Run in headless mode
@@ -41,9 +41,9 @@ cookies = [
     {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
     {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
     {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-    {"name": "__cf_bm", "value": "_xBochdDo2cjp3VyGzU.VwMTgIrBnLuomqNvRi77ooc-1733647761-1.0.1.1-KPZtGU.pgUdu7FSPtC9xHixrZLIFi.n9iC1mZuGhnfEDKXQaEZem82HB.pL6U6WTeV3Y0ACNjn0Z.dRD8qM5FA", "domain": ".jobs.bg", "path": "/"},
-    {"name": "TS01caf967", "value": "01855380b02314502e83d2661215bc7cec304967f6f5ab6b6869f98a2bd3ffe0d551c1d45652da36f3b7cbe782459ce76f13c65119", "domain": ".jobs.bg", "path": "/"},
-    {"name": "datadome", "value": "DXoZRcj_xB4LYjVnPQ8tl6pL2Si0hSXHWyxCZdYsdoQ_lq0wyJv7vMt4vQchrG4_tRl~e6Q6hToCQc41EUZHwjM75JmYC9Q7uMS2FOozVdT1oy7cxTGjnvtV~tiuQK1e", "domain": ".jobs.bg", "path": "/"},
+    {"name": "__cf_bm", "value": "4x.Jx6K32RVOgIJ4K.qK1iJIPWgFkml0svmXk.KPUpU-1733754813-1.0.1.1-IHT2bQdz04Ty5ZKWCSUBFDR8_DcxyKi2emvpAd3WNJboPODOEcTC0Q9tIsvIeY5Pw6Xw9uvom3nHMQqb6eSthg", "domain": ".jobs.bg", "path": "/"},
+    {"name": "TS01caf967", "value": "01855380b065adb5b3ed516d024a5de452adb256a6083741c777fff1922e781c2da34d26bbe143415c616805ac0f06100691b0c2d1", "domain": ".jobs.bg", "path": "/"},
+    {"name": "datadome", "value": "t7O1tzGP4CsM7FlZ_m92L7F978fCSFevzFku1C9tuj~AQA8NfsUexHyRSiGWwyQrkLtFtDTfyQS0RvuqfUC9sZamDFWqgw6h5_Cr3p39h7H_CwENnkeG3YeS3wUCjUkk", "domain": ".jobs.bg", "path": "/"}
 ]
 
 for cookie in cookies:
@@ -52,10 +52,10 @@ for cookie in cookies:
 # Step 4: Open the target page using the passed URL
 driver.get(URL)
 
-# Wait for the job listings to load (wait for specific elements to appear)
+# Wait for the job listings to load
 try:
     job_list_locator = (By.CSS_SELECTOR, "ul.page-1 > li")  # Adjust selector if necessary
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))  # Wait for job list to be present
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))
 except Exception as e:
     print(f"Error waiting for page elements: {e}", file=sys.stderr)
     driver.quit()
@@ -75,7 +75,12 @@ job_offers = []
 for job in job_list:
     try:
         # Extract data
-        job_title = job.select_one("div.card-title span:last-child").get_text(strip=True)
+        job_title_element = job.select_one(
+            "div.card-title > span:not(:has(.material-icons)):not(:empty)"
+        )
+        job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
+
+        
         company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
         job_location_salary = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
         job_url = job.select_one("a.black-link-b")['href']
@@ -101,7 +106,7 @@ try:
 except Exception as e:
     print(f"Error saving to file: {e}", file=sys.stderr)
 
-# Return the job offers as output (this is the part that will be used in the Node.js app)
+# Return the job offers as output
 print(json.dumps(job_offers))  # Print job offers in JSON format
 
 # Step 9: Quit the browser
