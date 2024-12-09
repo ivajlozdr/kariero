@@ -19,6 +19,25 @@ db.connect((err) => {
 });
 
 // Helper functions
+export async function translate(entry) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
+    entry
+  )}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const flattenedTranslation = data[0].map((item) => item[0]).join(" ");
+
+    const mergedTranslation = flattenedTranslation.replace(/\s+/g, " ").trim();
+    return mergedTranslation;
+  } catch (error) {
+    console.error(`Error translating entry: ${entry}`, error);
+    return entry;
+  }
+}
+
 const checkEmailExists = (email, callback) => {
   const query = "SELECT * FROM users WHERE email = ?";
   db.query(query, [email], callback);

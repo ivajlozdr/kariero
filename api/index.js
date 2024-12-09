@@ -392,13 +392,6 @@ app.get("/onet", async (req, res) => {
       }
     );
     // ^^^^^^^ FULL DETAILS, DONT DELETE
-    const translateResponse = await axios.get(
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
-        keyword
-      )}`
-    );
-
-    const translatedKeyword = translateResponse.data[0][0][0]; // Extract the translated keyword from the response
 
     // Step 1: Search for profession-related job listings on jobs.bg using Google Custom Search
     const searchEngineResponse = await axios.get(
