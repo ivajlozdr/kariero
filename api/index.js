@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -337,6 +338,91 @@ app.get("/run-python-script", (req, res) => {
       res.status(500).json({ error: "Invalid JSON from Python script" });
     }
   });
+});
+
+app.get("/onet", async (req, res) => {
+  const { keyword } = req.query;
+
+  // Check if the keyword query parameter is provided
+  if (!keyword) {
+    return res.status(400).send("Keyword is required");
+  }
+
+  try {
+    // First API call to search for careers
+    const searchResponse = await axios.get(
+      "https://services.onetcenter.org/ws/mnm/search",
+      {
+        params: {
+          keyword: encodeURIComponent(keyword)
+        },
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    // Check if career data exists and if it's not empty
+    const careerArray = searchResponse.data.career;
+    if (!careerArray || careerArray.length === 0) {
+      return res.status(404).send("No career found for the given keyword.");
+    }
+
+    // Get the code property from the first item in the career array
+    const code = careerArray[0].code;
+
+    // Make a second API call to get detailed information using the code
+    const detailsResponse = await axios.get(
+      `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
+      {
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    const translateResponse = await axios.get(
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
+        keyword
+      )}`
+    );
+
+    const translatedKeyword = translateResponse.data[0][0][0]; // Extract the translated keyword from the response
+
+    // Step 2: Search for job listings on jobs.bg using Google Custom Search
+    const searchEngineResponse = await axios.get(
+      `https://customsearch.googleapis.com/customsearch/v1`,
+      {
+        params: {
+          key: CUSTOM_SEARCH_API_KEY,
+          cx: CX,
+          q: translatedKeyword + " site:jobs.bg"
+        }
+      }
+    );
+
+    // Check if search results are returned
+    const items = searchEngineResponse.data.items;
+    if (!items || items.length === 0) {
+      return res
+        .status(404)
+        .send("No job listings found for the given profession.");
+    }
+    const responseData = {
+      originalKeyword: keyword,
+      translatedKeyword: translatedKeyword,
+      jobListings: items
+    };
+
+    // Send the response with job listings and debug info
+    res.status(detailsResponse.status).send(responseData);
+  } catch (error) {
+    // Handle errors from either request
+    console.error("Error fetching data from ONET API:", error);
+    res.status(500).send("An error occurred while fetching data.");
+  }
 });
 
 // Start server
