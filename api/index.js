@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -35,6 +36,7 @@ let verificationCodes = {};
 const SECRET_KEY = "1a2b3c4d5e6f7g8h9i0jklmnopqrstuvwxyz123456";
 const EMAIL_USER = "no-reply@kariero.noit.eu";
 const EMAIL_PASS = "Noit_2025";
+const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
 
 // Създаване на транспортерен обект с използване на SMTP транспорт
 const transporter = nodemailer.createTransport({
@@ -309,41 +311,127 @@ app.get("/user-data", (req, res) => {
   });
 });
 
-app.post("/run-python-script", (req, res) => {
-  const { url } = req.body; // Get the URL from the request body
+app.post("/run-python-script", async (req, res) => {
+  console.log("Received POST request to /run-python-script");
+  try {
+    const { keyword } = req.body;
+    console.log("Request body:", req.body);
 
-  if (!url) {
-    return res.status(400).json({ error: "URL is required" });
+    // Translate the keyword
+    console.log("Translating keyword:", keyword);
+    const translatedKeyword = await db.translate(keyword);
+    console.log("Translated keyword:", translatedKeyword);
+
+    // Perform the search using Google Custom Search API
+    console.log("Searching jobs for translated keyword:", translatedKeyword);
+    const jobSearchUrls = await db.searchJobs(translatedKeyword);
+    console.log("Job search URLs:", jobSearchUrls);
+
+    if (jobSearchUrls.length === 0) {
+      console.log("No valid URLs found");
+      return res.status(404).send("No valid front job search URLs found.");
+    }
+
+    // Use the first valid URL to pass to the Python script
+    const url = jobSearchUrls[0];
+    console.log("Selected URL for Python scraper:", url);
+
+    if (!url) {
+      console.error("No URL found for Python scraper");
+      return res.status(400).json({ error: "URL is required" });
+    }
+
+    // Spawn the Python process
+    console.log("Spawning Python process with URL:", url);
+    const pythonProcess = spawn("python", ["scraper.py", url]);
+
+    let response = "";
+
+    // Capture data from the Python script
+    pythonProcess.stdout.on("data", (data) => {
+      console.log("Python script stdout:", data.toString());
+      response += data.toString();
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      console.error("Python script stderr:", data.toString());
+    });
+
+    pythonProcess.on("close", (code) => {
+      console.log("Python process exited with code:", code);
+      if (code !== 0) {
+        console.error("Python scraper failed");
+        return res.status(500).json({ error: "Python scraper failed" });
+      }
+
+      try {
+        console.log("Parsing Python script response");
+        const parsedResponse = JSON.parse(response.trim());
+        console.log("Parsed response:", parsedResponse);
+        res.status(200).json(parsedResponse);
+      } catch (error) {
+        console.error("Error parsing Python script response:", error);
+        res.status(500).json({ error: "Failed to parse Python script output" });
+      }
+    });
+  } catch (error) {
+    console.error("Error in /run-python-script endpoint:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the request." });
+  }
+});
+
+app.get("/onet", async (req, res) => {
+  const { keyword } = req.query;
+
+  // Check if the keyword query parameter is provided
+  if (!keyword) {
+    return res.status(400).send("Keyword is required");
   }
 
-  const pythonProcess = spawn("python", ["scraper.py", url]); // Pass URL to the Python script
+  try {
+    // First API call to search for careers
+    const searchResponse = await axios.get(
+      "https://services.onetcenter.org/ws/mnm/search",
+      {
+        params: {
+          keyword: encodeURIComponent(keyword)
+        },
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
+      }
+    );
 
-  let response = "";
-
-  // Capture data from the Python script
-  pythonProcess.stdout.on("data", (data) => {
-    response += data.toString();
-  });
-
-  pythonProcess.stderr.on("data", (data) => {
-    console.error(`Error from Python script: ${data.toString()}`);
-  });
-
-  pythonProcess.on("close", (code) => {
-    if (code !== 0) {
-      return res.status(500).json({ error: "Python scraper failed" });
+    // Check if career data exists and if it's not empty
+    const careerArray = searchResponse.data.career;
+    if (!careerArray || careerArray.length === 0) {
+      return res.status(404).send("No career found for the given keyword.");
     }
 
-    try {
-      const parsedResponse = JSON.parse(response.trim());
-      res.status(200).json(parsedResponse);
-    } catch (error) {
-      console.error("Error parsing Python script response:", error);
-      return res
-        .status(500)
-        .json({ error: "Failed to parse Python script output" });
-    }
-  });
+    // Get the code property from the first item in the career array
+    const code = careerArray[0].code;
+
+    // Make a second API call to get detailed information using the code
+    const detailsResponse = await axios.get(
+      `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
+      {
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    // Return the response from your /run-python-script endpoint
+    res.status(detailsResponse.status).send(detailsResponse.data);
+  } catch (error) {
+    // Handle errors from either request
+    console.error("Error fetching data from ONET API:", error);
+    res.status(500).send("An error occurred while fetching data.");
+  }
 });
 
 // Start server

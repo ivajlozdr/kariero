@@ -1,65 +1,182 @@
-import { RiasecCategory } from "./quiz-types";
+import { QuestionMapping } from "./quiz-types";
 
-export const riasecMapping: Record<number, RiasecCategory | RiasecCategory[]> =
+export const questions: QuestionMapping[] = [
+  // RIASEC questions
   {
-    1: "Realistic",
-    2: "Investigative",
-    3: "Investigative",
-    4: "Artistic",
-    5: "Social",
-    6: "Social",
-    7: "Enterprising",
-    8: "Enterprising",
-    9: "Conventional",
-    10: "Conventional",
-    11: [
-      "Investigative",
-      "Artistic",
-      "Social",
-      "Conventional",
-      "Enterprising",
-      "Realistic"
-    ],
-    12: "Realistic",
-    13: ["Realistic", "Artistic"],
-    14: ["Social", "Investigative"],
-    15: ["Artistic", "Conventional", "Social"],
-    16: ["Enterprising", "Conventional"],
-    17: "Investigative",
-    18: ["Enterprising", "Investigative", "Artistic"],
-    19: ["Social", "Investigative", "Artistic"],
-    20: ["Realistic", "Artistic", "Social"]
-  };
-
-export const questions = [
-  "Обичате ли да работите с ръцете си или да изграждате неща?",
-  "Обичате ли да решавате сложни проблеми или да анализирате данни?",
-  "Често ли се чудите как работят нещата или защо се случват определени явления?",
-  "Обичате ли да създавате неща, като например да пишете, рисувате или проектирате?",
-  "Чувствате ли се заредени с енергия, когато помагате на други хора или обучавате нови умения?",
-  "Бихте ли се наслаждавали на работа с хора за съвместно решаване на проблеми?",
-  "Обичате ли да ръководите проекти или да убеждавате другите да възприемат вашите идеи?",
-  "Бихте ли предпочели да вземате решения в лидерска роля вместо да следвате план?",
-  "Обичате ли да организирате данни, да създавате графици или да работите с детайлни системи?",
-  "Бихте ли предпочели структурирана работна среда пред гъвкава?",
-  "Кое от тези най-добре ви описва? (Изберете всички, които се отнасят): Аналитичен мислител, Креативен решавач на проблеми, Емпатичен слушател, Организиран до детайли, Уверен лидер, Практически ориентиран работник",
-  "Колко удобно се чувствате при работа с технологии, инструменти или машини?",
-  "Бихте ли предпочели да работите на открито, в офис или в творческо студио?",
-  "Обичате ли да работите в екип или предпочитате индивидуални задачи?",
-  "Кое е по-важно за вас в една работа: креативност, стабилност или да помагате на другите?",
-  "Развивате ли се най-добре в бърза и динамична среда, или предпочитате стабилен и предсказуем ритъм на работа?",
-  "Какво е най-високото ниво на образование, което сте завършили?",
-  "Къде виждате себе си професионално след 5 години? (Лидерска роля, технически експерт, креативна позиция и т.н.)",
-  "Какъв тип работа ви носи най-голямо удовлетворение: да помагате на другите, да решавате проблеми или да създавате нещо осезаемо?",
-  "Ако можехте да имате каквато и да е работа, без да се притеснявате за пари или квалификации, каква би била тя?"
+    id: 1,
+    question: "Обичате ли да работите с ръцете си или да изграждате неща?",
+    category: "RIASEC",
+    field: "HandsOn",
+    answerType: "Likert"
+  },
+  {
+    id: 2,
+    question:
+      "Обичате ли да решавате сложни проблеми или да анализирате данни?",
+    category: "RIASEC",
+    field: "ProblemSolving",
+    answerType: "Likert"
+  },
+  {
+    id: 3,
+    question:
+      "Често ли се чудите как работят нещата или защо се случват определени явления?",
+    category: "RIASEC",
+    field: "Curiosity",
+    answerType: "Likert"
+  },
+  {
+    id: 4,
+    question:
+      "Обичате ли да създавате неща, като например да пишете, рисувате или проектирате?",
+    category: "RIASEC",
+    field: "Creative",
+    answerType: "Likert"
+  },
+  {
+    id: 5,
+    question:
+      "Чувствате ли се заредени с енергия, когато помагате на други хора или обучавате нови умения?",
+    category: "RIASEC",
+    field: "Social",
+    answerType: "Likert"
+  },
+  {
+    id: 6,
+    question:
+      "Бихте ли се наслаждавали на работа с хора за съвместно решаване на проблеми?",
+    category: "RIASEC",
+    field: "Collaboration",
+    answerType: "Likert"
+  },
+  {
+    id: 7,
+    question:
+      "Обичате ли да ръководите проекти или да убеждавате другите да възприемат вашите идеи?",
+    category: "RIASEC",
+    field: "Enterprising",
+    answerType: "Likert"
+  },
+  {
+    id: 8,
+    question:
+      "Бихте ли предпочели да вземате решения в лидерска роля вместо да следвате план?",
+    category: "RIASEC",
+    field: "Enterprising",
+    answerType: "Likert"
+  },
+  {
+    id: 9,
+    question:
+      "Обичате ли да организирате данни, да създавате графици или да работите с детайлни системи?",
+    category: "RIASEC",
+    field: "Conventional",
+    answerType: "Likert"
+  },
+  {
+    id: 10,
+    question: "Бихте ли предпочели структурирана работна среда пред гъвкава?",
+    category: "WorkStyle",
+    field: "StructurePreference",
+    answerType: "MultipleChoice",
+    options: ["Структурирана", "Гъвкава"]
+  },
+  {
+    id: 11,
+    question:
+      "Кое от тези най-добре ви описва? (Изберете всички, които се отнасят): Аналитичен мислител, Креативен решавач на проблеми, Емпатичен слушател, Организиран до детайли, Уверен лидер, Практически ориентиран работник",
+    category: "Preferences",
+    field: "PersonalityTypes",
+    answerType: "MultipleChoice",
+    options: [
+      "Аналитичен мислител",
+      "Креативен решавач на проблеми",
+      "Емпатичен слушател",
+      "Организиран до детайли",
+      "Уверен лидер",
+      "Практически ориентиран работник"
+    ]
+  },
+  {
+    id: 12,
+    question:
+      "Колко удобно се чувствате при работа с технологии, инструменти или машини?",
+    category: "RIASEC",
+    field: "TechComfort",
+    answerType: "Likert"
+  },
+  {
+    id: 13,
+    question:
+      "Бихте ли предпочели да работите на открито, в офис или в творческо студио?",
+    category: "Preferences",
+    field: "WorkEnvironment",
+    answerType: "MultipleChoice",
+    options: ["Открито", "Офис", "Творческо студио"]
+  },
+  {
+    id: 14,
+    question:
+      "Обичате ли да работите в екип или предпочитате индивидуални задачи?",
+    category: "WorkStyle",
+    field: "Collaboration",
+    answerType: "MultipleChoice",
+    options: ["Екип", "Индивидуални задачи"]
+  },
+  {
+    id: 15,
+    question:
+      "Кое е по-важно за вас в една работа: креативност, стабилност или да помагате на другите?",
+    category: "Preferences",
+    field: "JobPriority",
+    answerType: "MultipleChoice",
+    options: ["Креативност", "Стабилност", "Помагане на другите"]
+  },
+  {
+    id: 16,
+    question:
+      "Развивате ли се най-добре в бърза и динамична среда, или предпочитате стабилен и предсказуем ритъм на работа?",
+    category: "WorkStyle",
+    field: "WorkEnvironment",
+    answerType: "MultipleChoice",
+    options: ["Бърза и динамична", "Стабилен и предсказуем"]
+  },
+  {
+    id: 17,
+    question: "Какво е най-високото ниво на образование, което сте завършили?",
+    category: "Preferences",
+    field: "EducationLevel",
+    answerType: "MultipleChoice",
+    options: ["Основно", "Средно", "Висше", "Магистър", "Доктор"]
+  },
+  {
+    id: 18,
+    question:
+      "Къде виждате себе си професионално след 5 години? (Лидерска роля, технически експерт, креативна позиция и т.н.)",
+    category: "Preferences",
+    field: "CareerGoals",
+    answerType: "MultipleChoice",
+    options: ["Лидерска роля", "Технически експерт", "Креативна позиция"]
+  },
+  {
+    id: 19,
+    question:
+      "Какъв тип работа ви носи най-голямо удовлетворение: да помагате на другите, да решавате проблеми или да създавате нещо осезаемо?",
+    category: "RIASEC",
+    field: "JobSatisfaction",
+    answerType: "MultipleChoice",
+    options: [
+      "Помагате на другите",
+      "Решавате проблеми",
+      "Създавате нещо осезаемо"
+    ]
+  }
 ];
 
-export const options = [
-  { label: "Strongly Agree", size: "scale-150", borderColor: "#A1CDA8" },
-  { label: "Agree", size: "scale-125", borderColor: "#A1CDA8" },
-  { label: "Slightly Agree", size: "scale-100", borderColor: "#A1CDA8" },
-  { label: "Neutral", size: "scale-75", borderColor: "gray" },
-  { label: "Slightly Disagree", size: "scale-100", borderColor: "#AD9BAA" },
-  { label: "Disagree", size: "scale-125", borderColor: "#AD9BAA" },
-  { label: "Strongly Disagree", size: "scale-150", borderColor: "#AD9BAA" }
+export const likertScale = [
+  { label: "Strongly Agree", weight: 3 },
+  { label: "Agree", weight: 2 },
+  { label: "Neutral", weight: 0 },
+  { label: "Disagree", weight: -2 },
+  { label: "Strongly Disagree", weight: -3 }
 ];
