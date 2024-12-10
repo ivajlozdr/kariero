@@ -144,6 +144,7 @@ for job in job_list:
 
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)
+        
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
 try:
