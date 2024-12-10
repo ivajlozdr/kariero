@@ -119,14 +119,12 @@ for job in job_list:
         city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград)", offer_details)
         city = city_match.group(0) if city_match else "N/A"
 
-        # Remove parsed details from offer_details
-        cleaned_details = offer_details
         for text_to_remove in [city, off_days, salary, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
-            if text_to_remove in cleaned_details:
-                cleaned_details = cleaned_details.replace(text_to_remove, "")
+            if text_to_remove in offer_details:
+                offer_details = offer_details.replace(text_to_remove, "")
 
-        # Clean up excess characters (like "|")
-        cleaned_details = re.sub(r"\|{2,}", "|", cleaned_details).strip(" |")
+        # Remove excess separators and clean up whitespace
+        cleaned_details = re.sub(r"\|{2,}", "|", offer_details).strip(" |")
 
         # Extract job posting date
         date_element = job.select_one("div.card-date")
@@ -146,7 +144,6 @@ for job in job_list:
 
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)
-
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
 try:
