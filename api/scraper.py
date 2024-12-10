@@ -86,7 +86,7 @@ for job in job_list:
         company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
 
         # Extract location (city)
-        city_element = job.select_one("span.location")  # Adjust this selector based on your HTML structure
+        city_element = job.select_one("span.location")
         city = city_element.get_text(strip=True) if city_element else "N/A"
 
         # Extract offer details
@@ -106,8 +106,6 @@ for job in job_list:
         # Extract off days
         off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
         off_days = off_days_match.group(1) if off_days_match else "N/A"
-
-        # For off days with range, format it properly (e.g., "от 48 до 56 дни")
         if off_days.startswith("от"):
             off_days = off_days.replace("от", "").strip()
 
@@ -115,20 +113,25 @@ for job in job_list:
         city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград)", offer_details)
         city = city_match.group(0) if city_match else "N/A"
 
+        # Remove parsed details from offer_details
+        cleaned_details = offer_details
+        for text_to_remove in [city, off_days, salary, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
+            if text_to_remove in cleaned_details:
+                cleaned_details = cleaned_details.replace(text_to_remove, "")
+
+        # Clean up excess characters (like "|")
+        cleaned_details = re.sub(r"\|{2,}", "|", cleaned_details).strip(" |")
+
         # Extract job posting date
         date_element = job.select_one("div.card-date")
-        if date_element:
-            # Get only the date text, ignoring nested elements
-            date_text = date_element.contents[0].strip()
-        else:
-            date_text = "N/A"
+        date_text = date_element.contents[0].strip() if date_element else "N/A"
 
         # Append to results
         job_offers.append({
             "title": job_title,
             "company": company_name,
             "city": city,
-            "details": offer_details,
+            "details": cleaned_details,
             "salary": salary,
             "off_days": off_days,
             "url": offer_url,
@@ -136,7 +139,7 @@ for job in job_list:
         })
 
     except Exception as e:
-        print(f"Error parsing job: {e}", file=sys.stderr)  # Log errors to stderr
+        print(f"Error parsing job: {e}", file=sys.stderr)
 
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
