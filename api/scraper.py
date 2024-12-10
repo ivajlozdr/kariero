@@ -90,7 +90,13 @@ for job in job_list:
         city = city_element.get_text(strip=True) if city_element else "N/A"
 
         # Extract offer details
-        offer_details = job.select_one("div.card-info.card__subtitle").get_text(" | ", strip=True)
+        details_element = job.select_one("div.card-info.card__subtitle")
+        
+        # Remove any <i> elements from the details element
+        for i_tag in details_element.select("i"):
+            i_tag.decompose()
+
+        offer_details = details_element.get_text(" | ", strip=True)
         offer_url = job.select_one("a.black-link-b")['href']
 
         # Extract salary information
