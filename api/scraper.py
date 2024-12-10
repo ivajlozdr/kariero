@@ -96,7 +96,7 @@ for job in job_list:
         for i_tag in details_element.select("i"):
             i_tag.decompose()
 
-        offer_details = details_element.get_text(" | ", strip=True)
+        offer_details = details_element.get_text(" ", strip=True)
         offer_url = job.select_one("a.black-link-b")['href']
 
         # Extract salary information
@@ -109,17 +109,20 @@ for job in job_list:
         elif "Нето" in offer_details:
             salary = f"{salary} (Нето)"
 
+        # Remove salary information from offer details
+        if salary_match:
+            offer_details = offer_details.replace(salary_match.group(0), "").strip()
+
         # Extract off days
         off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
         off_days = off_days_match.group(1) if off_days_match else "N/A"
-        if off_days.startswith("от"):
-            off_days = off_days.replace("от", "").strip()
 
         # Extract city from details (assuming it's one of the mentioned cities)
         city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград)", offer_details)
         city = city_match.group(0) if city_match else "N/A"
 
-        for text_to_remove in [city, off_days, salary, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
+        # Remove unrelated text from offer details
+        for text_to_remove in [city, off_days, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
             if text_to_remove in offer_details:
                 offer_details = offer_details.replace(text_to_remove, "")
 
@@ -144,7 +147,7 @@ for job in job_list:
 
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)
-        
+     
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
 try:
