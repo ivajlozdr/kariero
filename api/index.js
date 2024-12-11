@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -394,12 +393,12 @@ app.get("/onet", async (req, res) => {
 
   try {
     // First API call to search for careers
-    const searchResponse = await axios.get(
-      "https://services.onetcenter.org/ws/mnm/search",
+    const searchResponse = await fetch(
+      `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
+        keyword
+      )}`,
       {
-        params: {
-          keyword: encodeURIComponent(keyword)
-        },
+        method: "GET",
         headers: {
           Authorization: `Basic ${ONET_API_KEY}`,
           Accept: "application/json"
@@ -407,8 +406,16 @@ app.get("/onet", async (req, res) => {
       }
     );
 
+    if (!searchResponse.ok) {
+      throw new Error(
+        `Search API request failed with status: ${searchResponse.status}`
+      );
+    }
+
+    const searchData = await searchResponse.json();
+
     // Check if career data exists and if it's not empty
-    const careerArray = searchResponse.data.career;
+    const careerArray = searchData.career;
     if (!careerArray || careerArray.length === 0) {
       return res.status(404).send("No career found for the given keyword.");
     }
@@ -417,9 +424,10 @@ app.get("/onet", async (req, res) => {
     const code = careerArray[0].code;
 
     // Make a second API call to get detailed information using the code
-    const detailsResponse = await axios.get(
+    const detailsResponse = await fetch(
       `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
       {
+        method: "GET",
         headers: {
           Authorization: `Basic ${ONET_API_KEY}`,
           Accept: "application/json"
@@ -427,8 +435,16 @@ app.get("/onet", async (req, res) => {
       }
     );
 
+    if (!detailsResponse.ok) {
+      throw new Error(
+        `Details API request failed with status: ${detailsResponse.status}`
+      );
+    }
+
+    const detailsData = await detailsResponse.json();
+
     // Return the response from your /run-python-script endpoint
-    res.status(detailsResponse.status).send(detailsResponse.data);
+    res.status(detailsResponse.status).send(detailsData);
   } catch (error) {
     // Handle errors from either request
     console.error("Error fetching data from ONET API:", error);
