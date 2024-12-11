@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("./database");
 const { spawn } = require("child_process");
+const { translate, searchJobs } = require("./helper_functions");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -319,12 +320,12 @@ app.post("/run-python-script", async (req, res) => {
 
     // Translate the keyword
     console.log("Translating keyword:", keyword);
-    const translatedKeyword = await db.translate(keyword);
+    const translatedKeyword = await translate(keyword);
     console.log("Translated keyword:", translatedKeyword);
 
     // Perform the search using Google Custom Search API
     console.log("Searching jobs for translated keyword:", translatedKeyword);
-    const jobSearchUrls = await db.searchJobs(translatedKeyword);
+    const jobSearchUrls = await searchJobs(translatedKeyword);
     console.log("Job search URLs:", jobSearchUrls);
 
     if (jobSearchUrls.length === 0) {
@@ -334,6 +335,7 @@ app.post("/run-python-script", async (req, res) => {
 
     // Use the first valid URL to pass to the Python script
     const url = jobSearchUrls[0];
+    // const url = "https://www.jobs.bg/front_job_search.php?subm=1&is_cyrillic=1";
     console.log("Selected URL for Python scraper:", url);
 
     if (!url) {
