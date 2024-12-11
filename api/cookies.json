@@ -1,0 +1,22 @@
+[
+    {
+        "domain": ".jobs.bg",
+        "expiry": 1733939048,
+        "httpOnly": true,
+        "name": "__cf_bm",
+        "path": "/",
+        "sameSite": "None",
+        "secure": true,
+        "value": "TEaDKPiybpZn2Fgi6Az05B2cS6cfkJdX.YeI3.tEWvo-1733937248-1.0.1.1-1LGCb3znCUIFJe1TGoOYoVH17TVY7m4INWRb_vG0QmpLFpBmsInFTIAF53JPUPe1QDCIvBwgEx5dmvS01ykVmg"
+    },
+    {
+        "domain": ".jobs.bg",
+        "expiry": 1765473248,
+        "httpOnly": false,
+        "name": "datadome",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": true,
+        "value": "Xsp3~AJhCYsSi1m~KGkYjQ8D8Mr~CXXwP192FKPYgujYX2CM2~DIn~F76u428~1kqJAaAdPUCaZlsbqxhwKs7~rolpEa0Nc0Wi15afoudcRl3oXltZHpIUNTRZgyHCXM"
+    }
+]
