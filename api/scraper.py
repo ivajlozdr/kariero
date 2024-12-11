@@ -92,14 +92,17 @@ for job in job_list:
         # Extract offer details
         details_element = job.select_one("div.card-info.card__subtitle")
 
-        # Remove any <i> elements from the details element
-        for i_tag in details_element.select("i"):
-            i_tag.decompose()
+        if details_element:
+            # Remove any elements with 'material-icons' in their class (span, i, etc.)
+            for tag in details_element.select(".material-icons"):
+                tag.decompose()
 
-        offer_details = details_element.get_text(" ", strip=True)
+            offer_details = details_element.get_text(" ", strip=True)
 
-        # Clean up extra spaces in offer details
-        offer_details = re.sub(r"\s+", " ", offer_details).strip()
+            # Clean up extra spaces in offer details
+            offer_details = re.sub(r"\s+", " ", offer_details).strip()
+        else:
+            offer_details = "N/A"
 
         # Extract offer URL
         offer_url = job.select_one("a.black-link-b")["href"]
@@ -135,7 +138,7 @@ for job in job_list:
         cleaned_details = re.sub(r"\|{2,}", "|", offer_details).strip(" |")
 
         # Collapse multiple spaces into a single space
-        cleaned_details = re.sub(r"\\s+", " ", cleaned_details).strip()
+        cleaned_details = re.sub(r"\s+", " ", cleaned_details).strip()
 
         # Extract job posting date
         date_element = job.select_one("div.card-date")
@@ -155,7 +158,7 @@ for job in job_list:
 
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)
- 
+
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
 try:
