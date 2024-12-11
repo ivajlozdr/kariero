@@ -1,22 +1,76 @@
 [
     {
+        "domain": "www.jobs.bg",
+        "httpOnly": false,
+        "name": "TS01caf967",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false,
+        "value": "01855380b0fbf1efa76feb77497e62fc8ba274ae0455e3625196570c50f71a80a3f80c42c974743558cdaceca57d55498e1eb42289"
+    },
+    {
         "domain": ".jobs.bg",
-        "expiry": 1733939048,
+        "httpOnly": false,
+        "name": "FAV",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": true,
+        "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29"
+    },
+    {
+        "domain": ".jobs.bg",
+        "httpOnly": false,
+        "name": "TS01caf967",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": true,
+        "value": "01855380b0225f293a4f0855d8c31ef03e20874e3e08ced794dcb2ba7aa21fadb80936314b9fa901d7ef182ba436a7b0152a259ce1"
+    },
+    {
+        "domain": ".jobs.bg",
+        "expiry": 1733942526,
         "httpOnly": true,
         "name": "__cf_bm",
         "path": "/",
         "sameSite": "None",
         "secure": true,
-        "value": "TEaDKPiybpZn2Fgi6Az05B2cS6cfkJdX.YeI3.tEWvo-1733937248-1.0.1.1-1LGCb3znCUIFJe1TGoOYoVH17TVY7m4INWRb_vG0QmpLFpBmsInFTIAF53JPUPe1QDCIvBwgEx5dmvS01ykVmg"
+        "value": "68w1OL3Z2NzIaGh44tox_Bau69DqRA3M05HhIKRZhkk-1733940726-1.0.1.1-kRiAqxbhqbsJF4Jy5g3FZjRZaBlWFOnHLkxND2pBqGsp8rC4qZ39Ds5jBvG_hoaCsLM3S5IzHA.Eaw2V1WSCaw"
     },
     {
         "domain": ".jobs.bg",
-        "expiry": 1765473248,
+        "httpOnly": false,
+        "name": "RELOC",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": true,
+        "value": "1"
+    },
+    {
+        "domain": ".jobs.bg",
+        "httpOnly": false,
+        "name": "TS017554c9",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false,
+        "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c"
+    },
+    {
+        "domain": ".jobs.bg",
+        "expiry": 1765476726,
         "httpOnly": false,
         "name": "datadome",
         "path": "/",
         "sameSite": "Lax",
         "secure": true,
-        "value": "Xsp3~AJhCYsSi1m~KGkYjQ8D8Mr~CXXwP192FKPYgujYX2CM2~DIn~F76u428~1kqJAaAdPUCaZlsbqxhwKs7~rolpEa0Nc0Wi15afoudcRl3oXltZHpIUNTRZgyHCXM"
+        "value": "ukf73i1jtZnEAywhhjiQcNoUIFfRVJXJq~ejwKIWmSQJQ~ibzZqN3zEcISpa1c6JnicrHl7k6IGkj9RmJWzz1htcZSSm3Drbmaiw1Z0SaOJGsAD8kTC5WEEOsJG0ym07"
+    },
+    {
+        "domain": ".jobs.bg",
+        "httpOnly": false,
+        "name": "JOBSSESSID",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": true,
+        "value": "fo4e23s7v2srg8bic4o1bg97uf"
     }
 ]
