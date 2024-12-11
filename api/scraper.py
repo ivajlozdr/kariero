@@ -43,9 +43,9 @@ cookies = [
     {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
     {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
     {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-    {"name": "__cf_bm", "value": "HCGLM.wP0U4VDgbhMR8asAALklbO3dduJE7atM5I4Z4-1733842084-1.0.1.1-vjrLuQXHaHs78nJMIC1RQmluUFLQcwLwSyEw_uatfXdoZZCU4pLLf8FenkVUfaOnVXTpT03e03dFdFFJUdESng", "domain": ".jobs.bg", "path": "/"},
-    {"name": "TS01caf967", "value": "01855380b080e357fc7bb2c42087ca8c6c43e03a43a363247dda764438b887c40addfd308316902ce376ab3336cfcf200a3db29c0a", "domain": ".jobs.bg", "path": "/"},
-    {"name": "datadome", "value": "L_ZX6uOijQmL04X~chy2lRZ5_gwkJjbk0buF5ETuHgmg5VRMLr8HQBhPLAw5UpTskcR6f8ug75~vZyAfIrFQjIMDIexQtHQeN1pVaGTLskT~FCHqdIxCI0yCGMou2hlp", "domain": ".jobs.bg", "path": "/"}
+    {"name": "__cf_bm", "value": "E2UtCDhOZQ5yemlBDza6bHWHIYBdD.vzYcvpJxwJDu8-1733928732-1.0.1.1-Sm6bDGwRekR8hxclbYGDvf16UI92V.EAZpS_95TimGmrCUWT.pdP.FMpPSnhul8Q944z_2wlzyTUZ.oD0sa9pg", "domain": ".jobs.bg", "path": "/"},
+    {"name": "TS01caf967", "value": "01855380b0225f293a4f0855d8c31ef03e20874e3e08ced794dcb2ba7aa21fadb80936314b9fa901d7ef182ba436a7b0152a259ce1", "domain": ".jobs.bg", "path": "/"},
+    {"name": "datadome", "value": "8Sjj3GQClzFc8iXyp2YxEBo7PEzhqoqtePsbpY5G2wwKDsUhWb2hpmntvtn22yV10gtkrFYnG10Vd2AyhGH2i8BDBcnbqhuK15~DoubriSTKt865pyCG5d712_0u5i2n", "domain": ".jobs.bg", "path": "/"}
 ]
 
 for cookie in cookies:
@@ -91,16 +91,21 @@ for job in job_list:
 
         # Extract offer details
         details_element = job.select_one("div.card-info.card__subtitle")
-        
+
         # Remove any <i> elements from the details element
         for i_tag in details_element.select("i"):
             i_tag.decompose()
 
         offer_details = details_element.get_text(" ", strip=True)
-        offer_url = job.select_one("a.black-link-b")['href']
+
+        # Clean up extra spaces in offer details
+        offer_details = re.sub(r"\s+", " ", offer_details).strip()
+
+        # Extract offer URL
+        offer_url = job.select_one("a.black-link-b")["href"]
 
         # Extract salary information
-        salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+BGN|от\s+\d+\s+BGN|до\s+\d+\s+BGN|[\d,]+\s+BGN)\b", offer_details)
+        salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+(BGN|USD|EUR)|от\s+\d+\s+(BGN|USD|EUR)|до\s+\d+\s+(BGN|USD|EUR)|[\d,]+\s+(BGN|USD|EUR))\b", offer_details)
         salary = salary_match.group(0) if salary_match else "N/A"
 
         # Check for the presence of "Бруто" and "Нето" in the offer details
@@ -118,7 +123,7 @@ for job in job_list:
         off_days = off_days_match.group(1) if off_days_match else "N/A"
 
         # Extract city from details (assuming it's one of the mentioned cities)
-        city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград)", offer_details)
+        city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград|Димитровград)", offer_details)
         city = city_match.group(0) if city_match else "N/A"
 
         # Remove unrelated text from offer details
@@ -128,6 +133,9 @@ for job in job_list:
 
         # Remove excess separators and clean up whitespace
         cleaned_details = re.sub(r"\|{2,}", "|", offer_details).strip(" |")
+
+        # Collapse multiple spaces into a single space
+        cleaned_details = re.sub(r"\\s+", " ", cleaned_details).strip()
 
         # Extract job posting date
         date_element = job.select_one("div.card-date")
@@ -147,7 +155,7 @@ for job in job_list:
 
     except Exception as e:
         print(f"Error parsing job: {e}", file=sys.stderr)
-     
+ 
 # Step 8: Save results to a JSON file
 output_file = "job_offers.json"
 try:
