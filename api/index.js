@@ -315,7 +315,6 @@ app.post("/run-python-script", async (req, res) => {
   console.log("Received POST request to /run-python-script");
   try {
     const { keyword } = req.body;
-    console.log("Request body:", req.body);
 
     // Translate the keyword
     console.log("Translating keyword:", keyword);
@@ -323,7 +322,6 @@ app.post("/run-python-script", async (req, res) => {
     console.log("Translated keyword:", translatedKeyword);
 
     // Perform the search using Google Custom Search API
-    console.log("Searching jobs for translated keyword:", translatedKeyword);
     const jobSearchUrls = await searchJobs(translatedKeyword);
     console.log("Job search URLs:", jobSearchUrls);
 
@@ -343,7 +341,6 @@ app.post("/run-python-script", async (req, res) => {
     }
 
     // Spawn the Python process
-    console.log("Spawning Python process with URL:", url);
     const pythonProcess = spawn("python", ["scraper.py", url]);
 
     let response = "";
@@ -366,9 +363,7 @@ app.post("/run-python-script", async (req, res) => {
       }
 
       try {
-        console.log("Parsing Python script response");
         const parsedResponse = JSON.parse(response.trim());
-        console.log("Parsed response:", parsedResponse);
         res.status(200).json(parsedResponse);
       } catch (error) {
         console.error("Error parsing Python script response:", error);
