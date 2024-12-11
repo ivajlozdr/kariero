@@ -125,7 +125,7 @@ for job in job_list:
             offer_details = offer_details.replace(salary_match.group(0), "").strip()
 
         # Extract off days
-        off_days_match = re.search(r"Отпуск\s*\|\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни)", offer_details)
+        off_days_match = re.search(r"Отпуск\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни|\d+\s+до\s+\d+\s+дни)", offer_details)
         off_days = off_days_match.group(1) if off_days_match else "N/A"
 
         # Extract city from details (assuming it's one of the mentioned cities)
