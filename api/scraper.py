@@ -93,8 +93,8 @@ for job in job_list:
         details_element = job.select_one("div.card-info.card__subtitle")
 
         if details_element:
-            # Remove any elements with 'material-icons' in their class (span, i, etc.)
-            for tag in details_element.select(".material-icons"):
+            # Remove any elements with 'material' in their classes
+            for tag in details_element.select("[class*='material']"):
                 tag.decompose()
 
             offer_details = details_element.get_text(" ", strip=True)
@@ -108,7 +108,10 @@ for job in job_list:
         offer_url = job.select_one("a.black-link-b")["href"]
 
         # Extract salary information
-        salary_match = re.search(r"\b(?:от\s+\d+\s+до\s+\d+\s+(BGN|USD|EUR)|от\s+\d+\s+(BGN|USD|EUR)|до\s+\d+\s+(BGN|USD|EUR)|[\d,]+\s+(BGN|USD|EUR))\b", offer_details)
+        salary_match = re.search(
+            r"\b(?:от\s+\d+\s+до\s+\d+\s+(BGN|USD|EUR)|от\s+\d+\s+(BGN|USD|EUR)|до\s+\d+\s+(BGN|USD|EUR)|[\d,]+\s+(BGN|USD|EUR))\b",
+            offer_details
+        )
         salary = salary_match.group(0) if salary_match else "N/A"
 
         # Check for the presence of "Бруто" and "Нето" in the offer details
