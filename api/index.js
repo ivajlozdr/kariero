@@ -7,7 +7,12 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("./database");
 const { spawn } = require("child_process");
-const { translate, searchJobs } = require("./helper_functions");
+const {
+  translate,
+  searchJobs,
+  fetchAndTranslateDetails,
+  fetchCareerCode
+} = require("./helper_functions");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,7 +41,6 @@ let verificationCodes = {};
 const SECRET_KEY = "1a2b3c4d5e6f7g8h9i0jklmnopqrstuvwxyz123456";
 const EMAIL_USER = "no-reply@kariero.noit.eu";
 const EMAIL_PASS = "Noit_2025";
-const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
 
 // Създаване на транспортерен обект с използване на SMTP транспорт
 const transporter = nodemailer.createTransport({
@@ -387,59 +391,14 @@ app.get("/onet", async (req, res) => {
   }
 
   try {
-    // First API call to search for careers
-    const searchResponse = await fetch(
-      `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
-        keyword
-      )}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${ONET_API_KEY}`,
-          Accept: "application/json"
-        }
-      }
-    );
+    // Fetch search results and get the career code
+    const code = await fetchCareerCode(keyword);
 
-    if (!searchResponse.ok) {
-      throw new Error(
-        `Search API request failed with status: ${searchResponse.status}`
-      );
-    }
+    // Fetch detailed data and translate it
+    const translatedData = await fetchAndTranslateDetails(code);
 
-    const searchData = await searchResponse.json();
-
-    // Check if career data exists and if it's not empty
-    const careerArray = searchData.career;
-    if (!careerArray || careerArray.length === 0) {
-      return res.status(404).send("No career found for the given keyword.");
-    }
-
-    // Get the code property from the first item in the career array
-    const code = careerArray[0].code;
-
-    // Make a second API call to get detailed information using the code
-    const detailsResponse = await fetch(
-      `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${ONET_API_KEY}`,
-          Accept: "application/json"
-        }
-      }
-    );
-
-    if (!detailsResponse.ok) {
-      throw new Error(
-        `Details API request failed with status: ${detailsResponse.status}`
-      );
-    }
-
-    const detailsData = await detailsResponse.json();
-
-    // Return the response from your /run-python-script endpoint
-    res.status(detailsResponse.status).send(detailsData);
+    // Return the translated and full details response
+    res.status(200).json(translatedData);
   } catch (error) {
     // Handle errors from either request
     console.error("Error fetching data from ONET API:", error);

@@ -1,5 +1,6 @@
 const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
 const CX = "160b0be643d1045a6";
+const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
 
 // Helper functions
 async function translate(entry) {
@@ -56,7 +57,72 @@ async function searchJobs(keyword) {
   }
 }
 
+async function fetchCareerCode(keyword) {
+  const searchResponse = await fetch(
+    `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
+      keyword
+    )}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${ONET_API_KEY}`,
+        Accept: "application/json"
+      }
+    }
+  );
+
+  if (!searchResponse.ok) {
+    throw new Error(
+      `Search API request failed with status: ${searchResponse.status}`
+    );
+  }
+
+  const searchData = await searchResponse.json();
+  const careerArray = searchData.career;
+
+  if (!careerArray || careerArray.length === 0) {
+    throw new Error("No career found for the given keyword.");
+  }
+
+  return careerArray[0].code;
+}
+
+async function fetchAndTranslateDetails(code) {
+  const detailsResponse = await fetch(
+    `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${ONET_API_KEY}`,
+        Accept: "application/json"
+      }
+    }
+  );
+
+  if (!detailsResponse.ok) {
+    throw new Error(
+      `Details API request failed with status: ${detailsResponse.status}`
+    );
+  }
+
+  const detailsData = await detailsResponse.json();
+  const translatedTitle = await translate(detailsData.occupation.title);
+  const translatedDescription = await translate(
+    detailsData.occupation.description
+  );
+
+  return {
+    ...detailsData,
+    translated: {
+      title: translatedTitle,
+      description: translatedDescription
+    }
+  };
+}
+
 module.exports = {
   translate,
-  searchJobs
+  searchJobs,
+  fetchCareerCode,
+  fetchAndTranslateDetails
 };
