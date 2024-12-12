@@ -5,9 +5,12 @@ import {
   WorkStyleKeys,
   Career,
   CareerRecommendation,
-  UserProfileData
+  UserProfileData,
+  FullCareerDetails
 } from "./quiz-types";
 import { likertScale, questions } from "./quiz-data";
+import { CSSTransition } from "react-transition-group";
+import Careers from "./careers";
 
 // Initial score structure
 const initialScores: Scores = {
@@ -28,6 +31,7 @@ const initialScores: Scores = {
 };
 
 const QuizComponent: React.FC = () => {
+  const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
   const [userResponses, setUserResponses] = useState<
     { question: string; answer: string }[]
@@ -237,6 +241,7 @@ const QuizComponent: React.FC = () => {
           }
 
           const onetData = await apiResponse.json();
+          setCareers([onetData]);
           console.log("data: ", onetData);
         } else {
           console.warn("No career names found in OpenAI recommendations.");
@@ -251,44 +256,62 @@ const QuizComponent: React.FC = () => {
 
   return (
     <div>
-      <h1>Career Quiz</h1>
-      <h2>{currentQuestion.question}</h2>
-
-      {currentQuestion.answerType === "Likert" ? (
-        <div>
-          {likertScale.map((option) => (
-            <button
-              className="button"
-              key={option.label}
-              onClick={() => handleLikertAnswer(option.weight)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div>
-          {currentQuestion.options?.map((option) => (
-            <button
-              className="button"
-              key={option}
-              onClick={() => handleMultipleChoiceAnswer(option)}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-      )}
-      <button
-        className="button"
-        style={{ marginTop: "80px" }}
-        onClick={() => console.log(userResponses)}
+      <CSSTransition
+        in={careers === undefined}
+        timeout={300}
+        classNames="fade"
+        unmountOnExit
       >
-        print userResponses
-      </button>
-      <button className="button" onClick={() => console.log(scores)}>
-        print scores
-      </button>
+        <div>
+          <h1>Career Quiz</h1>
+          <h2>{currentQuestion.question}</h2>
+          {currentQuestion.answerType === "Likert" ? (
+            <div>
+              {likertScale.map((option) => (
+                <button
+                  className="button"
+                  key={option.label}
+                  onClick={() => handleLikertAnswer(option.weight)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div>
+              {currentQuestion.options?.map((option) => (
+                <button
+                  className="button"
+                  key={option}
+                  onClick={() => handleMultipleChoiceAnswer(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            className="button"
+            style={{ marginTop: "80px" }}
+            onClick={() => console.log(userResponses)}
+          >
+            print userResponses
+          </button>
+          <button className="button" onClick={() => console.log(scores)}>
+            print scores
+          </button>
+        </div>
+      </CSSTransition>
+      {!(careers === undefined) && (
+        <CSSTransition
+          in={!(careers === undefined)}
+          timeout={300}
+          classNames="fade"
+          unmountOnExit
+        >
+          <Careers careers={careers} />
+        </CSSTransition>
+      )}
     </div>
   );
 };

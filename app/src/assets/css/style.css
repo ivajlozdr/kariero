@@ -20000,28 +20000,47 @@ option.selectionList {
   background-color: transparent; /* Keep it transparent on hover */
 }
 
-/* Fade in/out animations */
+/* Fade in/out animations
 .fade-in {
   opacity: 1;
-  transition: opacity 0.5s ease-in; /* Fade in duration */
+  transition: opacity 0.5s ease-in; 
 }
 
 .fade-out {
   opacity: 0;
-  transition: opacity 0.5s ease-out; /* Fade out duration */
+  transition: opacity 0.5s ease-out; 
+} */
+
+.fade-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.fade-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 500ms, transform 500ms;
+}
+.fade-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.fade-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 500ms, transform 500ms;
 }
 
 .career-card {
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 20px;
-  width: 250px; /* Set a fixed width for uniformity */
-  height: 300px; /* Set a fixed height for uniformity */
+  padding: 16px; /* Adjusted for better spacing */
+  width: 250px; /* Fixed width for uniformity */
+  height: 400px; /* Fixed height to keep the cards consistent */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space out the content */
+  justify-content: space-between; /* Space out the content inside the card */
 }
 
 .career-title {
@@ -20032,29 +20051,42 @@ option.selectionList {
 
 .career-description {
   font-size: 1rem;
-  margin-bottom: 10px;
+  -webkit-line-clamp: 3; /* Clamp to 3 lines */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden; /* Hide overflow text */
 }
 
-.career-salary,
-.career-skills {
+.skills-list {
+  margin-top: auto; /* Pushes the skills list to the bottom of the card */
+}
+
+.skills-list h4 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.skills-list ul {
+  list-style-type: disc;
+  margin-left: 20px;
   font-size: 0.9rem;
-  color: #555;
+  color: #4b4b4b;
 }
 
 .button {
-  background-color: #007bff; 
-  color: #fff; 
+  background-color: #007bff;
+  color: #fff;
   padding: 10px 20px;
-  margin: 5px; 
-  border: none; 
-  border-radius: 5px; 
-  cursor: pointer; 
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease, transform 0.2s;
 }
 
 .button:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
   transform: scale(1.05);
 }
 

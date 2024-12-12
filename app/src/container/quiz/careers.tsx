@@ -1,52 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
+import { FullCareerDetails } from "./quiz-types";
+import { hardcodedData } from "./quiz-data";
 
+// CareerCard Component
 const CareerCard: React.FC<{
   title: string;
   description: string;
-  salary: string;
-  skills: string;
-}> = ({ title, description, salary, skills }) => {
+  skills: string[]; // Expecting an array of skill names
+}> = ({ title, description, skills }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const visibleSkills = isHovered ? skills : skills.slice(0, 5);
+
   return (
-    <div className="career-card">
-      <h3 className="career-title">{title}</h3>
-      <p className="career-description">{description}</p>
-      <p className="career-salary">Salary: {salary}</p>
-      <p className="career-skills">Skills: {skills}</p>
+    <div
+      className="career-card border rounded-lg shadow-lg p-6 w-full max-w-xs h-[400px]"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="career-header flex flex-col justify-between h-full">
+        <div>
+          <h3 className="career-title font-semibold text-2xl">{title}</h3>
+          <p
+            className="career-description text-sm text-gray-600 mt-2 cursor-pointer line-clamp-3"
+            title={description}
+          >
+            {description}
+          </p>
+        </div>
+        <div className="skills-list">
+          <h4 className="text-lg font-semibold mb-2">Skills Needed:</h4>
+          <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+            {visibleSkills.map((skill, index) => (
+              <li key={index}>{skill}</li>
+            ))}
+          </ul>
+          {skills.length > 5 && !isHovered && (
+            <span className="text-sm text-blue-500 cursor-pointer">
+              Hover to see more skills
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-const Careers: React.FC = () => {
-  const careers = [
-    {
-      title: "Software Engineer",
-      description: "Develop software applications.",
-      salary: "$80,000 - $120,000",
-      skills: "JavaScript, Python, Java"
-    },
-    {
-      title: "Data Analyst",
-      description: "Analyze data to provide insights.",
-      salary: "$60,000 - $90,000",
-      skills: "Excel, SQL, Python"
-    },
-    {
-      title: "Product Manager",
-      description: "Oversee product development.",
-      salary: "$70,000 - $110,000",
-      skills: "Agile, Communication, Marketing"
-    }
-  ];
-
+// Careers Component
+const Careers: React.FC<{
+  careers: FullCareerDetails[];
+}> = ({ careers }) => {
   return (
-    <div className="flex flex-row justify-center items-center gap-4">
+    <div className="careers-container flex flex-wrap gap-6 justify-center items-center p-6 min-h-[500px]">
       {careers.map((career, index) => (
         <CareerCard
           key={index}
-          title={career.title}
-          description={career.description}
-          salary={career.salary}
-          skills={career.skills}
+          title={career.translated.title}
+          description={career.translated.description}
+          skills={career.translated.skills.map(skill => skill.translated_name)} // Extract skill names
         />
       ))}
     </div>

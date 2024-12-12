@@ -110,12 +110,30 @@ async function fetchAndTranslateDetails(code) {
   const translatedDescription = await translate(
     detailsData.occupation.description
   );
+  // Combine all skills into one string for translation
+  const skillsString = detailsData.skills.element
+    .map((skill) => skill.name)
+    .join(", ");
 
+  // Translate the combined skills string
+  const translatedSkillsString = await translate(skillsString);
+
+  // Split the translated skills string back into individual skills
+  const translatedSkills = translatedSkillsString
+    .split(", ")
+    .map((translatedName, index) => {
+      return {
+        translated_name: translatedName
+      };
+    });
+
+  // Return the data including translated skills
   return {
     ...detailsData,
     translated: {
       title: translatedTitle,
-      description: translatedDescription
+      description: translatedDescription,
+      skills: translatedSkills
     }
   };
 }
