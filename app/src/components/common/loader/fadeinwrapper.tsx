@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { CSSTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
-import Loader from "./Loader";
+import Loader from "./loader";
 
 interface FadeInWrapperProps {
   children: ReactNode;

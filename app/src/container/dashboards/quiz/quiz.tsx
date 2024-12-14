@@ -12,7 +12,7 @@ type QuestionMapping = {
 
 interface Scores {
   [key: string]: {
-    [field: string]: number | Record<string, number> | string[];
+    [field: string]: number | Record<string, number> | string[] | string;
   };
 }
 
@@ -272,7 +272,7 @@ const QuizComponent: React.FC = () => {
     const currentQuestion = questions[currentQuestionIndex];
 
     if (currentQuestion) {
-      const { category, field, answerType, options } = currentQuestion;
+      const { category, field, answerType } = currentQuestion;
 
       // Log the current score before updating
       console.log(
@@ -280,47 +280,39 @@ const QuizComponent: React.FC = () => {
         scores[category]?.[field]
       );
 
-      setScores((prevScores) => {
-        // Check if the answer type is MultipleChoice
+      setScores((prevScores: Scores): Scores => {
+        // Clone the existing category or initialize an empty object
+        const categoryData = prevScores[category] || {};
+
         if (answerType === "MultipleChoice") {
-          // Ensure the options are stored as an array, and toggle the selected answer
-          const selectedOptions = prevScores[category]?.[field] || [];
+          // Ensure `selectedOptions` is always an array
+          const selectedOptions: string[] = Array.isArray(categoryData[field])
+            ? categoryData[field]
+            : [];
 
-          // Check if selectedOptions is an array
-          if (Array.isArray(selectedOptions)) {
-            // If the option is already selected, remove it; otherwise, add it
-            const newSelectedOptions = selectedOptions.includes(option)
-              ? selectedOptions.filter((item) => item !== option)
-              : [...selectedOptions, option];
+          // Toggle the selected option
+          const newSelectedOptions = selectedOptions.includes(option)
+            ? selectedOptions.filter((item) => item !== option)
+            : [...selectedOptions, option];
 
-            return {
-              ...prevScores,
-              [category]: {
-                ...prevScores[category],
-                [field]: newSelectedOptions // Store the selected options
-              }
-            };
-          } else {
-            // If the value isn't an array, initialize it as an empty array or handle it differently
-            return {
-              ...prevScores,
-              [category]: {
-                ...prevScores[category],
-                [field]: [option] // Start with the selected option as the first entry
-              }
-            };
-          }
-        } else if (answerType === "Likert") {
-          // For Likert-type questions, store the string answer as the score (or adjust for numeric values)
           return {
             ...prevScores,
             [category]: {
-              ...prevScores[category],
-              [field]: option // Assuming `option` is a Likert value (e.g., "Agree", "Strongly Agree")
+              ...categoryData,
+              [field]: newSelectedOptions
+            }
+          };
+        } else if (answerType === "Likert") {
+          return {
+            ...prevScores,
+            [category]: {
+              ...categoryData,
+              [field]: option // Assuming `option` is a string
             }
           };
         }
 
+        // Return the previous scores if no updates were made
         return prevScores;
       });
 
