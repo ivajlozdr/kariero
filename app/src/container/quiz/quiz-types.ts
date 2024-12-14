@@ -25,6 +25,14 @@ export interface Scores {
   };
 }
 
+export type RiasecCategory =
+  | "Realistic"
+  | "Investigative"
+  | "Artistic"
+  | "Social"
+  | "Enterprising"
+  | "Conventional";
+
 export type PreferenceKeys =
   | "PersonalityTypes"
   | "WorkEnvironment"
@@ -88,6 +96,7 @@ export interface ElementArray {
 }
 
 export interface Element {
+  translated_name: any;
   id: string;
   related: string;
   name: string;

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FullCareerDetails } from "./quiz-types";
-import { hardcodedData } from "./quiz-data";
 
 // CareerCard Component
 const CareerCard: React.FC<{
@@ -57,7 +56,9 @@ const Careers: React.FC<{
           key={index}
           title={career.translated.title}
           description={career.translated.description}
-          skills={career.translated.skills.map(skill => skill.translated_name)} // Extract skill names
+          skills={career.translated.skills.map(
+            (skill) => skill.translated_name
+          )}
         />
       ))}
     </div>
