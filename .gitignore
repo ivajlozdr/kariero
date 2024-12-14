@@ -4,24 +4,117 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
+pnpm-debug.log*
+.pnpm-debug.log*
 
-node_modules
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Directory for instrumented libs
+lib-cov
+
+# Coverage directory
+coverage/
+*.lcov
+.nyc_output
+
+# Build output
+dist/
+dist-ssr/
+build/Release/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm/yarn/pnpm cache directories
+.npm
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Environment variables
 .env
-dist
-dist-ssr
-*.local
-.venv
-api/job_offers.json
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# Editor directories and files
+# Cache and temp files
+.cache/
+.parcel-cache
+.vuepress/dist
+.temp
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Output of 'npm pack'
+*.tgz
+
+# IDE/editor files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.node_repl_history
+
+# Grunt files
+.grunt
+
+# Bower
+bower_components/
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+
+# Gatsby files
+.cache/
+# Uncomment the following line if using Gatsby and not Next.js
+# public/
+
+# Serverless
+.serverless/
+
+# FuseBox
+.fusebox/
+
+# DynamoDB Local
+.dynamodb/
+
+# TernJS
+.tern-port
+
+# VSCode testing
+.vscode-test
+
+# Microbundle cache
+.stylelintcache
+.eslintcache
+
+# Custom project-specific files
+job_offers.json
+cookies.json

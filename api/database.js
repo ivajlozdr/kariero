@@ -1,13 +1,10 @@
 const mysql = require("mysql2");
-
+const dbOpts = require("./config.js").dbOpts;
+const dbOptsLocal = require("./config.js").dbOptsLocal;
 require("dotenv").config();
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "kariero"
-});
+const db = mysql.createConnection(dbOptsLocal);
+// const db = mysql.createConnection(dbOpts);
 
 db.connect((err) => {
   if (err) throw err;
