@@ -1,14 +1,9 @@
 import sys
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
 import json
 import re
 from datetime import datetime
+from playwright.sync_api import sync_playwright
+from bs4 import BeautifulSoup
 
 # Check if a URL argument is passed
 if len(sys.argv) < 2:
@@ -19,162 +14,146 @@ if len(sys.argv) < 2:
 URL = sys.argv[1]
 
 # Path to your local chromedriver executable
-chromedriver_path = "/home/noit1/kariero-api/scraping/chromedriver"
+# chromedriver_path = "/home/noit1/kariero-api/scraping/chromedriver"
 # chromedriver_path = "chromedriver.exe"
 
-# Step 1: Set up Selenium WebDriver
-options = Options()
+# Function to handle scraping
+def scrape_jobs():
+    with sync_playwright() as p:
+        # Launch a browser (chromium is similar to Chrome)
+        browser = p.chromium.launch(headless=False)  # Set headless=True to run without a visible browser
+        page = browser.new_page()
 
-# Add a User-Agent to mimic a real browser
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0"
-options.add_argument(f"user-agent={user_agent}")
+        # Add cookies to the page
+        cookies = [
+            {"name": "JOBSSESSID", "value": "fo4e23s7v2srg8bic4o1bg97uf", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
+            {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
+            {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
+            {"name": "__cf_bm", "value": "stOu3bFqYaRuR5029e66rvzzUyXu6GCUTgtFbKWgYQ-1734184401-1.0.1.1-gyDBZFtagWnWeCDp5cPohrcs_5WnwNi7_XnwpCydR.5XNo4xXO.Sy.MRWiUqyGEIuekZ6J8HdWW_PGQHg0kW.w", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS01caf967", "value": "01855380b09e6677d3f91093313406cac61cca4b64d36212287fb7196d9955a8be2d5863a904cb6e95b48ed035527ae352ea50a92b", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "8Qwbn06CXfnoqB8vSu5_4nQKtFKslfOMcb25Qa6zq8wzHxA59IiFkWiB1AAEA6eBCVsmJHJlqBLl6~fxBtoI2Q3qhyBCb8OipX1X_EvBg5gjo9AufnQqOV5wPIDnWHOv", "domain": ".jobs.bg", "path": "/"}
+        ]
+        page.context.add_cookies(cookies)
 
-# Optional: Run in headless mode
-options.headless = False  # Set to True if you don't want the browser to open
+        # Open the target URL
+        page.goto(URL)
 
-# Set up the WebDriver
-driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
+        # Wait for the job listings to load (adjust selector if necessary)
+        page.wait_for_selector("ul.page-1 > li")
 
-# Step 2: Open a base page to set cookies
-driver.get("https://www.jobs.bg")  # Base page must match the domain of the target URL
+        # Fetch the page content after rendering
+        page_source = page.content()
 
-# Step 3: Add cookies
-cookies = [
-    {"name": "JOBSSESSID", "value": "fo4e23s7v2srg8bic4o1bg97uf", "domain": ".jobs.bg", "path": "/"},
-    {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
-    {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
-    {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-    {"name": "__cf_bm", "value": "stOu3bFqYaRuR5029e66rvzzUyXu6GCUTgtFbKWgYQ-1734184401-1.0.1.1-gyDBZFtagWnWeCDp5cPohrcs_5WnwNi7_XnwpCydR.5XNo4xXO.Sy.MRWiUqyGEIuekZ6J8HdWW_PGQHg0kW.w", "domain": ".jobs.bg", "path": "/"},
-    {"name": "TS01caf967", "value": "01855380b09e6677d3f91093313406cac61cca4b64d36212287fb7196d9955a8be2d5863a904cb6e95b48ed035527ae352ea50a92b", "domain": ".jobs.bg", "path": "/"},
-    {"name": "datadome", "value": "8Qwbn06CXfnoqB8vSu5_4nQKtFKslfOMcb25Qa6zq8wzHxA59IiFkWiB1AAEA6eBCVsmJHJlqBLl6~fxBtoI2Q3qhyBCb8OipX1X_EvBg5gjo9AufnQqOV5wPIDnWHOv", "domain": ".jobs.bg", "path": "/"}
-]
+        # Parse the page content with BeautifulSoup
+        soup = BeautifulSoup(page_source, 'html.parser')
 
-for cookie in cookies:
-    driver.add_cookie(cookie)
+        # Find all job listing elements
+        job_list = soup.select("ul.page-1 > li")
 
-# Step 4: Open the target page using the passed URL
-driver.get(URL)
+        job_offers = []
 
-# Wait for the job listings to load
-try:
-    job_list_locator = (By.CSS_SELECTOR, "ul.page-1 > li")  # Adjust selector if necessary
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(job_list_locator))
-except Exception as e:
-    print(f"Error waiting for page elements: {e}", file=sys.stderr)
-    driver.quit()
-    sys.exit(1)
+        for job in job_list:
+            try:
+                # Extract job title
+                job_title_element = job.select_one("div.card-title > span:not(:has(.material-icons)):not(:empty)")
+                job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
 
-# Step 5: Fetch the page source
-page_source = driver.page_source
+                # Extract company name
+                company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
 
-# Step 6: Parse the page content with BeautifulSoup
-soup = BeautifulSoup(page_source, 'html.parser')
+                # Extract location (city)
+                city_element = job.select_one("span.location")
+                city = city_element.get_text(strip=True) if city_element else "N/A"
 
-# Step 7: Find all job listing elements
-job_list = soup.select("ul.page-1 > li")  # Ensure this selector matches the structure of the page
+                # Extract offer details
+                details_element = job.select_one("div.card-info.card__subtitle")
 
-job_offers = []
+                if details_element:
+                    # Remove any elements with 'material' in their classes
+                    for tag in details_element.select("[class*='material']"):
+                        tag.decompose()
 
-for job in job_list:
-    try:
-        # Extract job title
-        job_title_element = job.select_one(
-            "div.card-title > span:not(:has(.material-icons)):not(:empty)"
-        )
-        job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
+                    offer_details = details_element.get_text(" ", strip=True)
 
-        # Extract company name
-        company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
+                    # Clean up extra spaces in offer details
+                    offer_details = re.sub(r"\s+", " ", offer_details).strip()
+                else:
+                    offer_details = "N/A"
 
-        # Extract location (city)
-        city_element = job.select_one("span.location")
-        city = city_element.get_text(strip=True) if city_element else "N/A"
+                # Extract offer URL
+                offer_url = job.select_one("a.black-link-b")["href"]
 
-        # Extract offer details
-        details_element = job.select_one("div.card-info.card__subtitle")
+                # Extract salary information
+                salary_match = re.search(
+                    r"\b(?:от\s+\d+\s+до\s+\d+\s+(BGN|USD|EUR)|от\s+\d+\s+(BGN|USD|EUR)|до\s+\d+\s+(BGN|USD|EUR)|[\d,]+\s+(BGN|USD|EUR))\b",
+                    offer_details
+                )
+                salary = salary_match.group(0) if salary_match else "N/A"
 
-        if details_element:
-            # Remove any elements with 'material' in their classes
-            for tag in details_element.select("[class*='material']"):
-                tag.decompose()
+                # Check for the presence of "Бруто" and "Нето" in the offer details
+                if "Бруто" in offer_details:
+                    salary = f"{salary} (Бруто)"
+                elif "Нето" in offer_details:
+                    salary = f"{salary} (Нето)"
 
-            offer_details = details_element.get_text(" ", strip=True)
+                # Remove salary information from offer details
+                if salary_match:
+                    offer_details = offer_details.replace(salary_match.group(0), "").strip()
 
-            # Clean up extra spaces in offer details
-            offer_details = re.sub(r"\s+", " ", offer_details).strip()
-        else:
-            offer_details = "N/A"
+                # Extract off days
+                off_days_match = re.search(r"Отпуск\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни|\d+\s+до\s+\d+\s+дни)", offer_details)
+                off_days = off_days_match.group(1) if off_days_match else "N/A"
 
-        # Extract offer URL
-        offer_url = job.select_one("a.black-link-b")["href"]
+                # Extract city from details (assuming it's one of the mentioned cities)
+                city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград|Димитровград|Варна|Стара Загора|Варвара \(Пазарджик\)|Плевен|Перник|Ботевград|Пазарджик|Ямбол|Враца|Шумен|Самоков|Казанлък|Велико Търново|Царацово|Добрич|Силистра|Кюстендил|Панаретовци|Габрово|Горна Оряховица|Разлог|Кърджали|Долна Диканя|Благоевград|Равно поле|Столник|Радиново|Гара Елин Пелин|Козлодуй|Оряховица|Елин Пелин|Девня|Огняново \(Пазарджик\)|Дупница|Ловеч|Карлово|Исперих|Сливен|Банско|Хасково|Монтана|Пампорово|Асеновград|Видин|Смолян|Севлиево|Троян|Петрич|Сандански|Костинброд|Панагюрище|Радомир|Боровец|Айтос|Чирпан)", offer_details)
+                city = city_match.group(0) if city_match else "N/A"
 
-        # Extract salary information
-        salary_match = re.search(
-            r"\b(?:от\s+\d+\s+до\s+\d+\s+(BGN|USD|EUR)|от\s+\d+\s+(BGN|USD|EUR)|до\s+\d+\s+(BGN|USD|EUR)|[\d,]+\s+(BGN|USD|EUR))\b",
-            offer_details
-        )
-        salary = salary_match.group(0) if salary_match else "N/A"
+                # Remove unrelated text from offer details
+                for text_to_remove in [city, off_days, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
+                    if text_to_remove in offer_details:
+                        offer_details = offer_details.replace(text_to_remove, "")
 
-        # Check for the presence of "Бруто" and "Нето" in the offer details
-        if "Бруто" in offer_details:
-            salary = f"{salary} (Бруто)"
-        elif "Нето" in offer_details:
-            salary = f"{salary} (Нето)"
+                # Remove excess separators and clean up whitespace
+                cleaned_details = re.sub(r"\|{2,}", "|", offer_details).strip(" |")
 
-        # Remove salary information from offer details
-        if salary_match:
-            offer_details = offer_details.replace(salary_match.group(0), "").strip()
+                # Collapse multiple spaces into a single space
+                cleaned_details = re.sub(r"\s+", " ", cleaned_details).strip()
 
-        # Extract off days
-        off_days_match = re.search(r"Отпуск\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни|\d+\s+до\s+\d+\s+дни)", offer_details)
-        off_days = off_days_match.group(1) if off_days_match else "N/A"
+                # Extract job posting date
+                date_element = job.select_one("div.card-date")
+                date_text = date_element.contents[0].strip() if date_element else "N/A"
 
-        # Extract city from details (assuming it's one of the mentioned cities)
-        city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград|Димитровград|Варна|Стара Загора|Варвара \(Пазарджик\)|Плевен|Перник|Ботевград|Пазарджик|Ямбол|Враца|Шумен|Самоков|Казанлък|Велико Търново|Царацово|Добрич|Силистра|Кюстендил|Панаретовци|Габрово|Горна Оряховица|Разлог|Кърджали|Долна Диканя|Благоевград|Равно поле|Столник|Радиново|Гара Елин Пелин|Козлодуй|Оряховица|Елин Пелин|Девня|Огняново \(Пазарджик\)|Дупница|Ловеч|Карлово|Исперих|Сливен|Банско|Хасково|Монтана|Пампорово|Асеновград|Видин|Смолян|Севлиево|Троян|Петрич|Сандански|Костинброд|Панагюрище|Радомир|Боровец|Айтос|Чирпан)", offer_details)
-        city = city_match.group(0) if city_match else "N/A"
+                # Append to results
+                job_offers.append({
+                    "title": job_title,
+                    "company": company_name,
+                    "city": city,
+                    "details": cleaned_details,
+                    "salary": salary,
+                    "off_days": off_days,
+                    "url": offer_url,
+                    "date": date_text
+                })
 
-        # Remove unrelated text from offer details
-        for text_to_remove in [city, off_days, "(Бруто)", "(Нето)", "Отпуск", ";", "Заплата"]:
-            if text_to_remove in offer_details:
-                offer_details = offer_details.replace(text_to_remove, "")
+            except Exception as e:
+                print(f"Error parsing job: {e}", file=sys.stderr)
 
-        # Remove excess separators and clean up whitespace
-        cleaned_details = re.sub(r"\|{2,}", "|", offer_details).strip(" |")
+        # Step 8: Save results to a JSON file
+        # output_file = "/home/noit1/kariero-api/scraping/job_offers.json"
+        output_file = "job_offers.json"
 
-        # Collapse multiple spaces into a single space
-        cleaned_details = re.sub(r"\s+", " ", cleaned_details).strip()
+        try:
+            with open(output_file, "w", encoding="utf-8") as file:
+                json.dump(job_offers, file, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f"Error saving to file: {e}", file=sys.stderr)
 
-        # Extract job posting date
-        date_element = job.select_one("div.card-date")
-        date_text = date_element.contents[0].strip() if date_element else "N/A"
+        # Return the job offers as output
+        print(json.dumps(job_offers))  # Print job offers in JSON format
 
-        # Append to results
-        job_offers.append({
-            "title": job_title,
-            "company": company_name,
-            "city": city,
-            "details": cleaned_details,
-            "salary": salary,
-            "off_days": off_days,
-            "url": offer_url,
-            "date": date_text
-        })
+        # Close the browser
+        browser.close()
 
-    except Exception as e:
-        print(f"Error parsing job: {e}", file=sys.stderr)
-
-# Step 8: Save results to a JSON file
-output_file = "/home/noit1/kariero-api/scraping/job_offers.json"
-# output_file = "job_offers.json"
-
-try:
-    with open(output_file, "w", encoding="utf-8") as file:
-        json.dump(job_offers, file, ensure_ascii=False, indent=4)
-except Exception as e:
-    print(f"Error saving to file: {e}", file=sys.stderr)
-
-# Return the job offers as output
-print(json.dumps(job_offers))  # Print job offers in JSON format
-
-# Step 9: Quit the browser
-driver.quit()
+if __name__ == "__main__":
+    scrape_jobs()

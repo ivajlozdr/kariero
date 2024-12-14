@@ -346,11 +346,13 @@ app.post("/run-python-script", async (req, res) => {
     }
 
     // Spawn the Python process
-    const pythonProcess = spawn("bash", [
-      "-c",
-      "source /home/noit1/virtualenv/kariero-api/scraping/3.10/bin/activate && cd /home/noit1/kariero-api/scraping && python3 /home/noit1/kariero-api/scraping/scraper.py " +
-        url
-    ]);
+    // const pythonProcess = spawn("bash", [
+    //   "-c",
+    //   "source /home/noit1/virtualenv/kariero-api/scraping/3.10/bin/activate && cd /home/noit1/kariero-api/scraping && python3 /home/noit1/kariero-api/scraping/scraper.py " +
+    //     url
+    // ]);
+
+    const pythonProcess = spawn("python", ["./scraping/scraper.py", url]);
 
     let response = "";
 
