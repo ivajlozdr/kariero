@@ -19,7 +19,8 @@ if len(sys.argv) < 2:
 URL = sys.argv[1]
 
 # Path to your local chromedriver executable
-chromedriver_path = "/home/noit1/kariero-api/scraping/chromedriver"  # Update with your actual path
+chromedriver_path = "/home/noit1/kariero-api/scraping/chromedriver"
+# chromedriver_path = "chromedriver.exe"
 
 # Step 1: Set up Selenium WebDriver
 options = Options()
@@ -164,6 +165,8 @@ for job in job_list:
 
 # Step 8: Save results to a JSON file
 output_file = "/home/noit1/kariero-api/scraping/job_offers.json"
+# output_file = "job_offers.json"
+
 try:
     with open(output_file, "w", encoding="utf-8") as file:
         json.dump(job_offers, file, ensure_ascii=False, indent=4)
