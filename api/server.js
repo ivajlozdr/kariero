@@ -416,33 +416,36 @@ app.post("/onet", async (req, res) => {
       .send("User responses are required and must be an array.");
   }
 
-  try {
-    const date = new Date().toISOString(); // Get the current date
+  const date = new Date().toISOString();
 
-    // Save user responses to the database
-    db.saveUserResponses(userId, userResponses, date, (err, result) => {
+  try {
+    // Save user responses
+    db.saveUserResponses(userId, userResponses, date, (err) => {
       if (err) {
         console.error("Error saving user responses:", err);
         return res
           .status(500)
-          .send("An error occurred while saving user responses.");
+          .send("An error occurred while saving responses.");
       }
 
-      console.log("User responses saved:", result);
+      // Save final scores
+      db.saveFinalScores(userId, scores, date, (err) => {
+        if (err) {
+          console.error("Error saving final scores:", err);
+          return res.status(500).send("An error occurred while saving scores.");
+        }
 
-      // Fetch search results and get the career code
-      hf.fetchCareerCode(keyword)
-        .then(async (code) => {
-          // Fetch detailed data and translate it
-          const translatedData = await hf.fetchAndTranslateDetails(code);
-
-          // Return the translated and full details response
-          res.status(200).json(translatedData);
-        })
-        .catch((error) => {
-          console.error("Error fetching data from ONET API:", error);
-          res.status(500).send("An error occurred while fetching data.");
-        });
+        // Fetch and translate ONET data
+        hf.fetchCareerCode(keyword)
+          .then(async (code) => {
+            const translatedData = await hf.fetchAndTranslateDetails(code);
+            res.status(200).json(translatedData);
+          })
+          .catch((error) => {
+            console.error("Error fetching data from ONET API:", error);
+            res.status(500).send("An error occurred while fetching data.");
+          });
+      });
     });
   } catch (error) {
     console.error("Error processing request:", error);
