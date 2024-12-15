@@ -34,9 +34,12 @@ const QuizComponent: React.FC = () => {
   const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
   const [userResponses, setUserResponses] = useState<
-    { question: string; answer: string }[]
+    { id: number; question: string; answer: string }[]
   >([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+
+  const token =
+    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
 
   // Handle Likert scale answers
   const handleLikertAnswer = (weight: number) => {
@@ -80,6 +83,7 @@ const QuizComponent: React.FC = () => {
     const updatedResponses = [
       ...userResponses,
       {
+        id: currentQuestion.id,
         question: currentQuestion.question,
         answer:
           likertScale.find((option) => option.weight === weight)?.label ||
@@ -148,7 +152,7 @@ const QuizComponent: React.FC = () => {
     // Store response
     const updatedResponses = [
       ...userResponses,
-      { question: currentQuestion.question, answer }
+      { id: currentQuestion.id, question: currentQuestion.question, answer }
     ];
     setUserResponses(updatedResponses);
 
@@ -223,14 +227,18 @@ const QuizComponent: React.FC = () => {
         if (careerNames.length > 0) {
           const firstCareerName = careerNames[0];
           const apiResponse = await fetch(
-            `${
-              import.meta.env.VITE_API_BASE_URL
-            }/onet?keyword=${encodeURIComponent(firstCareerName)}`,
+            `${import.meta.env.VITE_API_BASE_URL}/onet`,
             {
-              method: "GET",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json"
-              }
+              },
+              body: JSON.stringify({
+                token: token,
+                keyword: firstCareerName,
+                scores: scores,
+                userResponses: userResponses
+              })
             }
           );
 

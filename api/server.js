@@ -6,13 +6,8 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("./database");
+const hf = require("./helper_functions");
 const { spawn } = require("child_process");
-const {
-  translate,
-  searchJobs,
-  fetchAndTranslateDetails,
-  fetchCareerCode
-} = require("./helper_functions");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -323,11 +318,11 @@ app.post("/run-python-script", async (req, res) => {
 
     // Translate the keyword
     console.log("Translating keyword:", keyword);
-    const translatedKeyword = await translate(keyword);
+    const translatedKeyword = await hf.translate(keyword);
     console.log("Translated keyword:", translatedKeyword);
 
     // Perform the search using Google Custom Search API
-    const jobSearchUrls = await searchJobs(translatedKeyword);
+    const jobSearchUrls = await hf.searchJobs(translatedKeyword);
     console.log("Job search URLs:", jobSearchUrls);
 
     if (jobSearchUrls.length === 0) {
@@ -395,27 +390,63 @@ app.post("/run-python-script", async (req, res) => {
   }
 });
 
-app.get("/onet", async (req, res) => {
-  const { keyword } = req.query;
+app.post("/onet", async (req, res) => {
+  const { token, keyword, scores, userResponses } = req.body;
 
-  // Check if the keyword query parameter is provided
+  // Verify the token to get the userId
+  let userId;
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return res.status(401).send("Invalid token.");
+  }
+
+  // Validate request body
   if (!keyword) {
-    return res.status(400).send("Keyword is required");
+    return res.status(400).send("Keyword is required.");
+  }
+  if (!scores) {
+    return res.status(400).send("Scores are required.");
+  }
+  if (!userResponses || !Array.isArray(userResponses)) {
+    return res
+      .status(400)
+      .send("User responses are required and must be an array.");
   }
 
   try {
-    // Fetch search results and get the career code
-    const code = await fetchCareerCode(keyword);
+    const date = new Date().toISOString(); // Get the current date
 
-    // Fetch detailed data and translate it
-    const translatedData = await fetchAndTranslateDetails(code);
+    // Save user responses to the database
+    db.saveUserResponses(userId, userResponses, date, (err, result) => {
+      if (err) {
+        console.error("Error saving user responses:", err);
+        return res
+          .status(500)
+          .send("An error occurred while saving user responses.");
+      }
 
-    // Return the translated and full details response
-    res.status(200).json(translatedData);
+      console.log("User responses saved:", result);
+
+      // Fetch search results and get the career code
+      hf.fetchCareerCode(keyword)
+        .then(async (code) => {
+          // Fetch detailed data and translate it
+          const translatedData = await hf.fetchAndTranslateDetails(code);
+
+          // Return the translated and full details response
+          res.status(200).json(translatedData);
+        })
+        .catch((error) => {
+          console.error("Error fetching data from ONET API:", error);
+          res.status(500).send("An error occurred while fetching data.");
+        });
+    });
   } catch (error) {
-    // Handle errors from either request
-    console.error("Error fetching data from ONET API:", error);
-    res.status(500).send("An error occurred while fetching data.");
+    console.error("Error processing request:", error);
+    res.status(500).send("An error occurred while processing the request.");
   }
 });
 

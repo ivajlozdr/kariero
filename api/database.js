@@ -44,11 +44,40 @@ const getUserData = (userId, callback) => {
   db.query(query, [userId], callback);
 };
 
+const saveUserResponses = (userId, userResponses, date, callback) => {
+  // Generate column names dynamically for the SQL query
+  const columns =
+    userResponses.map((_, index) => `answer_${index + 1}`).join(", ") +
+    ", date"; // Add 'date' column
+
+  // Generate placeholders for the answers dynamically
+  const placeholders = userResponses.map(() => "?").join(", ") + ", ?"; // Add placeholder for 'date'
+
+  // Extract the answers in the correct order
+  const answers = userResponses.map(({ answer }) => answer);
+
+  // SQL query to insert or update the row
+  const sql = `
+    INSERT INTO user_responses (user_id, ${columns})
+    VALUES (?, ${placeholders})
+    ON DUPLICATE KEY UPDATE 
+    ${userResponses
+      .map((_, index) => `answer_${index + 1} = VALUES(answer_${index + 1})`)
+      .join(", ")}, date = VALUES(date)
+  `;
+
+  // Execute the query
+  db.query(sql, [userId, ...answers, date], (err, result) => {
+    callback(err, result);
+  });
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
   findUserByEmail,
   updateUserPassword,
   getUserById,
-  getUserData
+  getUserData,
+  saveUserResponses
 };
