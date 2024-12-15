@@ -13,9 +13,9 @@
   },
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "node index"
+    "dev": "node server"
   },
   "keywords": [],
   "author": "",

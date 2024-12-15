@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FullCareerDetails } from "./quiz-types";
 
 // CareerCard Component
 const CareerCard: React.FC<{
@@ -45,24 +44,4 @@ const CareerCard: React.FC<{
   );
 };
 
-// Careers Component
-const Careers: React.FC<{
-  careers: FullCareerDetails[];
-}> = ({ careers }) => {
-  return (
-    <div className="careers-container flex flex-wrap gap-6 justify-center items-center p-6 min-h-[500px]">
-      {careers.map((career, index) => (
-        <CareerCard
-          key={index}
-          title={career.translated.title}
-          description={career.translated.description}
-          skills={career.translated.skills.map(
-            (skill) => skill.translated_name
-          )}
-        />
-      ))}
-    </div>
-  );
-};
-
-export default Careers;
+export default CareerCard;

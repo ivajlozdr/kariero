@@ -110,30 +110,39 @@ async function fetchAndTranslateDetails(code) {
   const translatedDescription = await translate(
     detailsData.occupation.description
   );
-  // Combine all skills into one string for translation
-  const skillsString = detailsData.skills.element
-    .map((skill) => skill.name)
-    .join(", ");
 
-  // Translate the combined skills string
-  const translatedSkillsString = await translate(skillsString);
+  // Check if skills are available, then translate them if they exist
+  let translatedSkills = [];
+  if (
+    detailsData.skills &&
+    detailsData.skills.element &&
+    detailsData.skills.element.length > 0
+  ) {
+    // Combine all skills into one string for translation
+    const skillsString = detailsData.skills.element
+      .map((skill) => skill.name)
+      .join(", ");
 
-  // Split the translated skills string back into individual skills
-  const translatedSkills = translatedSkillsString
-    .split(", ")
-    .map((translatedName, index) => {
-      return {
-        translated_name: translatedName
-      };
-    });
+    // Translate the combined skills string
+    const translatedSkillsString = await translate(skillsString);
 
-  // Return the data including translated skills
+    // Split the translated skills string back into individual skills
+    translatedSkills = translatedSkillsString
+      .split(", ")
+      .map((translatedName) => {
+        return {
+          translated_name: translatedName
+        };
+      });
+  }
+
+  // Return the data including translated skills (or empty array if no skills)
   return {
     ...detailsData,
     translated: {
       title: translatedTitle,
       description: translatedDescription,
-      skills: translatedSkills
+      skills: translatedSkills // Empty array if no skills were present
     }
   };
 }

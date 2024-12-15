@@ -10,7 +10,8 @@ import {
 } from "./quiz-types";
 import { likertScale, questions } from "./quiz-data";
 import { CSSTransition } from "react-transition-group";
-import Careers from "./careers";
+import Careers from "./components/careers";
+import { fetchCareerDetails } from "./helper-functions";
 
 // Initial score structure
 const initialScores: Scores = {
@@ -41,6 +42,11 @@ const QuizComponent: React.FC = () => {
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
 
+  const [selectedCareerPath, setSelectedCareerPath] = useState<string | null>(
+    null
+  );
+  const [careerDetails, setCareerDetails] = useState<any[]>([]);
+  const [careerRecommendations, setCareerRecommendations] = useState<any[]>([]);
   // Handle Likert scale answers
   const handleLikertAnswer = (weight: number) => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -164,15 +170,13 @@ const QuizComponent: React.FC = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      alert("You have completed the quiz!");
-
       // Log final scores and user responses
       console.log("Final Scores:", scores);
       console.log("User Responses:", userResponses);
 
       // Send the request to OpenAI
       try {
-        const response = await fetch(
+        const openAIResponse = await fetch(
           "https://api.openai.com/v1/chat/completions",
           {
             method: "POST",
@@ -186,7 +190,7 @@ const QuizComponent: React.FC = () => {
                 {
                   role: "system",
                   content:
-                    "You are a career guidance assistant. You will analyse thoroughly data given to you and based off it you will provide accurate, personalised career path recommendations. Your response will always be only a valid JSON object, that is in the following structure: { Abilities:[ Array of at least 4 strings ], Skills:[ Array of at least 4 strings ], Knowledge:[ Array of at least 4 strings ], Interests:[ Array of at least 4 strings ], WorkStyle:[ Array of at least 4 strings ], WorkValues:[ Array of at least 4 strings ], TechnologySkills:[ Array of at least 4 strings ], CareerRecommendations:[{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]}] }. Provide a comprehensive explanation as to why the specific career is right for the individual under the 'reason' property. When you provide the arrays for Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills, make sure they are accurately derived from the data of the user prompt. Make sure everything is also compatible with O*NET's API data, especially for the Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills! It is important you do not miss-match categories. When providing careers, make sure career path is a broad keyword, that when searched for in the O*NET API, shows the careers listed in listOfCareers. Each career in listOfCareers should be a SPECIFIC CAREER WITH ITS OWN CAREER CODE in the O*NET API, not a keyword."
+                    "You are a career guidance assistant. You will analyse thoroughly data given to you and based off it you will provide accurate, personalised career path recommendations. Your response will always be only a valid JSON object, that is in the following structure: { Abilities:[ Array of at least 4 strings ], Skills:[ Array of at least 4 strings ], Knowledge:[ Array of at least 4 strings ], Interests:[ Array of at least 4 strings ], WorkStyle:[ Array of at least 4 strings ], WorkValues:[ Array of at least 4 strings ], TechnologySkills:[ Array of at least 4 strings ], CareerRecommendations:[{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]}] }. Provide a comprehensive explanation as to why the specific career is right for the individual under the 'reason' property. When you provide the arrays for Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills, make sure they are accurately derived from the data of the user prompt. Make sure everything is also compatible with O*NET's API data, especially for the Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills! It is important you do not miss-match categories. When providing careers, make sure career path is a broad keyword, that covers the field that the careers in listOfCareers belong to. Each career in listOfCareers should be a SPECIFIC CAREER WITH ITS OWN CAREER CODE in the O*NET API, not a keyword. Make sure the careers you provide are real careers that exist in O*NET. Each career's name must be plural (example: Graphic designer should be Graphic designers) to match the O*NET API's naming conventions."
                 },
                 {
                   role: "user",
@@ -199,64 +203,118 @@ const QuizComponent: React.FC = () => {
           }
         );
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        if (!openAIResponse.ok) {
+          throw new Error(`OpenAI API Error: ${openAIResponse.status}`);
         }
 
-        const data = await response.json();
-        const json = data.choices[0].message.content;
-        const unescapedData = json
-          .replace(/^```json([\s\S]*?)```$/, "$1")
-          .replace(/^```JSON([\s\S]*?)```$/, "$1")
-          .replace(/^```([\s\S]*?)```$/, "$1")
-          .replace(/^'|'$/g, "")
-          .trim();
-        console.log("unescapedData: ", unescapedData);
-        const decodedData = decodeURIComponent(unescapedData);
-        console.log("decodedData: ", decodedData);
-        const recommendations: UserProfileData = JSON.parse(decodedData);
-        console.log("recommendations: ", recommendations);
-
-        const careerNames: string[] =
-          recommendations.CareerRecommendations.flatMap(
-            (rec: CareerRecommendation) =>
-              rec.listOfCareers.map((career: Career) => career.career)
+        const openAIData = await openAIResponse.json();
+        const rawContent = openAIData.choices[0]?.message?.content;
+        const cleanedContent = rawContent
+          ?.replace(/^```json([\s\S]*?)```$/, "$1")
+          ?.replace(/^```([\s\S]*?)```$/, "$1")
+          ?.trim();
+        if (!cleanedContent) {
+          throw new Error(
+            "Failed to extract recommendations from OpenAI response."
           );
-
-        console.log(careerNames);
-        if (careerNames.length > 0) {
-          const firstCareerName = careerNames[0];
-          const apiResponse = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/onet`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                token: token,
-                keyword: firstCareerName,
-                scores: scores,
-                userResponses: userResponses
-              })
-            }
-          );
-
-          if (!apiResponse.ok) {
-            throw new Error(
-              `O*NET API Error: ${apiResponse.status} - ${apiResponse.statusText}`
-            );
-          }
-
-          const onetData = await apiResponse.json();
-          setCareers([onetData]);
-          console.log("data: ", onetData);
-        } else {
-          console.warn("No career names found in OpenAI recommendations.");
         }
+
+        const recommendations: UserProfileData = JSON.parse(cleanedContent);
+        console.log("OpenAI Recommendations:", recommendations);
+
+        // Save all extracted career paths and details (non-O*NET data)
+        setCareerRecommendations(recommendations.CareerRecommendations);
+
+        // Extract specific careers for O*NET data fetching
+        const careerNames = recommendations.CareerRecommendations.flatMap(
+          (rec) => rec.listOfCareers.map((career) => career.career)
+        );
+
+        console.log("Career Names for O*NET Fetching:", careerNames);
+
+        // Batch-fetch O*NET data for all careers
+        const onetDataPromises = careerNames.map((careerName) =>
+          fetch(`${import.meta.env.VITE_API_BASE_URL}/onet`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: token,
+              keyword: careerName,
+              scores: scores,
+              userResponses: userResponses
+            })
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `O*NET API Error: ${response.status} - ${response.statusText}`
+                );
+              }
+              return response.json();
+            })
+            .catch((error) => {
+              console.error(
+                `Error fetching O*NET data for ${careerName}:`,
+                error
+              );
+              return null; // Handle individual fetch failures gracefully
+            })
+        );
+
+        const onetData = (await Promise.all(onetDataPromises)).filter(
+          (data): data is FullCareerDetails => data !== null
+        );
+
+        console.log("O*NET Data:", onetData);
+
+        // Update state with O*NET data
+        setCareers(onetData);
       } catch (error) {
-        console.error("Error sending request to OpenAI:", error);
+        console.error("Error in nextQuestion processing:", error);
       }
+    }
+  };
+
+  const handleCareerPathClick = async (
+    careerPath: string,
+    listOfCareers: Career[]
+  ) => {
+    setSelectedCareerPath(careerPath);
+    setCareerDetails([]); // Clear previous details while loading
+
+    try {
+      // Fetch details for all careers under the selected career path using the helper function
+      const careerDetailsPromises = listOfCareers.map(async (career) => {
+        return await fetchCareerDetails(career.career);
+      });
+
+      // Wait for all the promises to resolve
+      const allCareerDetails = await Promise.all(careerDetailsPromises);
+
+      // Filter out null responses (in case any fetch fails)
+      const validCareerDetails = allCareerDetails.filter(
+        (details): details is FullCareerDetails => details !== null
+      );
+
+      setCareerDetails(validCareerDetails); // Update state with valid career details
+      console.log("Career Details:", validCareerDetails);
+    } catch (error) {
+      console.error("Error fetching career details:", error);
+    }
+  };
+
+  const careerPathClickHandler = (
+    careerPath: string,
+    careerRecommendations: CareerRecommendation[]
+  ) => {
+    const selectedRecommendation = careerRecommendations.find(
+      (rec) => rec.careerPath === careerPath
+    );
+
+    if (selectedRecommendation) {
+      handleCareerPathClick(careerPath, selectedRecommendation.listOfCareers);
     }
   };
 
@@ -310,14 +368,14 @@ const QuizComponent: React.FC = () => {
           </button>
         </div>
       </CSSTransition>
-      {!(careers === undefined) && (
+      {careerRecommendations && careers && careerRecommendations.length > 0 && (
         <CSSTransition
-          in={!(careers === undefined)}
+          in={careerRecommendations.length > 0}
           timeout={300}
           classNames="fade"
           unmountOnExit
         >
-          <Careers careers={careers} />
+          <Careers careerPaths={careerRecommendations} careersData={careers} />
         </CSSTransition>
       )}
     </div>
