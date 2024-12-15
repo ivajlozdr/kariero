@@ -352,6 +352,12 @@ app.post("/run-python-script", async (req, res) => {
     //     url
     // ]);
 
+    // Script to test in CPanel Terminal
+    // source /home/noit1/virtualenv/kariero-api/scraping/3.10/bin/activate && cd /home/noit1/kariero-api/scraping && python3 /home/noit1/kariero-api/scraping/scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
+
+    // Script to test in Local Terminal
+    // python scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
+
     const pythonProcess = spawn("python", ["./scraping/scraper.py", url]);
 
     let response = "";
