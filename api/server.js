@@ -390,6 +390,18 @@ app.post("/run-python-script", async (req, res) => {
   }
 });
 
+app.get("/scrape", async (req, res) => {
+  try {
+    const data = await hf.scrape();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Error in scraping process:", error);
+    return res
+      .status(500)
+      .json({ error: "Internal server error during scraping." });
+  }
+});
+
 app.post("/onet", async (req, res) => {
   const { token, keyword, scores, userResponses } = req.body;
 
