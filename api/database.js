@@ -171,6 +171,8 @@ const saveFinalScores = (userId, scores, date, callback) => {
   });
 };
 
+const saveRecommendations = (userId, translatedData, date, callback) => {};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -179,5 +181,6 @@ module.exports = {
   getUserById,
   getUserData,
   saveUserResponses,
-  saveFinalScores
+  saveFinalScores,
+  saveRecommendations
 };

@@ -439,7 +439,18 @@ app.post("/onet", async (req, res) => {
         hf.fetchCareerCode(keyword)
           .then(async (code) => {
             const translatedData = await hf.fetchAndTranslateDetails(code);
-            res.status(200).json(translatedData);
+
+            // Save translated data
+            db.saveRecommendations(userId, translatedData, date, (err) => {
+              if (err) {
+                console.error("Error saving recommendations:", err);
+                return res
+                  .status(500)
+                  .send("An error occurred while saving recommendations.");
+              }
+
+              res.status(200).json(translatedData);
+            });
           })
           .catch((error) => {
             console.error("Error fetching data from ONET API:", error);
