@@ -1,60 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Scores, FullCareerDetails } from "./quiz-types";
+import {
+  Scores,
+  FullCareerDetails,
+  CareerRecommendation,
+  userResponses
+} from "./quiz-types";
 import { initialScores } from "./quiz-data";
 import { CSSTransition } from "react-transition-group";
 import Careers from "./components/careers";
-import { fetchOnetData, fetchOpenAIResponse } from "./helper-functions";
+import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 
 const QuizComponent: React.FC = () => {
   const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
-  const [userResponses, setUserResponses] = useState<
-    { id: number; question: string; answer: string }[]
-  >([]);
+  const [userResponses, setUserResponses] = useState<userResponses[]>([]);
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-  const [careerRecommendations, setCareerRecommendations] = useState<any[]>([]);
+  const [careerRecommendations, setCareerRecommendations] = useState<
+    CareerRecommendation[]
+  >([]);
 
   useEffect(() => {
     if (userResponses.length === 19 && scores.RIASEC.Realistic) {
-      submitQuiz();
-    }
-  }, [userResponses, scores]);
-
-  const submitQuiz = async () => {
-    try {
-      console.log("Final Scores:", scores);
-      console.log("User Responses:", userResponses);
-
-      const recommendations = await fetchOpenAIResponse(scores);
-      if (!recommendations) {
-        throw new Error("Failed to fetch career recommendations from OpenAI.");
-      }
-
-      console.log("OpenAI Recommendations:", recommendations);
-
-      setCareerRecommendations(recommendations.CareerRecommendations);
-
-      const careerNames = recommendations.CareerRecommendations.flatMap((rec) =>
-        rec.listOfCareers.map((career) => career.career)
-      );
-
-      console.log("Career Names for O*NET Fetching:", careerNames);
-
-      const onetData = await fetchOnetData(
-        careerNames,
+      submitQuiz(
         scores,
         userResponses,
-        token
+        token,
+        setCareerRecommendations,
+        setCareers
       );
-      console.log("O*NET Data:", onetData);
-
-      setCareers(onetData);
-    } catch (error) {
-      console.error("Error in submitQuiz processing:", error);
     }
-  };
+  }, [userResponses, scores]);
 
   return (
     <div>

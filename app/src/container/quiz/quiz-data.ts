@@ -1,7 +1,12 @@
 import { QuestionMapping, Scores } from "./quiz-types";
 
+/**
+ * Масив от въпроси за теста, използвани за оценка на потребителя. Всеки въпрос
+ * включва уникален ID, текста на въпроса, категорията му и типа на очаквания отговор.
+ *
+ * @type {QuestionMapping[]}
+ */
 export const questions: QuestionMapping[] = [
-  // RIASEC questions
   {
     id: 1,
     question: "Обичате ли да работите с ръцете си или да изграждате неща?",
@@ -173,6 +178,12 @@ export const questions: QuestionMapping[] = [
   }
 ];
 
+/**
+ * Likert скала, използвана за въпроси, изискващи съгласие/несъгласие.
+ * Всеки отговор е свързан с тегло, което представлява неговата стойност.
+ *
+ * @type {Array<{label: string, weight: number}>}
+ */
 export const likertScale = [
   { label: "Strongly Agree", weight: 3 },
   { label: "Agree", weight: 2 },
@@ -181,6 +192,12 @@ export const likertScale = [
   { label: "Strongly Disagree", weight: -3 }
 ];
 
+/**
+ * Начално състояние на оценките, използвано за проследяване на отговорите на потребителя за всяка категория.
+ * Категориите `RIASEC` и `WorkStyle` имат предварително дефинирани структури, докато `Preferences` е празно в началото.
+ *
+ * @type {Scores}
+ */
 export const initialScores: Scores = {
   RIASEC: {
     Realistic: {},

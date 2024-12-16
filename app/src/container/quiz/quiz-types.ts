@@ -4,7 +4,7 @@ export type QuestionMapping = {
   category: string;
   field: string;
   answerType: "Likert" | "MultipleChoice";
-  options?: string[]; // For multiple-choice questions
+  options?: string[];
 };
 
 export interface Scores {
@@ -289,4 +289,40 @@ export interface Translated {
   title: string;
   description: string;
   skills: Element[];
+}
+
+export interface userResponses {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+export interface CareerPathCardProps {
+  pathName: string;
+  reason: string;
+  careers: string[];
+  onClick: () => void;
+}
+
+export interface CareerPath {
+  careerPath: string;
+  reason: string;
+  listOfCareers: Career[];
+}
+
+export interface CareerQuizProps {
+  setScores: React.Dispatch<React.SetStateAction<Scores>>;
+  setUserResponses: React.Dispatch<React.SetStateAction<userResponses[]>>;
+  userResponses: userResponses[];
+}
+
+export interface CareerCardProps {
+  title: string;
+  description: string;
+  skills: string[];
+}
+
+export interface CareersProps {
+  careerPaths: CareerPath[];
+  careersData: FullCareerDetails[];
 }

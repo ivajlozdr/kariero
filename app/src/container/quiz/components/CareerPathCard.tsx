@@ -1,9 +1,12 @@
-const CareerPathCard: React.FC<{
-  pathName: string;
-  reason: string;
-  careers: string[]; // Array of career names
-  onClick: () => void; // Handle click on the card
-}> = ({ pathName, reason, careers, onClick }) => {
+import { CareerPathCardProps } from "../quiz-types";
+
+// Основен компонент на картата на сферата
+const CareerPathCard: React.FC<CareerPathCardProps> = ({
+  pathName,
+  reason,
+  careers,
+  onClick
+}) => {
   return (
     <div
       className="career-path-card border rounded-lg shadow-lg p-6 w-full max-w-md h-[400px] cursor-pointer"

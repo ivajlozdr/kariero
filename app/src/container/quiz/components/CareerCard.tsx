@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { CareerCardProps } from "../quiz-types";
 
-// CareerCard Component
-const CareerCard: React.FC<{
-  title: string;
-  description: string;
-  skills: string[]; // Expecting an array of skill names
-}> = ({ title, description, skills }) => {
+// Основен компонент на картата на кариерата
+const CareerCard: React.FC<CareerCardProps> = ({
+  title,
+  description,
+  skills
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const visibleSkills = isHovered ? skills : skills.slice(0, 5);

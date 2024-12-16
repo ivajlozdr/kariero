@@ -1,13 +1,22 @@
 import { likertScale } from "./quiz-data";
 import {
+  CareerRecommendation,
   FullCareerDetails,
   PreferenceKeys,
+  QuestionMapping,
   RiasecCategory,
   Scores,
-  UserProfileData,
-  WorkStyleKeys
+  UserProfileData
 } from "./quiz-types";
 
+/**
+ * Актуализира RIASEC резултатите чрез промяна на стойността за определена категория.
+ *
+ * @param {Object} prevScores - Предишните резултати, съдържащи стойности за всички RIASEC категории.
+ * @param {RiasecCategory} key - Категорията, която ще бъде актуализирана (напр. "Realistic", "Investigative").
+ * @param {number} value - Новата стойност на резултата, която ще бъде зададена за посочената категория.
+ * @returns {Object} - Нов обект с резултати с актуализираната стойност за категорията.
+ */
 export function updateScores(
   prevScores: {
     Realistic: number;
@@ -22,10 +31,19 @@ export function updateScores(
 ) {
   return {
     ...prevScores,
-    [key]: value // TypeScript knows `key` is a valid index
+    [key]: value
   };
 }
 
+/**
+ * Извлича подробна информация за дадена кариера от API-то.
+ *
+ * @param {string} career - Името на кариерата, за която трябва да се извлекат данни.
+ * @returns {Promise<FullCareerDetails | null>} - Promise, който връща обект с подробности за кариерата
+ * или `null`, ако извличането е неуспешно.
+ *
+ * @throws {Error} - Хвърля грешка при проблем с мрежовата заявка.
+ */
 export const fetchCareerDetails = async (
   career: string
 ): Promise<FullCareerDetails | null> => {
@@ -52,6 +70,14 @@ export const fetchCareerDetails = async (
   }
 };
 
+/**
+ * Обработва отговор за категорията RIASEC и актуализира съответния резултат.
+ *
+ * @param {string} category - Категорията в RIASEC (напр. "HandsOn", "ProblemSolving").
+ * @param {number} weight - Стойността на отговора, която ще се използва за актуализиране на резултата.
+ * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функцията за актуализиране на състоянието на резултатите.
+ * @returns {void} - Не връща стойност, а просто актуализира състоянието.
+ */
 export const handleRIASECAnswer = (
   category: string,
   weight: number,
@@ -85,7 +111,14 @@ export const handleRIASECAnswer = (
   }
 };
 
-// Handle Preferences category responses
+/**
+ * Обработва отговор за категорията "Preferences" и актуализира съответния резултат.
+ *
+ * @param {PreferenceKeys} field - Полето в категорията "Preferences", което се актуализира.
+ * @param {string} answer - Отговорът, който се добавя към полето на предпочитанията.
+ * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функцията за актуализиране на състоянието на резултатите.
+ * @returns {void} - Не връща стойност, а просто актуализира състоянието.
+ */
 export const handlePreferenceAnswer = (
   field: PreferenceKeys,
   answer: string,
@@ -100,7 +133,14 @@ export const handlePreferenceAnswer = (
   }));
 };
 
-// Handle WorkStyle category responses
+/**
+ * Обработва отговор за категорията "WorkStyle" и актуализира съответния резултат.
+ *
+ * @param {string} field - Полето в категорията "WorkStyle", което се актуализира.
+ * @param {string} answer - Отговорът, който се добавя към полето на работния стил.
+ * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функцията за актуализиране на състоянието на резултатите.
+ * @returns {void} - Не връща стойност, а просто актуализира състоянието.
+ */
 export const handleWorkStyleAnswer = (
   field: string,
   answer: string,
@@ -115,12 +155,29 @@ export const handleWorkStyleAnswer = (
   }));
 };
 
+/**
+ * Получава етикета на отговора въз основа на предоставеното тегло.
+ *
+ * Търси в масива likertScale елемент с тегло, което съвпада с подаденото и връща съответния етикет.
+ * Ако не бъде намерен такъв елемент, връща "No Answer".
+ *
+ * @param {number} weight - Теглото на отговора, което трябва да бъде намерено в likertScale.
+ * @returns {string} - Етикет на отговора или "No Answer" ако не е намерен.
+ */
 export const getAnswerLabel = (weight: number) => {
   return (
     likertScale.find((option) => option.weight === weight)?.label || "No Answer"
   );
 };
 
+/**
+ * Изпраща заявка към OpenAI API за получаване на персонализирани препоръки за кариера въз основа на предоставените данни за потребителя.
+ *
+ * Тази функция извиква OpenAI API, изпращайки JSON обект със стойности за RIASEC, Preferences и WorkStyle на потребителя. След получаване на отговор от OpenAI, тя извлича и почиства данните, за да върне препоръки за кариера във формат JSON, който включва способности, умения, знания, интереси, работен стил, стойности на работата, технологични умения и препоръки за кариера.
+ *
+ * @param {Scores} scores - Обект със стойности за RIASEC, Preferences и WorkStyle на потребителя.
+ * @returns {Promise<UserProfileData | null>} - Връща обект с препоръки за кариера или null в случай на грешка.
+ */
 export const fetchOpenAIResponse = async (
   scores: Scores
 ): Promise<UserProfileData | null> => {
@@ -129,7 +186,7 @@ export const fetchOpenAIResponse = async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}` // Replace with your actual key
+        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         model: "gpt-4o-2024-08-06",
@@ -174,7 +231,17 @@ export const fetchOpenAIResponse = async (
   }
 };
 
-// Helper function to fetch O*NET data for multiple careers
+/**
+ * Изпраща асинхронни заявки към O*NET API за всяка кариера в масива и връща подробности за кариерата.
+ *
+ * Функцията изпраща POST заявки към KARIERO API за всяко име на кариера, предоставяйки потребителски отговори и оценка (scores). Тя обработва отговорите и връща подробни данни за всяка кариера, ако има успешно получен отговор. Ако има грешка, тя я отчита и премахва грешните отговори от резултатите.
+ *
+ * @param {string[]} careerNames - Масив с имена на кариери, които трябва да бъдат търсени.
+ * @param {Scores} scores - Оценки за RIASEC модел и други детайли, свързани с потребителя.
+ * @param {any} userResponses - Отговори на потребителя, които да бъдат изпратени към API-то.
+ * @param {string | null} token - Токен за авторизация към API-то.
+ * @returns {Promise<FullCareerDetails[]>} - Обещание, което връща масив с подробности за кариерите или празен масив, ако има грешки.
+ */
 export const fetchOnetData = async (
   careerNames: string[],
   scores: Scores,
@@ -208,11 +275,163 @@ export const fetchOnetData = async (
       return response.json();
     } catch (error) {
       console.error(`Error fetching O*NET data for ${careerName}:`, error);
-      return null; // Gracefully handle errors by returning null for this career
+      return null;
     }
   });
 
-  // Resolve all promises and filter out null results
   const results = await Promise.all(promises);
   return results.filter((data): data is FullCareerDetails => data !== null);
+};
+
+/**
+ * Изпраща резултатите от теста към OpenAI и O*NET за получаване на кариерни препоръки и свързани подробности за кариера.
+ *
+ * Тази функция обработва резултатите от теста на потребителя и изпраща заявка към OpenAI за препоръки за кариера. След това използва тези препоръки, за да извлече допълнителни данни от O*NET API и актуализира състоянията на приложението с получените резултати.
+ *
+ * @param {Scores} scores - Оценки за потребителя, получени от теста.
+ * @param {Array<{ id: number; question: string; answer: string }>} userResponses - Масив с отговорите на потребителя, съдържащ въпроси и съответните отговори.
+ * @param {string | null} token - Токен за авторизация към API.
+ * @param {React.Dispatch<React.SetStateAction<any[]>>} setCareerRecommendations - Функция за обновяване на препоръките за кариера в състоянието.
+ * @param {React.Dispatch<React.SetStateAction<FullCareerDetails[] | undefined>>} setCareers - Функция за обновяване на подробности за кариерата в състоянието.
+ * @returns {Promise<void>} - Няма връщан резултат, работи с асинхронни операции и актуализира състоянието.
+ */
+export const submitQuiz = async (
+  scores: Scores,
+  userResponses: { id: number; question: string; answer: string }[],
+  token: string | null,
+  setCareerRecommendations: React.Dispatch<
+    React.SetStateAction<CareerRecommendation[]>
+  >,
+  setCareers: React.Dispatch<
+    React.SetStateAction<FullCareerDetails[] | undefined>
+  >
+): Promise<void> => {
+  try {
+    console.log("Final Scores:", scores);
+    console.log("User Responses:", userResponses);
+
+    const recommendations = await fetchOpenAIResponse(scores);
+    if (!recommendations) {
+      throw new Error("Failed to fetch career recommendations from OpenAI.");
+    }
+
+    console.log("OpenAI Recommendations:", recommendations);
+
+    setCareerRecommendations(recommendations.CareerRecommendations);
+
+    const careerNames = recommendations.CareerRecommendations.flatMap((rec) =>
+      rec.listOfCareers.map((career) => career.career)
+    );
+
+    console.log("Career Names for O*NET Fetching:", careerNames);
+
+    const onetData = await fetchOnetData(
+      careerNames,
+      scores,
+      userResponses,
+      token
+    );
+    console.log("O*NET Data:", onetData);
+
+    setCareers(onetData);
+  } catch (error) {
+    console.error("Error in submitQuiz processing:", error);
+  }
+};
+
+/**
+ * Обработва отговорите на потребителя по Likert скалата и актуализира резултатите и отговорите.
+ *
+ * Тази функция обработва отговорите на потребителя към текущия въпрос, който попада в категорията RIASEC. След това актуализира състоянието с новите отговори и преминава към следващия въпрос.
+ *
+ * @param {number} weight - Теглото на отговора, което показва нивото на съгласие или оценка.
+ * @param {QuestionMapping[]} questions - Масив с въпросите, като всеки въпрос съдържа информация за категорията и полето.
+ * @param {number} currentQuestionIndex - Индекс на текущия въпрос в масива `questions`.
+ * @param {Array<{ id: number; question: string; answer: string }>} userResponses - Масив с отговорите на потребителя до момента.
+ * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функция за обновяване на резултатите (оцени) в състоянието.
+ * @param {React.Dispatch<React.SetStateAction<{ id: number; question: string; answer: string }[]>>} setUserResponses - Функция за обновяване на отговорите на потребителя в състоянието.
+ * @param {() => void} nextQuestion - Функция, която преминава към следващия въпрос.
+ * @returns {void} - Няма връщан резултат, но актуализира състоянието и преминава към следващия въпрос.
+ */
+export const handleLikertAnswer = (
+  weight: number,
+  questions: QuestionMapping[],
+  currentQuestionIndex: number,
+  userResponses: { id: number; question: string; answer: string }[],
+  setScores: React.Dispatch<React.SetStateAction<Scores>>,
+  setUserResponses: React.Dispatch<
+    React.SetStateAction<{ id: number; question: string; answer: string }[]>
+  >,
+  nextQuestion: () => void
+): void => {
+  const currentQuestion = questions[currentQuestionIndex];
+
+  if (currentQuestion.category === "RIASEC") {
+    handleRIASECAnswer(currentQuestion.field, weight, setScores);
+  }
+
+  const updatedResponses = [
+    ...userResponses,
+    {
+      id: currentQuestion.id,
+      question: currentQuestion.question,
+      answer: getAnswerLabel(weight)
+    }
+  ];
+
+  setUserResponses(updatedResponses);
+  nextQuestion();
+};
+
+/**
+ * Обработва отговорите на потребителя за въпрос с многократен избор и актуализира резултатите и отговорите.
+ *
+ * Тази функция обработва отговорите на потребителя за текущия въпрос, в зависимост от категорията на въпроса (RIASEC, Preferences, WorkStyle).
+ * След това актуализира състоянието на отговорите на потребителя и преминава към следващия въпрос.
+ *
+ * @param {string} answer - Отговорът на потребителя за текущия въпрос.
+ * @param {QuestionMapping[]} questions - Масив с въпросите, като всеки въпрос съдържа информация за категорията и полето.
+ * @param {number} currentQuestionIndex - Индекс на текущия въпрос в масива `questions`.
+ * @param {Array<{ id: number; question: string; answer: string }>} userResponses - Масив с отговорите на потребителя до момента.
+ * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функция за обновяване на резултатите (оцени) в състоянието.
+ * @param {React.Dispatch<React.SetStateAction<{ id: number; question: string; answer: string }[]>>} setUserResponses - Функция за обновяване на отговорите на потребителя в състоянието.
+ * @param {() => void} nextQuestion - Функция, която преминава към следващия въпрос.
+ * @returns {void} - Няма връщан резултат, но актуализира състоянието и преминава към следващия въпрос.
+ */
+export const handleMultipleChoiceAnswer = (
+  answer: string,
+  questions: QuestionMapping[],
+  currentQuestionIndex: number,
+  userResponses: { id: number; question: string; answer: string }[],
+  setScores: React.Dispatch<React.SetStateAction<Scores>>,
+  setUserResponses: React.Dispatch<
+    React.SetStateAction<{ id: number; question: string; answer: string }[]>
+  >,
+  nextQuestion: () => void
+): void => {
+  const currentQuestion = questions[currentQuestionIndex];
+
+  if (currentQuestion.category === "RIASEC") {
+    handleRIASECAnswer(currentQuestion.field, parseInt(answer, 10), setScores);
+  }
+
+  if (currentQuestion.category === "Preferences") {
+    handlePreferenceAnswer(
+      currentQuestion.field as PreferenceKeys,
+      answer,
+      setScores
+    );
+  }
+
+  if (currentQuestion.category === "WorkStyle") {
+    handleWorkStyleAnswer(currentQuestion.field, answer, setScores);
+  }
+
+  const updatedResponses = [
+    ...userResponses,
+    { id: currentQuestion.id, question: currentQuestion.question, answer }
+  ];
+
+  setUserResponses(updatedResponses);
+  nextQuestion();
 };

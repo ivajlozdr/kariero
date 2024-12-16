@@ -1,23 +1,14 @@
 import React, { useState } from "react";
-import { Career, FullCareerDetails } from "../quiz-types";
+import { CareerPath, CareersProps } from "../quiz-types";
 import CareerCard from "./CareerCard";
 import CareerPathCard from "./CareerPathCard";
 
-interface CareerPath {
-  careerPath: string;
-  reason: string;
-  listOfCareers: Career[]; // This contains career names, not details
-}
-
-const Careers: React.FC<{
-  careerPaths: CareerPath[];
-  careersData: FullCareerDetails[];
-}> = ({ careerPaths, careersData }) => {
+// Основен компонент Careers
+const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
 
-  // Helper function to get the full career details from careersData by index
   const getCareerDetailsByIndex = (index: number) => {
-    return careersData[index] || null; // Return career details based on index
+    return careersData[index] || null;
   };
 
   return (
@@ -29,7 +20,7 @@ const Careers: React.FC<{
               key={index}
               pathName={path.careerPath}
               reason={path.reason}
-              careers={path.listOfCareers.map((career, i) => career.career)} // Just displaying the names
+              careers={path.listOfCareers.map((career, i) => career.career)}
               onClick={() => setSelectedPath(path)}
             />
           ))}
@@ -52,8 +43,8 @@ const Careers: React.FC<{
                 3 *
                   careerPaths.findIndex(
                     (path) => path.careerPath === selectedPath?.careerPath
-                  ); // Map to career index
-              const fullCareerDetails = getCareerDetailsByIndex(careerIndex); // Get career details by index
+                  );
+              const fullCareerDetails = getCareerDetailsByIndex(careerIndex);
               return fullCareerDetails ? (
                 <CareerCard
                   key={index}
