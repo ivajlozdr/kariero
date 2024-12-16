@@ -239,14 +239,14 @@ export const fetchOpenAIResponse = async (
  *
  * @param {string[]} careerNames - Масив с имена на кариери, които трябва да бъдат търсени.
  * @param {Scores} scores - Оценки за RIASEC модел и други детайли, свързани с потребителя.
- * @param {any} userResponses - Отговори на потребителя, които да бъдат изпратени към API-то.
+ * @param {UserResponses[]} userResponses - Отговори на потребителя, които да бъдат изпратени към API-то.
  * @param {string | null} token - Токен за авторизация към API-то.
  * @returns {Promise<FullCareerDetails[]>} - Обещание, което връща масив с подробности за кариерите или празен масив, ако има грешки.
  */
 export const fetchOnetData = async (
   careerNames: string[],
   scores: Scores,
-  userResponses: any,
+  userResponses: UserResponses[],
   token: string | null
 ): Promise<FullCareerDetails[]> => {
   const promises = careerNames.map(async (careerName) => {
@@ -296,9 +296,9 @@ export const fetchOnetData = async (
  * Тази функция обработва резултатите от теста на потребителя и изпраща заявка към OpenAI за препоръки за кариера. След това използва тези препоръки, за да извлече допълнителни данни от O*NET API и актуализира състоянията на приложението с получените резултати.
  *
  * @param {Scores} scores - Оценки за потребителя, получени от теста.
- * @param {Array<UserResponses>} userResponses - Масив с отговорите на потребителя, съдържащ въпроси и съответните отговори.
+ * @param {UserResponses[]} userResponses - Масив с отговорите на потребителя, съдържащ въпроси и съответните отговори.
  * @param {string | null} token - Токен за авторизация към API.
- * @param {React.Dispatch<React.SetStateAction<any[]>>} setCareerRecommendations - Функция за обновяване на препоръките за кариера в състоянието.
+ * @param {React.Dispatch<React.SetStateAction<CareerRecommendation[]>>} setCareerRecommendations - Функция за обновяване на препоръките за кариера в състоянието.
  * @param {React.Dispatch<React.SetStateAction<FullCareerDetails[] | undefined>>} setCareers - Функция за обновяване на подробности за кариерата в състоянието.
  * @returns {Promise<void>} - Няма връщан резултат, работи с асинхронни операции и актуализира състоянието.
  */
@@ -354,7 +354,7 @@ export const submitQuiz = async (
  * @param {number} weight - Теглото на отговора, което показва нивото на съгласие или оценка.
  * @param {QuestionMapping[]} questions - Масив с въпросите, като всеки въпрос съдържа информация за категорията и полето.
  * @param {number} currentQuestionIndex - Индекс на текущия въпрос в масива `questions`.
- * @param {Array<UserResponses>} userResponses - Масив с отговорите на потребителя до момента.
+ * @param {UserResponses[]} userResponses - Масив с отговорите на потребителя до момента.
  * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функция за обновяване на резултатите (оцени) в състоянието.
  * @param {React.Dispatch<React.SetStateAction<UserResponses[]>>} setUserResponses - Функция за обновяване на отговорите на потребителя в състоянието.
  * @param {() => void} nextQuestion - Функция, която преминава към следващия въпрос.
@@ -397,7 +397,7 @@ export const handleLikertAnswer = (
  * @param {string} answer - Отговорът на потребителя за текущия въпрос.
  * @param {QuestionMapping[]} questions - Масив с въпросите, като всеки въпрос съдържа информация за категорията и полето.
  * @param {number} currentQuestionIndex - Индекс на текущия въпрос в масива `questions`.
- * @param {Array<UserResponses>} userResponses - Масив с отговорите на потребителя до момента.
+ * @param {UserResponses[]} userResponses - Масив с отговорите на потребителя до момента.
  * @param {React.Dispatch<React.SetStateAction<Scores>>} setScores - Функция за обновяване на резултатите (оцени) в състоянието.
  * @param {React.Dispatch<React.SetStateAction<UserResponses[]>>} setUserResponses - Функция за обновяване на отговорите на потребителя в състоянието.
  * @param {() => void} nextQuestion - Функция, която преминава към следващия въпрос.
