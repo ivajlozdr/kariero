@@ -177,7 +177,8 @@ const saveRecommendations = (translatedData, callback) => {
     title_bg: translatedData?.translated?.title ?? null,
     title_en: translatedData?.occupation?.title ?? null,
     description: translatedData?.translated?.description ?? null,
-    bright_outlook: translatedData?.bright_outlook?.category ?? null,
+    bright_outlook:
+      translatedData?.occupation?.bright_outlook?.category ?? null,
     tasks: translatedData?.tasks?.task?.map((task) => task.statement) ?? [],
     tasks_id: translatedData?.tasks?.task?.map((task) => task.id) ?? [],
     skills: translatedData?.translated?.skills ?? [],
