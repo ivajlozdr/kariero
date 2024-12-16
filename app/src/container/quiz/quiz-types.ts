@@ -96,7 +96,7 @@ export interface ElementArray {
 }
 
 export interface Element {
-  translated_name: any;
+  translated_name: string;
   id: string;
   related: string;
   name: string;
