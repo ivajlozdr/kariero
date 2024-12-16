@@ -171,7 +171,19 @@ const saveFinalScores = (userId, scores, date, callback) => {
   });
 };
 
-const saveRecommendations = (userId, translatedData, date, callback) => {};
+const saveRecommendations = (data, callback) => {
+  console.log("Saving recommendations:", data);
+
+  setTimeout(() => {
+    const success = true;
+
+    if (success) {
+      callback(null);
+    } else {
+      callback(new Error("Failed to save data"));
+    }
+  }, 1000); // Simulating async operation with a delay
+};
 
 module.exports = {
   checkEmailExists,

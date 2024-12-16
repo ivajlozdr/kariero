@@ -419,7 +419,6 @@ app.post("/onet", async (req, res) => {
   const date = new Date().toISOString();
 
   try {
-    // Save user responses
     db.saveUserResponses(userId, userResponses, date, (err) => {
       if (err) {
         console.error("Error saving user responses:", err);
@@ -428,20 +427,97 @@ app.post("/onet", async (req, res) => {
           .send("An error occurred while saving responses.");
       }
 
-      // Save final scores
       db.saveFinalScores(userId, scores, date, (err) => {
         if (err) {
           console.error("Error saving final scores:", err);
           return res.status(500).send("An error occurred while saving scores.");
         }
 
-        // Fetch and translate ONET data
         hf.fetchCareerCode(keyword)
           .then(async (code) => {
             const translatedData = await hf.fetchAndTranslateDetails(code);
 
-            // Save translated data
-            db.saveRecommendations(userId, translatedData, date, (err) => {
+            const extractedData = {
+              code: translatedData?.code ?? null,
+              title_bg: translatedData?.translated?.title ?? null,
+              title_en: translatedData?.occupation?.title ?? null,
+              description: translatedData?.translated?.description ?? null,
+              bright_outlook: translatedData?.bright_outlook?.category ?? null,
+              tasks:
+                translatedData?.tasks?.task?.map((task) => task.statement) ??
+                [],
+              tasks_id:
+                translatedData?.tasks?.task?.map((task) => task.id) ?? [],
+              skills: translatedData?.translated?.skills ?? [],
+              skills_id:
+                translatedData?.skills?.element?.map((skill) => skill.id) ?? [],
+              skills_importance:
+                translatedData?.skills?.element?.map(
+                  (skill) => skill.score?.value
+                ) ?? [],
+              abilities:
+                translatedData?.abilities?.element?.map(
+                  (ability) => ability.name
+                ) ?? [],
+              abilities_id:
+                translatedData?.abilities?.element?.map(
+                  (ability) => ability.id
+                ) ?? [],
+              abilities_importance:
+                translatedData?.abilities?.element?.map(
+                  (ability) => ability.score?.value
+                ) ?? [],
+              knowledge:
+                translatedData?.knowledge?.element?.map(
+                  (knowledge) => knowledge.name
+                ) ?? [],
+              knowledge_id:
+                translatedData?.knowledge?.element?.map(
+                  (knowledge) => knowledge.id
+                ) ?? [],
+              knowledge_importance:
+                translatedData?.knowledge?.element?.map(
+                  (knowledge) => knowledge.score?.value
+                ) ?? [],
+              technology_skills:
+                translatedData?.technology_skills?.category?.map(
+                  (techSkill) => techSkill.title?.name
+                ) ?? [],
+              technology_skills_id:
+                translatedData?.technology_skills?.category?.map(
+                  (techSkill) => techSkill.title?.id
+                ) ?? [],
+              work_activities:
+                translatedData?.detailed_work_activities?.activity?.map(
+                  (activity) => activity.name
+                ) ?? [],
+              work_activities_id:
+                translatedData?.detailed_work_activities?.activity?.map(
+                  (activity) => activity.id
+                ) ?? [],
+              education:
+                translatedData?.education?.level_required?.category
+                  ?.map((level) => `${level.name}: ${level.score?.value}%`)
+                  .join(", ") ?? null,
+              interests:
+                translatedData?.interests?.element?.map(
+                  (interest) => interest.name
+                ) ?? [],
+              interests_id:
+                translatedData?.interests?.element?.map(
+                  (interest) => interest.id
+                ) ?? [],
+              interests_importance:
+                translatedData?.interests?.element?.map(
+                  (interest) => interest.score?.value
+                ) ?? [],
+              related_occupations:
+                translatedData?.related_occupations?.occupation?.map(
+                  (occupation) => occupation.code
+                ) ?? []
+            };
+
+            db.saveRecommendations(extractedData, (err) => {
               if (err) {
                 console.error("Error saving recommendations:", err);
                 return res

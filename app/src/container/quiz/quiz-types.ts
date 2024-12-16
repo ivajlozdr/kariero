@@ -291,7 +291,7 @@ export interface Translated {
   skills: Element[];
 }
 
-export interface userResponses {
+export interface UserResponses {
   id: number;
   question: string;
   answer: string;
@@ -312,8 +312,8 @@ export interface CareerPath {
 
 export interface CareerQuizProps {
   setScores: React.Dispatch<React.SetStateAction<Scores>>;
-  setUserResponses: React.Dispatch<React.SetStateAction<userResponses[]>>;
-  userResponses: userResponses[];
+  setUserResponses: React.Dispatch<React.SetStateAction<UserResponses[]>>;
+  userResponses: UserResponses[];
 }
 
 export interface CareerCardProps {

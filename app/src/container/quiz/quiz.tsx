@@ -3,7 +3,7 @@ import {
   Scores,
   FullCareerDetails,
   CareerRecommendation,
-  userResponses
+  UserResponses
 } from "./quiz-types";
 import { initialScores } from "./quiz-data";
 import { CSSTransition } from "react-transition-group";
@@ -14,7 +14,7 @@ import CareerQuiz from "./components/CareerQuiz";
 const QuizComponent: React.FC = () => {
   const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
-  const [userResponses, setUserResponses] = useState<userResponses[]>([]);
+  const [userResponses, setUserResponses] = useState<UserResponses[]>([]);
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const [careerRecommendations, setCareerRecommendations] = useState<
