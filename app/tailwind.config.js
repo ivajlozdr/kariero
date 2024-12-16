@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import colors from "tailwindcss/colors";
-import plugin from 'tailwindcss/plugin';
+import plugin from "tailwindcss/plugin";
 export default {
   darkMode: "class",
   content: [
@@ -30,8 +30,7 @@ export default {
       full: "9999px"
     },
     fontFamily: {
-      Opsilon: ["Opsilon", "sans-serif"],
-      Equilibrist: ["Equilibrist", "sans-serif"],
+      Roboto: ["Roboto", "sans-serif"],
       SerifBold: ["SerifBold", "serif"]
     },
     fontSize: {

@@ -101,23 +101,17 @@ Background Image
 
 /*-- Declare Local Fonts --*/
 
-/* Equilibrist  */
+/* Roboto  */
 @font-face {
-  font-family: "Equilibrist";
-  src: url("../../assets/fonts/EquilibristRegular.ttf");
-}
-
-/* Opsilon */
-@font-face {
-  font-family: "Opsilon";
-  src: url("../../assets/fonts/Opsilon.ttf");
+  font-family: "Roboto";
+  src: url("../../assets/fonts/RobotoRegular.ttf");
 }
 
 /* SerifBold */
 @font-face {
   font-family: "SerifBold";
-  src: local("EquilibristBold"),
-    url("./fonts/EquilibristBold.ttf") format("truetype");
+  src: local("RobotoBold"),
+    url("./fonts/RobotoBold.ttf") format("truetype");
 }
 
 :root {
@@ -622,20 +616,6 @@ Background Image
   display: flex;
   align-items: flex-end;
   justify-content: center;
-}
-
-.footer-brand-name-cine {
-  font-family: "Opsilon", sans-serif;
-  font-weight: bold;
-  font-size: 2rem;
-}
-
-.footer-brand-name-compass {
-  font-family: "Equilibrist", sans-serif;
-  font-weight: bold;
-  font-size: 1.8rem;
-  color: #c5750d;
-  margin-left: 0.5rem;
 }
 
 .footer-text .bi-heart-fill {
@@ -4574,64 +4554,64 @@ label {
 }
 
 /* Start::task-kanboard-board */
-.cine-kanban-board {
+.kariero-kanban-board {
   @apply flex overflow-x-auto items-stretch mb-3 pb-4;
 }
-.cine-kanban-board .kanban-tasks-type {
+.kariero-kanban-board .kanban-tasks-type {
   @apply min-w-[20rem] me-6 w-full;
 }
-.cine-kanban-board .kanban-tasks-type:last-child {
+.kariero-kanban-board .kanban-tasks-type:last-child {
   @apply me-0;
 }
-.cine-kanban-board .kanban-tasks-type .kanban-tasks {
+.kariero-kanban-board .kanban-tasks-type .kanban-tasks {
   @apply touch-none;
 }
-.cine-kanban-board .task-image .kanban-image {
+.kariero-kanban-board .task-image .kanban-image {
   @apply h-[150px] w-full rounded-md;
 }
-.cine-kanban-board .kanban-content {
+.kariero-kanban-board .kanban-content {
   @apply mt-3;
 }
-.cine-kanban-board .kanban-task-description {
+.kariero-kanban-board .kanban-task-description {
   @apply text-textmuted text-[0.82rem];
 }
-.cine-kanban-board .kanban-tasks-type.new .kanban-tasks.box {
+.kariero-kanban-board .kanban-tasks-type.new .kanban-tasks.box {
   @apply border-t-[3px] border-solid border-primary/30;
 }
-.cine-kanban-board .kanban-tasks-type.todo .kanban-tasks.box {
+.kariero-kanban-board .kanban-tasks-type.todo .kanban-tasks.box {
   @apply border-t-[3px] border-solid border-warning/30;
 }
-.cine-kanban-board .kanban-tasks-type.in-progress .kanban-tasks.box {
+.kariero-kanban-board .kanban-tasks-type.in-progress .kanban-tasks.box {
   @apply border-t-[3px] border-solid border-info/30;
 }
-.cine-kanban-board .kanban-tasks-type.inreview .kanban-tasks.box {
+.kariero-kanban-board .kanban-tasks-type.inreview .kanban-tasks.box {
   @apply border-t-[3px] border-solid border-danger/30;
 }
-.cine-kanban-board .kanban-tasks-type.completed .kanban-tasks.box {
+.kariero-kanban-board .kanban-tasks-type.completed .kanban-tasks.box {
   @apply border-t-[3px] border-solid border-success/30;
 }
-.cine-kanban-board #new-tasks .box:last-child,
-.cine-kanban-board #todo-tasks .box:last-child,
-.cine-kanban-board #inprogress-tasks .box:last-child,
-.cine-kanban-board #inreview-tasks .box:last-child,
-.cine-kanban-board #completed-tasks .box:last-child {
+.kariero-kanban-board #new-tasks .box:last-child,
+.kariero-kanban-board #todo-tasks .box:last-child,
+.kariero-kanban-board #inprogress-tasks .box:last-child,
+.kariero-kanban-board #inreview-tasks .box:last-child,
+.kariero-kanban-board #completed-tasks .box:last-child {
   @apply mb-0;
 }
-.cine-kanban-board #new-tasks,
-.cine-kanban-board #todo-tasks,
-.cine-kanban-board #inprogress-tasks,
-.cine-kanban-board #inreview-tasks,
-.cine-kanban-board #completed-tasks {
+.kariero-kanban-board #new-tasks,
+.kariero-kanban-board #todo-tasks,
+.kariero-kanban-board #inprogress-tasks,
+.kariero-kanban-board #inreview-tasks,
+.kariero-kanban-board #completed-tasks {
   @apply relative max-h-[35rem];
 }
-.cine-kanban-board #new-tasks .simplebar-content,
-.cine-kanban-board #todo-tasks .simplebar-content,
-.cine-kanban-board #inprogress-tasks .simplebar-content,
-.cine-kanban-board #inreview-tasks .simplebar-content,
-.cine-kanban-board #completed-tasks .simplebar-content {
+.kariero-kanban-board #new-tasks .simplebar-content,
+.kariero-kanban-board #todo-tasks .simplebar-content,
+.kariero-kanban-board #inprogress-tasks .simplebar-content,
+.kariero-kanban-board #inreview-tasks .simplebar-content,
+.kariero-kanban-board #completed-tasks .simplebar-content {
   @apply pt-0 pb-4 px-0;
 }
-.cine-kanban-board .task-Null {
+.kariero-kanban-board .task-Null {
   @apply relative min-h-[12.5rem] before:absolute before:inset-0 before:bg-white dark:before:bg-bodybg before:rounded-md before:bg-[url("../images/media/media-83.svg")] before:bg-cover before:bg-center before:h-[12.5rem]
         before:w-full before:my-0 before:mx-auto;
 }
@@ -4674,7 +4654,7 @@ label {
 }
 
 .app-sidebar {
-  @apply w-[15rem] h-full bg-primary bg-bodybg border-e border-e-white/10 fixed top-0 start-0 font-Opsilon z-[49] transition-all ease-linear duration-[0.05s];
+  @apply w-[15rem] h-full bg-primary bg-bodybg border-e border-e-white/10 fixed top-0 start-0 font-Roboto z-[49] transition-all ease-linear duration-[0.05s];
 }
 .app-sidebar .main-sidebar-header {
   @apply h-[3.75rem] w-[15rem] fixed flex bg-bodybg z-[9] items-center justify-center py-[0.813rem] px-5 border-b border-b-white/10 border-e border-e-white/10 transition-all ease-linear duration-[0.05s];
@@ -16475,7 +16455,7 @@ pre {
 }
 
 html {
-  @apply font-Equilibrist scroll-smooth text-start;
+  @apply font-Roboto scroll-smooth text-start;
 }
 
 html[dir="rtl"] {
@@ -16483,7 +16463,7 @@ html[dir="rtl"] {
 }
 
 body {
-  @apply scroll-smooth bg-bodybg h-full text-defaulttextcolor dark:text-white m-0 font-Equilibrist font-normal text-[0.813rem] relative text-start rtl:dir-rtl;
+  @apply scroll-smooth bg-bodybg h-full text-defaulttextcolor dark:text-white m-0 font-Roboto font-normal text-[0.813rem] relative text-start rtl:dir-rtl;
 }
 
 .page {

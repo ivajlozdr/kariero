@@ -13,9 +13,6 @@ import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
 
-import gradientDark from "../../../assets/images/menu-bg-images/low-poly-grid-haikei-dark.svg";
-import gradientLight from "../../../assets/images/menu-bg-images/low-poly-grid-haikei-light.svg";
-
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
@@ -454,15 +451,6 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
         id="sidebar"
         onMouseEnter={() => Onhover()}
         onMouseLeave={() => Outhover()}
-        style={{
-          backgroundImage:
-            local_varaiable.class === "dark"
-              ? `url(${gradientDark})`
-              : `url(${gradientLight})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          transition: "background-image 0.3s ease"
-        }}
       >
         <div className="main-sidebar-header">
           <a
