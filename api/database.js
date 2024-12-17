@@ -430,131 +430,109 @@ const saveOccupation = (translatedData, userId, date, callback) => {
 // };
 
 const saveCategoryData = (translatedData, callback) => {
-  // Define the categories to loop through
   const categories = ["abilities", "knowledge", "skills", "interests"];
-
   const occupationCode = translatedData?.code ?? null;
 
-  // Begin a transaction to ensure atomicity for all categories
+  if (!occupationCode) {
+    console.error("Missing occupation code. Cannot proceed.");
+    return callback(new Error("Invalid occupation code."));
+  }
+
   db.beginTransaction((err) => {
     if (err) {
       console.error("Transaction start error:", err.message);
       return callback(err);
     }
 
-    // Flag to track whether any error occurred
     let hasErrorOccurred = false;
 
-    // Loop through each category and process it
-    categories.forEach((category) => {
-      // Get the data for the current category
-      const ids =
-        translatedData?.[category]?.element?.map((item) => item.id) ?? [];
-      const names =
-        category == "skills"
-          ? translatedData?.translated?.[category] ?? []
-          : translatedData?.[category]?.element?.map(
-              (ability) => ability.name
-            ) ?? [];
-      const importance =
-        translatedData?.[category]?.element?.map((item) => item.score?.value) ??
-        [];
-
-      console.log(`Evaluating category: ${category}`);
-      console.log("IDs:", ids);
-      console.log("Names:", names);
-      console.log("Importance:", importance);
-      if (
-        !occupationCode ||
-        ids.length === 0 ||
-        names.length === 0 ||
-        importance.length === 0
-      ) {
-        console.error(
-          `Missing or invalid data for saving ${category}. Skipping...`
-        );
-        hasErrorOccurred = true;
-        return; // Skip this category and continue with the next one
-      }
-
-      if (ids.length !== names.length || ids.length !== importance.length) {
-        console.error(
-          `${category} data arrays are not aligned in length. Skipping...`
-        );
-        hasErrorOccurred = true;
-        return; // Skip this category and continue with the next one
-      }
-
-      // Prepare the rows for bulk insertion
-      const categoryData = ids.map((id, index) => {
-        return [
-          id, // Item ID (Skill/Knowledge/Interest/Ability)
-          occupationCode, // Occupation code
+    const processCategory = async (category) => {
+      try {
+        const ids =
+          translatedData?.[category]?.element?.map((item) => item.id) ?? [];
+        const names =
           category == "skills"
-            ? names[index].translated_name ?? null
-            : names[index], // Item name
-          importance[index] ?? null // Item importance
-        ];
-      });
+            ? translatedData?.translated?.[category] ?? []
+            : translatedData?.[category]?.element?.map(
+                (category) => category.name
+              ) ?? [];
+        const importance =
+          translatedData?.[category]?.element?.map(
+            (item) => item.score?.value
+          ) ?? [];
 
-      console.log(`${category} data:`, categoryData); // Log the current item data for debugging
+        console.log(`Processing category: ${category}`);
 
-      // Check if the items already exist before inserting
-      const checkQuery = `
-        SELECT id FROM ${category} WHERE occupation_code = ? AND id IN (?);
-      `;
-      db.query(checkQuery, [occupationCode, ids], (err, results) => {
-        if (err) {
-          console.error(`Check existing ${category} query error:`, err.message);
-          hasErrorOccurred = true;
-          return; // Skip this category and continue with the next one
+        if (
+          ids.length === 0 ||
+          names.length === 0 ||
+          importance.length === 0 ||
+          ids.length !== names.length ||
+          ids.length !== importance.length
+        ) {
+          console.warn(
+            `Invalid or incomplete data for ${category}. Skipping...`
+          );
+          return;
         }
 
-        const existingIds = results.map((row) => row.id);
-        const newData = categoryData.filter(
-          (item) => !existingIds.includes(item[0])
-        );
+        const categoryData = ids.map((id, index) => [
+          id,
+          occupationCode,
+          category === "skills"
+            ? names[index]?.translated_name ?? null
+            : names[index],
+          importance[index] ?? null
+        ]);
 
-        // If there are new items to insert
-        if (newData.length > 0) {
-          const insertQuery = `
-            INSERT INTO ${category} (id, occupation_code, name, importance)
-            VALUES ?
-          `;
-          db.query(insertQuery, [newData], (err) => {
-            if (err) {
-              console.error(`Insert ${category} query error:`, err.message);
-              hasErrorOccurred = true;
-              return; // Skip this category and continue with the next one
-            }
+        // Delete all previous records for this occupation and category
+        const deleteQuery = `
+          DELETE FROM ${category} WHERE occupation_code = ?;
+        `;
+        await db.promise().query(deleteQuery, [occupationCode]);
 
-            console.log(
-              `${
-                category.charAt(0).toUpperCase() + category.slice(1)
-              } for occupation "${occupationCode}" saved successfully.`
-            );
-          });
-        } else {
-          console.log(`No new ${category} for occupation "${occupationCode}".`);
-        }
-      });
-    });
+        // Insert new data
+        const insertQuery = `
+          INSERT INTO ${category} (id, occupation_code, name, importance)
+          VALUES ?;
+        `;
+        await db.promise().query(insertQuery, [categoryData]);
 
-    // Commit the transaction after all categories have been processed
-    db.commit((err) => {
-      if (err || hasErrorOccurred) {
-        console.error(
-          "Transaction commit error or error occurred during process:",
-          err
+        console.log(
+          `${
+            category.charAt(0).toUpperCase() + category.slice(1)
+          } for occupation "${occupationCode}" saved successfully.`
         );
-        return db.rollback(() =>
-          callback(
-            err || new Error("An error occurred during the save process.")
-          )
-        );
+      } catch (error) {
+        console.error(`Error processing ${category}:`, error.message);
+        hasErrorOccurred = true;
       }
-      callback(null); // Everything succeeded
-    });
+    };
+
+    // Process each category sequentially
+    (async () => {
+      for (const category of categories) {
+        await processCategory(category);
+        if (hasErrorOccurred) break; // Stop further processing if an error occurs
+      }
+
+      if (hasErrorOccurred) {
+        db.rollback(() => {
+          callback(new Error("An error occurred while saving category data."));
+        });
+      } else {
+        db.commit((err) => {
+          if (err) {
+            console.error("Transaction commit error:", err.message);
+            db.rollback(() =>
+              callback(new Error("Transaction failed during commit."))
+            );
+          } else {
+            callback(null); // Success
+          }
+        });
+      }
+    })();
   });
 };
 
