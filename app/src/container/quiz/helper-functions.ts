@@ -475,7 +475,156 @@ export const submitQuiz = async (
     console.log("Final Scores:", hardCodedScores);
     console.log("User Responses:", hardCodedUserResponses);
 
-    const recommendations = await fetchOpenAIResponse(hardCodedScores);
+    // const recommendations = await fetchOpenAIResponse(hardCodedScores);
+    const recommendations = {
+      Abilities: [
+        "Written Comprehension",
+        "Inductive Reasoning",
+        "Deductive Reasoning",
+        "Attention to Detail"
+      ],
+      Skills: [
+        "Critical Thinking",
+        "Active Learning",
+        "Reading Comprehension",
+        "Complex Problem Solving"
+      ],
+      Knowledge: [
+        "English Language",
+        "Computers and Electronics",
+        "Mathematics",
+        "Clerical"
+      ],
+      Interests: ["Social", "Conventional", "Analytical Thinking", "Stability"],
+      WorkStyle: [
+        "Dependability",
+        "Integrity",
+        "Attention to Detail",
+        "Analytical Thinking"
+      ],
+      WorkValues: ["Support", "Independence", "Recognition", "Achievement"],
+      TechnologySkills: [
+        "Data base management software",
+        "Analytical or scientific software",
+        "Office suite software",
+        "Internet browser software"
+      ],
+      CareerRecommendations: [
+        {
+          careerPath: "Office and Administrative Support",
+          reason:
+            "Given your strong preference for conventional roles, a stable work environment, and a focus on technical expertise, careers in this path can offer a structured and predictable environment while allowing you to utilize analytical skills.",
+          listOfCareers: [
+            {
+              career: "Office Clerks, General",
+              reason:
+                "Utilizes your organizational skills and appreciation for stable work environments."
+            },
+            {
+              career: "File Clerks",
+              reason:
+                "Allows for structured work with an emphasis on accuracy and detail."
+            },
+            {
+              career: "Data Entry Keyers",
+              reason:
+                "Requires precision and a methodical approach which aligns with your work style and interests."
+            }
+          ]
+        },
+        {
+          careerPath: "Information Technology",
+          reason:
+            "Your investigative and conventional interests, along with a desire to be a technical expert, make IT roles suitable as they balance problem-solving with structured environments.",
+          listOfCareers: [
+            {
+              career: "Computer Network Support Specialists",
+              reason:
+                "Involve technical problem solving within a structured framework."
+            },
+            {
+              career: "Database Administrators",
+              reason:
+                "Requires both analytical skills and adherence to protocols."
+            },
+            {
+              career: "Software Quality Assurance Analysts and Testers",
+              reason:
+                "Focus on attention to detail and quality assurance fits your preference for accuracy."
+            }
+          ]
+        },
+        {
+          careerPath: "Education and Training",
+          reason:
+            "You might enjoy the structured teaching and sharing of knowledge roles, utilizing your social tendencies while in a conventional environment.",
+          listOfCareers: [
+            {
+              career:
+                "Adult Literacy, Remedial Education, and GED Teachers and Instructors",
+              reason:
+                "Offers a stable environment with opportunities to apply social skills."
+            },
+            {
+              career: "Library Technicians",
+              reason:
+                "Provides a stable, organized workspace where precision is valued."
+            },
+            {
+              career: "Instructional Coordinators",
+              reason:
+                "Focuses on curriculum development, demanding analytical skills and structure."
+            }
+          ]
+        },
+        {
+          careerPath: "Business and Financial Operations",
+          reason:
+            "A practical use of your conventional and analytical skills, these roles provide stability and opportunities for independent work.",
+          listOfCareers: [
+            {
+              career: "Claims Adjusters, Examiners, and Investigators",
+              reason:
+                "Work often independently and require critical thinking and attention to detail."
+            },
+            {
+              career: "Financial Analysts",
+              reason:
+                "Involves data analysis and decision-making in a structured industry."
+            },
+            {
+              career: "Credit Analysts",
+              reason:
+                "Uses analytical thinking to assess financial information."
+            }
+          ]
+        },
+        {
+          careerPath: "Human Resources",
+          reason:
+            "Balancing analytical and social interests, this path suits a conventional layout and includes tasks that require careful decision-making and organization.",
+          listOfCareers: [
+            {
+              career: "Employment, Recruitment, and Placement Specialists",
+              reason:
+                "Requires interaction and communication while following structured procedures."
+            },
+            {
+              career:
+                "Human Resources Assistants, Except Payroll and Timekeeping",
+              reason:
+                "Demands strong organizational skills and attention to detail."
+            },
+            {
+              career: "Training and Development Specialists",
+              reason:
+                "Involves creating structured learning experiences, aligning with your conventional and educational interests."
+            }
+          ]
+        }
+      ]
+    };
+
     if (!recommendations) {
       throw new Error("Failed to fetch career recommendations from OpenAI.");
     }
