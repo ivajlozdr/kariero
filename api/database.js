@@ -493,7 +493,7 @@ const saveCategoryData = (translatedData, callback) => {
 
         // Insert new data
         const insertQuery = `
-          INSERT INTO ${category} (id, occupation_code, name, importance)
+          INSERT INTO ${category} (onet_id, occupation_code, name, importance)
           VALUES ?;
         `;
         await db.promise().query(insertQuery, [categoryData]);
