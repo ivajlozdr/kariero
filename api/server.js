@@ -482,8 +482,17 @@ app.post("/save-occupation", (req, res) => {
             .send("An error occurred while saving occupation data.");
         }
 
-        // Return the translated occupation data
-        res.status(200).json(translatedData);
+        db.saveCategoryData(translatedData, (err) => {
+          if (err) {
+            console.error("Error saving skills data:", err);
+            return res
+              .status(500)
+              .send("An error occurred while saving skills data.");
+          }
+
+          // Return the translated occupation data and skills data
+          res.status(200).json(translatedData);
+        });
       });
     })
     .catch((error) => {

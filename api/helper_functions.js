@@ -58,33 +58,60 @@ async function searchJobs(keyword) {
 }
 
 async function fetchCareerCode(keyword) {
-  const searchResponse = await fetch(
-    `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
-      keyword
-    )}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${ONET_API_KEY}`,
-        Accept: "application/json"
+  try {
+    console.log(`Fetching career code for keyword: "${keyword}"`);
+
+    const searchResponse = await fetch(
+      `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
+        keyword
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
       }
-    }
-  );
-
-  if (!searchResponse.ok) {
-    throw new Error(
-      `Search API request failed with status: ${searchResponse.status}`
     );
+
+    if (!searchResponse.ok) {
+      console.error(
+        `Fetch failed with status: ${searchResponse.status} - ${searchResponse.statusText}`
+      );
+      throw new Error(
+        `Search API request failed with status: ${searchResponse.status}`
+      );
+    }
+
+    let searchData;
+    try {
+      searchData = await searchResponse.json();
+    } catch (jsonError) {
+      console.error("Error parsing JSON response:", jsonError);
+      throw new Error("Failed to parse JSON response from API.");
+    }
+
+    console.log("API response received:", searchData);
+
+    const careerArray = searchData.career;
+
+    if (!careerArray || !Array.isArray(careerArray)) {
+      console.error("Invalid 'career' data format:", searchData);
+      throw new Error("API response does not contain a valid 'career' array.");
+    }
+
+    if (careerArray.length === 0) {
+      console.warn("No careers found for the given keyword:", keyword);
+      throw new Error("No career found for the given keyword.");
+    }
+
+    const careerCode = careerArray[0].code;
+    console.log(`Career code retrieved successfully: ${careerCode}`);
+    return careerCode;
+  } catch (error) {
+    console.error("Error in fetchCareerCode function:", error.message);
+    throw error; // Re-throw the error for further handling
   }
-
-  const searchData = await searchResponse.json();
-  const careerArray = searchData.career;
-
-  if (!careerArray || careerArray.length === 0) {
-    throw new Error("No career found for the given keyword.");
-  }
-
-  return careerArray[0].code;
 }
 
 async function fetchAndTranslateDetails(code) {

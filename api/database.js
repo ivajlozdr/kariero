@@ -362,6 +362,202 @@ const saveOccupation = (translatedData, userId, date, callback) => {
   });
 };
 
+// const alldata = {
+//   id: translatedData?.skills?.element?.map((skill) => skill.id) ?? [],
+//   occupationCode: translatedData?.code ?? null,
+//   skills: translatedData?.translated?.skills ?? [],
+//   skills_importance:
+//     translatedData?.skills?.element?.map((skill) => skill.score?.value) ?? [],
+//   title_bg: translatedData?.translated?.title ?? null,
+//   title_en: translatedData?.occupation?.title ?? null,
+//   description: translatedData?.translated?.description ?? null,
+//   bright_outlook: translatedData?.occupation?.bright_outlook?.category ?? null,
+//   tasks: translatedData?.tasks?.task?.map((task) => task.statement) ?? [],
+//   tasks_id: translatedData?.tasks?.task?.map((task) => task.id) ?? [],
+//   skills: translatedData?.translated?.skills ?? [],
+//   skills_id: translatedData?.skills?.element?.map((skill) => skill.id) ?? [],
+//   skills_importance:
+//     translatedData?.skills?.element?.map((skill) => skill.score?.value) ?? [],
+//   abilities:
+//     translatedData?.abilities?.element?.map((ability) => ability.name) ?? [],
+//   abilities_id:
+//     translatedData?.abilities?.element?.map((ability) => ability.id) ?? [],
+//   abilities_importance:
+//     translatedData?.abilities?.element?.map(
+//       (ability) => ability.score?.value
+//     ) ?? [],
+//   knowledge:
+//     translatedData?.knowledge?.element?.map((knowledge) => knowledge.name) ??
+//     [],
+//   knowledge_id:
+//     translatedData?.knowledge?.element?.map((knowledge) => knowledge.id) ?? [],
+//   knowledge_importance:
+//     translatedData?.knowledge?.element?.map(
+//       (knowledge) => knowledge.score?.value
+//     ) ?? [],
+//   technology_skills:
+//     translatedData?.technology_skills?.category?.map(
+//       (techSkill) => techSkill.title?.name
+//     ) ?? [],
+//   technology_skills_id:
+//     translatedData?.technology_skills?.category?.map(
+//       (techSkill) => techSkill.title?.id
+//     ) ?? [],
+//   work_activities:
+//     translatedData?.detailed_work_activities?.activity?.map(
+//       (activity) => activity.name
+//     ) ?? [],
+//   work_activities_id:
+//     translatedData?.detailed_work_activities?.activity?.map(
+//       (activity) => activity.id
+//     ) ?? [],
+//   education:
+//     translatedData?.education?.level_required?.category
+//       ?.map((level) => `${level.name}: ${level.score?.value}%`)
+//       .join(", ") ?? null,
+//   interests:
+//     translatedData?.interests?.element?.map((interest) => interest.name) ?? [],
+//   interests_id:
+//     translatedData?.interests?.element?.map((interest) => interest.id) ?? [],
+//   interests_importance:
+//     translatedData?.interests?.element?.map(
+//       (interest) => interest.score?.value
+//     ) ?? [],
+//   related_occupations:
+//     translatedData?.related_occupations?.occupation?.map(
+//       (occupation) => occupation.code
+//     ) ?? []
+// };
+
+const saveCategoryData = (translatedData, callback) => {
+  // Define the categories to loop through
+  const categories = ["abilities", "knowledge", "skills", "interests"];
+
+  const occupationCode = translatedData?.code ?? null;
+
+  // Begin a transaction to ensure atomicity for all categories
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error("Transaction start error:", err.message);
+      return callback(err);
+    }
+
+    // Flag to track whether any error occurred
+    let hasErrorOccurred = false;
+
+    // Loop through each category and process it
+    categories.forEach((category) => {
+      // Get the data for the current category
+      const ids =
+        translatedData?.[category]?.element?.map((item) => item.id) ?? [];
+      const names =
+        category == "skills"
+          ? translatedData?.translated?.[category] ?? []
+          : translatedData?.[category]?.element?.map(
+              (ability) => ability.name
+            ) ?? [];
+      const importance =
+        translatedData?.[category]?.element?.map((item) => item.score?.value) ??
+        [];
+
+      console.log(`Evaluating category: ${category}`);
+      console.log("IDs:", ids);
+      console.log("Names:", names);
+      console.log("Importance:", importance);
+      if (
+        !occupationCode ||
+        ids.length === 0 ||
+        names.length === 0 ||
+        importance.length === 0
+      ) {
+        console.error(
+          `Missing or invalid data for saving ${category}. Skipping...`
+        );
+        hasErrorOccurred = true;
+        return; // Skip this category and continue with the next one
+      }
+
+      if (ids.length !== names.length || ids.length !== importance.length) {
+        console.error(
+          `${category} data arrays are not aligned in length. Skipping...`
+        );
+        hasErrorOccurred = true;
+        return; // Skip this category and continue with the next one
+      }
+
+      // Prepare the rows for bulk insertion
+      const categoryData = ids.map((id, index) => {
+        return [
+          id, // Item ID (Skill/Knowledge/Interest/Ability)
+          occupationCode, // Occupation code
+          category == "skills"
+            ? names[index].translated_name ?? null
+            : names[index], // Item name
+          importance[index] ?? null // Item importance
+        ];
+      });
+
+      console.log(`${category} data:`, categoryData); // Log the current item data for debugging
+
+      // Check if the items already exist before inserting
+      const checkQuery = `
+        SELECT id FROM ${category} WHERE occupation_code = ? AND id IN (?);
+      `;
+      db.query(checkQuery, [occupationCode, ids], (err, results) => {
+        if (err) {
+          console.error(`Check existing ${category} query error:`, err.message);
+          hasErrorOccurred = true;
+          return; // Skip this category and continue with the next one
+        }
+
+        const existingIds = results.map((row) => row.id);
+        const newData = categoryData.filter(
+          (item) => !existingIds.includes(item[0])
+        );
+
+        // If there are new items to insert
+        if (newData.length > 0) {
+          const insertQuery = `
+            INSERT INTO ${category} (id, occupation_code, name, importance)
+            VALUES ?
+          `;
+          db.query(insertQuery, [newData], (err) => {
+            if (err) {
+              console.error(`Insert ${category} query error:`, err.message);
+              hasErrorOccurred = true;
+              return; // Skip this category and continue with the next one
+            }
+
+            console.log(
+              `${
+                category.charAt(0).toUpperCase() + category.slice(1)
+              } for occupation "${occupationCode}" saved successfully.`
+            );
+          });
+        } else {
+          console.log(`No new ${category} for occupation "${occupationCode}".`);
+        }
+      });
+    });
+
+    // Commit the transaction after all categories have been processed
+    db.commit((err) => {
+      if (err || hasErrorOccurred) {
+        console.error(
+          "Transaction commit error or error occurred during process:",
+          err
+        );
+        return db.rollback(() =>
+          callback(
+            err || new Error("An error occurred during the save process.")
+          )
+        );
+      }
+      callback(null); // Everything succeeded
+    });
+  });
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -371,5 +567,6 @@ module.exports = {
   getUserData,
   saveUserResponses,
   saveFinalScores,
-  saveOccupation
+  saveOccupation,
+  saveCategoryData
 };
