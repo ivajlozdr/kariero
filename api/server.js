@@ -472,6 +472,98 @@ app.post("/onet", async (req, res) => {
   }
 });
 
+app.post("/save-responses-scores", (req, res) => {
+  const { token, scores, userResponses, date } = req.body;
+
+  // Verify the token to get the userId
+  let userId;
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return res.status(401).send("Invalid token.");
+  }
+
+  // Validate request body
+  if (!scores) {
+    return res.status(400).send("Scores are required.");
+  }
+  if (!userResponses || !Array.isArray(userResponses)) {
+    return res
+      .status(400)
+      .send("User responses are required and must be an array.");
+  }
+
+  // Save user responses and final scores
+  db.saveUserResponses(userId, userResponses, date, (err, result) => {
+    if (err) {
+      console.error("Error saving user responses:", err);
+      return res
+        .status(500)
+        .send("An error occurred while saving user responses.");
+    }
+
+    db.saveFinalScores(userId, scores, date, (err, result) => {
+      if (err) {
+        console.error("Error saving final scores:", err);
+        return res
+          .status(500)
+          .send("An error occurred while saving final scores.");
+      }
+
+      // Return a success response
+      res.status(200).send("Responses and scores saved successfully.");
+    });
+  });
+});
+
+app.post("/save-occupation", (req, res) => {
+  const { token, keyword, date } = req.body;
+
+  // Verify the token to get the userId
+  let userId;
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return res.status(401).send("Invalid token.");
+  }
+
+  // Validate request body
+  if (!keyword) {
+    return res.status(400).send("Keyword is required.");
+  }
+
+  // Fetch career code for the given keyword
+  hf.fetchCareerCode(keyword)
+    .then((code) => {
+      // Fetch and translate occupation details
+      return hf.fetchAndTranslateDetails(code);
+    })
+    .then((translatedData) => {
+      // Save occupation data
+      db.saveOccupation(translatedData, userId, date, (err) => {
+        if (err) {
+          console.error("Error saving occupation data:", err);
+          return res
+            .status(500)
+            .send("An error occurred while saving occupation data.");
+        }
+
+        // Return the translated occupation data
+        res.status(200).json(translatedData);
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching or saving occupation data:", error);
+      res
+        .status(500)
+        .send("An error occurred while processing the occupation data.");
+    });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");

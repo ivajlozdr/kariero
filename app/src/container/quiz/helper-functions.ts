@@ -233,9 +233,9 @@ export const fetchOpenAIResponse = async (
 };
 
 /**
- * Изпраща асинхронни заявки към O*NET API за всяка кариера в масива и връща подробности за кариерата.
+ * Изпраща асинхронни заявки към бекенд API-то за всяка кариера в масива и връща подробности за кариерата.
  *
- * Функцията изпраща POST заявки към KARIERO API за всяко име на кариера, предоставяйки потребителски отговори и оценка (scores). Тя обработва отговорите и връща подробни данни за всяка кариера, ако има успешно получен отговор. Ако има грешка, тя я отчита и премахва грешните отговори от резултатите.
+ * Функцията изпраща POST заявки към бекенд API за всяко име на кариера, предоставяйки потребителски отговори и оценка (scores). Тя обработва отговорите и връща подробни данни за всяка кариера, ако има успешно получен отговор. Ако има грешка, тя я отчита и премахва грешните отговори от резултатите.
  *
  * @param {string[]} careerNames - Масив с имена на кариери, които трябва да бъдат търсени.
  * @param {Scores} scores - Оценки за RIASEC модел и други детайли, свързани с потребителя.
@@ -247,47 +247,72 @@ export const fetchOnetData = async (
   careerNames: string[],
   scores: Scores,
   userResponses: UserResponses[],
-  token: string | null
+  token: string | null,
+  date: string
 ): Promise<FullCareerDetails[]> => {
-  const promises = careerNames.map(async (careerName) => {
-    try {
-      console.log({
-        token: token,
-        keyword: careerName,
-        scores,
-        userResponses
-      });
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/onet`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            token: token,
-            keyword: careerName,
-            scores,
-            userResponses
-          })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `O*NET API Error for ${careerName}: ${response.status}`
-        );
+  try {
+    // First, send the user responses and scores to the backend to be saved
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/save-responses-scores`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          token: token,
+          scores: scores,
+          userResponses: userResponses,
+          date: date
+        })
       }
+    );
 
-      return response.json();
-    } catch (error) {
-      console.error(`Error fetching O*NET data for ${careerName}:`, error);
-      return null;
+    if (!response.ok) {
+      throw new Error(`Error saving responses and scores: ${response.status}`);
     }
-  });
 
-  const results = await Promise.all(promises);
-  return results.filter((data): data is FullCareerDetails => data !== null);
+    // Now process each career in the careerNames array
+    const promises = careerNames.map(async (careerName) => {
+      try {
+        // Send the career data (occupation) to be saved
+        const occupationResponse = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/save-occupation`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: token,
+              keyword: careerName,
+              date: date
+            })
+          }
+        );
+
+        if (!occupationResponse.ok) {
+          throw new Error(
+            `Error saving occupation data for ${careerName}: ${occupationResponse.status}`
+          );
+        }
+
+        // Parse and return the occupation details
+        const occupationData = await occupationResponse.json();
+        return occupationData; // Return the occupation details as part of the result
+      } catch (error) {
+        console.error(`Error processing career ${careerName}:`, error);
+        return null; // In case of error, return null for that career
+      }
+    });
+
+    // Wait for all occupation data to be processed and return the successful results
+    const results = await Promise.all(promises);
+    return results.filter((data): data is FullCareerDetails => data !== null); // Filter out any null values (errors)
+  } catch (error) {
+    console.error("Error processing data:", error);
+    return []; // Return an empty array if any error occurs
+  }
 };
 
 /**
@@ -314,6 +339,8 @@ export const submitQuiz = async (
   >
 ): Promise<void> => {
   try {
+    const date = new Date().toISOString();
+
     // console.log("Final Scores:", scores);
     // console.log("User Responses:", userResponses);
 
@@ -643,7 +670,8 @@ export const submitQuiz = async (
       careerNames,
       hardCodedScores,
       hardCodedUserResponses,
-      token
+      token,
+      date
     );
     console.log("O*NET Data:", onetData);
 
