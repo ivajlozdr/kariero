@@ -314,10 +314,168 @@ export const submitQuiz = async (
   >
 ): Promise<void> => {
   try {
-    console.log("Final Scores:", scores);
-    console.log("User Responses:", userResponses);
+    // console.log("Final Scores:", scores);
+    // console.log("User Responses:", userResponses);
 
-    const recommendations = await fetchOpenAIResponse(scores);
+    const hardCodedScores: Scores = {
+      RIASEC: {
+        Realistic: {
+          HandsOn: 0,
+          TechComfort: 0
+        },
+        Investigative: {
+          ProblemSolving: 0,
+          Curiosity: 0
+        },
+        Artistic: {
+          Creative: 0
+        },
+        Social: {
+          Social: 2,
+          Collaboration: 0
+        },
+        Enterprising: {
+          Enterprising: -2,
+          JobSatisfaction: null
+        },
+        Conventional: {
+          Conventional: 2
+        }
+      },
+      Preferences: {
+        PersonalityTypes: ["Аналитичен мислител"],
+        WorkEnvironment: ["Офис"],
+        JobPriority: ["Стабилност"],
+        EducationLevel: ["Висше"],
+        CareerGoals: ["Технически експерт"]
+      },
+      WorkStyle: {
+        StructurePreference: "Гъвкава",
+        Collaboration: "Индивидуални задачи",
+        WorkEnvironment: "Бърза и динамична"
+      }
+    };
+
+    const hardCodedUserResponses: UserResponses[] = [
+      {
+        id: 1,
+        question: "Обичате ли да работите с ръцете си или да изграждате неща?",
+        answer: "Neutral"
+      },
+      {
+        id: 2,
+        question:
+          "Обичате ли да решавате сложни проблеми или да анализирате данни?",
+        answer: "Neutral"
+      },
+      {
+        id: 3,
+        question:
+          "Често ли се чудите как работят нещата или защо се случват определени явления?",
+        answer: "Neutral"
+      },
+      {
+        id: 4,
+        question:
+          "Обичате ли да създавате неща, като например да пишете, рисувате или проектирате?",
+        answer: "Neutral"
+      },
+      {
+        id: 5,
+        question:
+          "Чувствате ли се заредени с енергия, когато помагате на други хора или обучавате нови умения?",
+        answer: "Agree"
+      },
+      {
+        id: 6,
+        question:
+          "Бихте ли се наслаждавали на работа с хора за съвместно решаване на проблеми?",
+        answer: "Neutral"
+      },
+      {
+        id: 7,
+        question:
+          "Обичате ли да ръководите проекти или да убеждавате другите да възприемат вашите идеи?",
+        answer: "Agree"
+      },
+      {
+        id: 8,
+        question:
+          "Бихте ли предпочели да вземате решения в лидерска роля вместо да следвате план?",
+        answer: "Disagree"
+      },
+      {
+        id: 9,
+        question:
+          "Обичате ли да организирате данни, да създавате графици или да работите с детайлни системи?",
+        answer: "Agree"
+      },
+      {
+        id: 10,
+        question:
+          "Бихте ли предпочели структурирана работна среда пред гъвкава?",
+        answer: "Гъвкава"
+      },
+      {
+        id: 11,
+        question:
+          "Кое от тези най-добре ви описва? (Изберете всички, които се отнасят): Аналитичен мислител, Креативен решавач на проблеми, Емпатичен слушател, Организиран до детайли, Уверен лидер, Практически ориентиран работник",
+        answer: "Аналитичен мислител"
+      },
+      {
+        id: 12,
+        question:
+          "Колко удобно се чувствате при работа с технологии, инструменти или машини?",
+        answer: "Neutral"
+      },
+      {
+        id: 13,
+        question:
+          "Бихте ли предпочели да работите на открито, в офис или в творческо студио?",
+        answer: "Офис"
+      },
+      {
+        id: 14,
+        question:
+          "Обичате ли да работите в екип или предпочитате индивидуални задачи?",
+        answer: "Индивидуални задачи"
+      },
+      {
+        id: 15,
+        question:
+          "Кое е по-важно за вас в една работа: креативност, стабилност или да помагате на другите?",
+        answer: "Стабилност"
+      },
+      {
+        id: 16,
+        question:
+          "Развивате ли се най-добре в бърза и динамична среда, или предпочитате стабилен и предсказуем ритъм на работа?",
+        answer: "Бърза и динамична"
+      },
+      {
+        id: 17,
+        question:
+          "Какво е най-високото ниво на образование, което сте завършили?",
+        answer: "Висше"
+      },
+      {
+        id: 18,
+        question:
+          "Къде виждате себе си професионално след 5 години? (Лидерска роля, технически експерт, креативна позиция и т.н.)",
+        answer: "Технически експерт"
+      },
+      {
+        id: 19,
+        question:
+          "Какъв тип работа ви носи най-голямо удовлетворение: да помагате на другите, да решавате проблеми или да създавате нещо осезаемо?",
+        answer: "Помагате на другите"
+      }
+    ];
+
+    console.log("Final Scores:", hardCodedScores);
+    console.log("User Responses:", hardCodedUserResponses);
+
+    const recommendations = await fetchOpenAIResponse(hardCodedScores);
     if (!recommendations) {
       throw new Error("Failed to fetch career recommendations from OpenAI.");
     }
@@ -334,8 +492,8 @@ export const submitQuiz = async (
 
     const onetData = await fetchOnetData(
       careerNames,
-      scores,
-      userResponses,
+      hardCodedScores,
+      hardCodedUserResponses,
       token
     );
     console.log("O*NET Data:", onetData);

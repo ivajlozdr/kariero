@@ -9,13 +9,13 @@ export type QuestionMapping = {
 
 export interface Scores {
   RIASEC: {
-    [key: string]: { [field: string]: string | number };
+    [key: string]: { [field: string]: string | number | null };
   };
   Preferences: {
     PersonalityTypes?: string[];
     WorkEnvironment?: string[];
     JobPriority?: string[];
-    EducationLevel?: string;
+    EducationLevel?: string[];
     CareerGoals?: string[];
   };
   WorkStyle: {

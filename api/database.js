@@ -171,84 +171,165 @@ const saveFinalScores = (userId, scores, date, callback) => {
   });
 };
 
-const saveRecommendations = (translatedData, callback) => {
+const saveRecommendations = (translatedData, userId, date, callback) => {
   const extractedData = {
     code: translatedData?.code ?? null,
     title_bg: translatedData?.translated?.title ?? null,
     title_en: translatedData?.occupation?.title ?? null,
     description: translatedData?.translated?.description ?? null,
-    bright_outlook:
-      translatedData?.occupation?.bright_outlook?.category ?? null,
-    tasks: translatedData?.tasks?.task?.map((task) => task.statement) ?? [],
-    tasks_id: translatedData?.tasks?.task?.map((task) => task.id) ?? [],
-    skills: translatedData?.translated?.skills ?? [],
-    skills_id: translatedData?.skills?.element?.map((skill) => skill.id) ?? [],
-    skills_importance:
-      translatedData?.skills?.element?.map((skill) => skill.score?.value) ?? [],
-    abilities:
-      translatedData?.abilities?.element?.map((ability) => ability.name) ?? [],
-    abilities_id:
-      translatedData?.abilities?.element?.map((ability) => ability.id) ?? [],
-    abilities_importance:
-      translatedData?.abilities?.element?.map(
-        (ability) => ability.score?.value
-      ) ?? [],
-    knowledge:
-      translatedData?.knowledge?.element?.map((knowledge) => knowledge.name) ??
-      [],
-    knowledge_id:
-      translatedData?.knowledge?.element?.map((knowledge) => knowledge.id) ??
-      [],
-    knowledge_importance:
-      translatedData?.knowledge?.element?.map(
-        (knowledge) => knowledge.score?.value
-      ) ?? [],
-    technology_skills:
-      translatedData?.technology_skills?.category?.map(
-        (techSkill) => techSkill.title?.name
-      ) ?? [],
-    technology_skills_id:
-      translatedData?.technology_skills?.category?.map(
-        (techSkill) => techSkill.title?.id
-      ) ?? [],
-    work_activities:
-      translatedData?.detailed_work_activities?.activity?.map(
-        (activity) => activity.name
-      ) ?? [],
-    work_activities_id:
-      translatedData?.detailed_work_activities?.activity?.map(
-        (activity) => activity.id
-      ) ?? [],
+    bright_outlook: JSON.stringify(
+      translatedData?.occupation?.bright_outlook?.category ?? null
+    ),
     education:
       translatedData?.education?.level_required?.category
         ?.map((level) => `${level.name}: ${level.score?.value}%`)
         .join(", ") ?? null,
-    interests:
-      translatedData?.interests?.element?.map((interest) => interest.name) ??
-      [],
-    interests_id:
-      translatedData?.interests?.element?.map((interest) => interest.id) ?? [],
-    interests_importance:
-      translatedData?.interests?.element?.map(
-        (interest) => interest.score?.value
-      ) ?? [],
+    tasks: translatedData?.tasks?.task ?? [],
+    skills: translatedData?.skills?.element ?? [],
+    abilities: translatedData?.abilities?.element ?? [],
+    knowledge: translatedData?.knowledge?.element ?? [],
     related_occupations:
       translatedData?.related_occupations?.occupation?.map(
         (occupation) => occupation.code
       ) ?? []
   };
 
-  console.log("Saving recommendations:", extractedData);
-
-  setTimeout(() => {
-    const success = true;
-
-    if (success) {
-      callback(null);
-    } else {
-      callback(new Error("Failed to save data"));
+  db.beginTransaction((err) => {
+    if (err) {
+      // console.log("Error starting transaction:", err);
+      return callback(err);
     }
-  }, 1000); // Simulating async operation with a delay
+
+    // Insert into occupations table, now using the passed 'date' variable
+    const occupationQuery = `
+      INSERT INTO occupations (code, user_id, title_bg, title_en, description, bright_outlook, education, date)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        title_bg = VALUES(title_bg),
+        title_en = VALUES(title_en),
+        description = VALUES(description),
+        bright_outlook = VALUES(bright_outlook),
+        education = VALUES(education)
+    `;
+    console.log("date: ", date);
+    db.query(
+      occupationQuery,
+      [
+        extractedData.code,
+        userId, // Pass userId dynamically
+        extractedData.title_bg,
+        extractedData.title_en,
+        extractedData.description,
+        extractedData.bright_outlook,
+        extractedData.education,
+        date // Passing the date
+      ],
+      (err) => {
+        if (err) {
+          // console.log("Error inserting occupation:", err);
+          return db.rollback(() => callback(err));
+        }
+
+        const insertDetails = (table, items, columns) => {
+          if (!items.length) return Promise.resolve();
+
+          const placeholders = items
+            .map(() => `(${columns.map(() => "?").join(", ")})`)
+            .join(", ");
+          const values = items.flatMap((item) =>
+            columns.map((col) => {
+              const value = item[col] ?? null;
+              return Array.isArray(value) || typeof value === "object"
+                ? JSON.stringify(value)
+                : value;
+            })
+          );
+
+          const query = `
+            INSERT INTO ${table} (${columns.join(", ")})
+            VALUES ${placeholders}
+            ON DUPLICATE KEY UPDATE ${columns
+              .map((col) => `${col} = VALUES(${col})`)
+              .join(", ")}
+          `;
+
+          return new Promise((resolve, reject) => {
+            db.query(query, values, (err) => {
+              if (err) {
+                // console.log("Error inserting details:", err);
+                reject(err);
+              } else resolve();
+            });
+          });
+        };
+
+        // Insert tasks, skills, abilities, knowledge, and related occupations
+
+        insertDetails("tasks", extractedData.tasks, [
+          "id",
+          "occupation_code",
+          "task_description"
+        ])
+          .then(() =>
+            insertDetails("skills", extractedData.skills, [
+              "id",
+              "occupation_code",
+              "name",
+              "importance"
+            ])
+          )
+          .then(() =>
+            insertDetails("abilities", extractedData.abilities, [
+              "id",
+              "occupation_code",
+              "name",
+              "importance"
+            ])
+          )
+          .then(() =>
+            insertDetails("knowledge", extractedData.knowledge, [
+              "id",
+              "occupation_code",
+              "name",
+              "importance"
+            ])
+          )
+          .then(() => {
+            const relatedValues = extractedData.related_occupations.map(
+              (relatedCode) => [extractedData.code, relatedCode]
+            );
+            const relatedQuery = `
+              INSERT INTO related_occupations (occupation_code, related_occupation_code)
+              VALUES ?
+              ON DUPLICATE KEY UPDATE related_occupation_code = VALUES(related_occupation_code)
+            `;
+
+            return new Promise((resolve, reject) => {
+              db.query(relatedQuery, [relatedValues], (err) => {
+                if (err) {
+                  // console.log("Error inserting related occupations:", err);
+                  reject(err);
+                } else resolve();
+              });
+            });
+          })
+          .then(() => {
+            db.commit((err) => {
+              if (err) {
+                // console.log("Error committing transaction:", err);
+                return db.rollback(() => callback(err));
+              }
+              console.log("Data saved successfully!");
+              callback(null);
+            });
+          })
+          .catch((err) => {
+            // console.log("Error in transaction:", err);
+            db.rollback(() => callback(err));
+          });
+      }
+    );
+  });
 };
 
 module.exports = {

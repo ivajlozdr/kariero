@@ -447,9 +447,11 @@ app.post("/onet", async (req, res) => {
 
         hf.fetchCareerCode(keyword)
           .then(async (code) => {
-            const translatedData = await hf.fetchAndTranslateDetails(code);
+            const translatedData = await hf.fetchAndTranslateDetails(
+              "17-2141.00"
+            ); //hard-coded 'code' parameter
 
-            db.saveRecommendations(translatedData, (err) => {
+            db.saveRecommendations(translatedData, userId, date, (err) => {
               if (err) {
                 console.error("Error saving recommendations:", err);
                 return res

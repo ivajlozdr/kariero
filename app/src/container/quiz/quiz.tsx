@@ -47,6 +47,20 @@ const QuizComponent: React.FC = () => {
           userResponses={userResponses}
         />
       </CSSTransition>
+      <button
+        className="button"
+        onClick={() =>
+          submitQuiz(
+            scores,
+            userResponses,
+            token,
+            setCareerRecommendations,
+            setCareers
+          )
+        }
+      >
+        Fake Submit
+      </button>
       {careerRecommendations && careers && careerRecommendations.length > 0 && (
         <CSSTransition
           in={careerRecommendations.length > 0}
