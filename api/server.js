@@ -503,6 +503,20 @@ app.post("/save-occupation", (req, res) => {
     });
 });
 
+app.post("/save-ai-analysis", (req, res) => {
+  const { token, date } = req.body;
+
+  // Verify the token to get the userId
+  let userId;
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return res.status(401).send("Invalid token.");
+  }
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");
