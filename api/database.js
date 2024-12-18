@@ -236,7 +236,6 @@ const saveCategoryData = (translatedData, callback) => {
   ];
   const occupationCode = translatedData?.code ?? null;
 
-  console.log("translatedData: ", translatedData);
   if (!occupationCode) {
     console.error("Missing occupation code. Cannot proceed.");
     return callback(new Error("Invalid occupation code."));
