@@ -378,7 +378,61 @@ export const submitQuiz = async (
     console.log("Final Scores:", scores);
     console.log("User Responses:", userResponses);
 
-    const recommendations = await fetchOpenAIResponse(scores);
+    //const recommendations = await fetchOpenAIResponse(scores);
+
+    const recommendations = {
+      Abilities: [
+        "Originality",
+        "Inductive Reasoning",
+        "Deductive Reasoning",
+        "Fluency of Ideas"
+      ],
+      Skills: [
+        "Complex Problem Solving",
+        "Critical Thinking",
+        "Judgment and Decision Making",
+        "Systems Analysis"
+      ],
+      Knowledge: [
+        "Design",
+        "Computers and Electronics",
+        "Engineering and Technology",
+        "Production and Processing"
+      ],
+      Interests: ["Artistic", "Realistic", "Enterprising", "Investigative"],
+      WorkStyle: [
+        "Analytical Thinking",
+        "Attention to Detail",
+        "Innovation",
+        "Independence"
+      ],
+      WorkValues: [
+        "Achievement",
+        "Recognition",
+        "Working Conditions",
+        "Independence"
+      ],
+      TechnologySkills: [
+        "Computer Aided Design (CAD) software",
+        "Analytical or scientific software",
+        "Development environment software",
+        "Graphics or photo imaging software"
+      ],
+      CareerRecommendations: [
+        {
+          careerPath: "Technology Analysis",
+          reason:
+            "Combining investigative and enterprising interests, careers in technology analysis suit individuals who enjoy working with computers and electronics within a flexible work structure.",
+          listOfCareers: [
+            {
+              career: "Software Developers",
+              reason:
+                "Program development offers innovation and problem-solving in technology, adapting well to your career goals and work values."
+            }
+          ]
+        }
+      ]
+    };
 
     if (!recommendations) {
       throw new Error("Failed to fetch career recommendations from OpenAI.");

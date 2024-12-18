@@ -236,6 +236,7 @@ const saveCategoryData = (translatedData, callback) => {
   ];
   const occupationCode = translatedData?.code ?? null;
 
+  console.log("translatedData: ", translatedData);
   if (!occupationCode) {
     console.error("Missing occupation code. Cannot proceed.");
     return callback(new Error("Invalid occupation code."));
@@ -253,7 +254,10 @@ const saveCategoryData = (translatedData, callback) => {
       try {
         const ids =
           translatedData?.[category]?.element?.map((item) => item.id) ?? [];
-        const namesBg = translatedData?.translated?.[category] ?? [];
+        const namesBg =
+          translatedData?.translated?.[category].map(
+            (item) => item.translated_name
+          ) ?? [];
         const namesEn =
           translatedData?.[category]?.element?.map(
             (category) => category.name
@@ -263,6 +267,18 @@ const saveCategoryData = (translatedData, callback) => {
             (item) => item.score?.value
           ) ?? [];
 
+        console.log(
+          "category: ",
+          category,
+          "ids: ",
+          ids,
+          "namesBg: ",
+          namesBg,
+          "namesEn: ",
+          namesEn,
+          "importance: ",
+          importance
+        );
         if (
           ids.length === 0 ||
           namesBg.length === 0 ||

@@ -59,8 +59,6 @@ async function searchJobs(keyword) {
 
 async function fetchCareerCode(keyword) {
   try {
-    console.log(`Fetching career code for keyword: "${keyword}"`);
-
     const searchResponse = await fetch(
       `https://services.onetcenter.org/ws/mnm/search?keyword=${encodeURIComponent(
         keyword
@@ -91,8 +89,6 @@ async function fetchCareerCode(keyword) {
       throw new Error("Failed to parse JSON response from API.");
     }
 
-    console.log("API response received:", searchData);
-
     const careerArray = searchData.career;
 
     if (!careerArray || !Array.isArray(careerArray)) {
@@ -106,7 +102,6 @@ async function fetchCareerCode(keyword) {
     }
 
     const careerCode = careerArray[0].code;
-    console.log(`Career code retrieved successfully: ${careerCode}`);
     return careerCode;
   } catch (error) {
     console.error("Error in fetchCareerCode function:", error.message);
