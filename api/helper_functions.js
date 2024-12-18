@@ -139,52 +139,51 @@ async function fetchAndTranslateDetails(code) {
     detailsData.occupation.description
   );
 
-  // Helper function to translate lists of elements
-  const translateElements = async (elements, namePath) => {
-    if (elements && elements.length > 0) {
-      const combinedString = elements.map((el) => el[namePath]).join(", ");
-      const translatedString = await translate(combinedString);
-      return translatedString.split(", ").map((translatedName) => ({
-        translated_name: translatedName
-      }));
+  // Helper function to translate array of strings
+  const translateList = async (list) => {
+    if (list && list.length > 0) {
+      // Translate each item in the list individually
+      const translatedItems = await Promise.all(
+        list.map(async (item) => {
+          const translatedItem = await translate(item);
+          return { translated_name: translatedItem };
+        })
+      );
+      return translatedItems;
     }
     return [];
   };
 
   // Extract and translate tasks
   const tasks = detailsData.tasks?.task?.map((t) => t.statement) || [];
-  const translatedTasks = await translateElements(tasks, undefined);
+  const translatedTasks = await translateList(tasks);
 
   // Extract and translate technology skills
   const techSkills =
     detailsData.technology_skills?.category?.map((c) => c.title.name) || [];
-  const translatedTechSkills = await translateElements(techSkills, undefined);
+  const translatedTechSkills = await translateList(techSkills);
 
   // Extract and translate work activities
   const workActivities =
     detailsData.detailed_work_activities?.activity?.map((a) => a.name) || [];
-  const translatedWorkActivities = await translateElements(
-    workActivities,
-    undefined
-  );
+  const translatedWorkActivities = await translateList(workActivities);
 
   // Extract and translate other elements
-  const translatedSkills = await translateElements(
-    detailsData.skills?.element || [],
-    "name"
-  );
-  const translatedInterests = await translateElements(
-    detailsData.interests?.element || [],
-    "name"
-  );
-  const translatedAbilities = await translateElements(
-    detailsData.abilities?.element || [],
-    "name"
-  );
-  const translatedKnowledge = await translateElements(
-    detailsData.knowledge?.element || [],
-    "name"
-  );
+  const skills = detailsData.skills?.element?.map((s) => s.name) || [];
+  const translatedSkills = await translateList(skills);
+
+  const interests = detailsData.interests?.element?.map((i) => i.name) || [];
+  const translatedInterests = await translateList(interests);
+
+  const abilities = detailsData.abilities?.element?.map((a) => a.name) || [];
+  const translatedAbilities = await translateList(abilities);
+
+  const knowledge = detailsData.knowledge?.element?.map((k) => k.name) || [];
+  const translatedKnowledge = await translateList(knowledge);
+
+  const relatedOccupations =
+    detailsData.related_occupations?.occupation?.map((r) => r.title) || [];
+  const translatedRelatedOccupations = await translateList(relatedOccupations);
 
   // Return all translated data
   return {
@@ -198,7 +197,8 @@ async function fetchAndTranslateDetails(code) {
       knowledge: translatedKnowledge,
       detailed_work_activities: translatedWorkActivities,
       technology_skills: translatedTechSkills,
-      tasks: translatedTasks
+      tasks: translatedTasks,
+      related_occupations: translatedRelatedOccupations
     }
   };
 }

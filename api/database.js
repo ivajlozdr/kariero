@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const dbOpts = require("./config.js").dbOpts;
 const dbOptsLocal = require("./config.js").dbOptsLocal;
+const hf = require("./helper_functions");
 require("dotenv").config();
 
 const db = mysql.createConnection(dbOptsLocal);
@@ -309,57 +310,72 @@ const saveFinalScores = (userId, scores, date, callback) => {
 //   });
 // };
 
-const saveOccupation = (translatedData, userId, date, callback) => {
-  const extractedData = {
-    code: translatedData?.code ?? null,
-    title_bg: translatedData?.translated?.title ?? null,
-    title_en: translatedData?.occupation?.title ?? null,
-    description: translatedData?.translated?.description ?? null,
-    bright_outlook: JSON.stringify(
-      translatedData?.occupation?.bright_outlook?.category ?? null
-    ),
-    education:
-      translatedData?.education?.level_required?.category
-        ?.map((level) => `${level.name}: ${level.score?.value}%`)
-        .join(", ") ?? null
-  };
+const saveOccupation = async (translatedData, userId, date, callback) => {
+  try {
+    const educationLevels =
+      translatedData?.education?.level_required?.category ?? [];
 
-  db.beginTransaction((err) => {
-    if (err) {
-      return callback(err);
-    }
+    // Translate each education level name
+    const educationTranslations = await Promise.all(
+      educationLevels.map(async (level) => {
+        const translatedName = await hf.translate(level.name); // Translate the education level name
+        return `${translatedName}: ${level.score?.value}%`;
+      })
+    );
 
-    const occupationQuery = `
-      INSERT INTO occupations (code, user_id, title_bg, title_en, description, bright_outlook, education, date)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    const extractedData = {
+      code: translatedData?.code ?? null,
+      title_bg: translatedData?.translated?.title ?? null,
+      title_en: translatedData?.occupation?.title ?? null,
+      description: translatedData?.translated?.description ?? null,
+      bright_outlook: JSON.stringify(
+        translatedData?.occupation?.bright_outlook?.category ?? null
+      ),
+      education:
+        educationTranslations.length > 0
+          ? educationTranslations.join(", ")
+          : null
+    };
 
-    db.query(
-      occupationQuery,
-      [
-        extractedData.code,
-        userId,
-        extractedData.title_bg,
-        extractedData.title_en,
-        extractedData.description,
-        extractedData.bright_outlook,
-        extractedData.education,
-        date
-      ],
-      (err) => {
-        if (err) {
-          return db.rollback(() => callback(err));
-        }
+    db.beginTransaction((err) => {
+      if (err) {
+        return callback(err);
+      }
 
-        db.commit((err) => {
+      const occupationQuery = `
+        INSERT INTO occupations (code, user_id, title_bg, title_en, description, bright_outlook, education, date)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        occupationQuery,
+        [
+          extractedData.code,
+          userId,
+          extractedData.title_bg,
+          extractedData.title_en,
+          extractedData.description,
+          extractedData.bright_outlook,
+          extractedData.education,
+          date
+        ],
+        (err) => {
           if (err) {
             return db.rollback(() => callback(err));
           }
-          callback(null);
-        });
-      }
-    );
-  });
+
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() => callback(err));
+            }
+            callback(null);
+          });
+        }
+      );
+    });
+  } catch (error) {
+    callback(error); // Handle any translation errors or unexpected issues
+  }
 };
 
 // const alldata = {
@@ -456,12 +472,11 @@ const saveCategoryData = (translatedData, callback) => {
       try {
         const ids =
           translatedData?.[category]?.element?.map((item) => item.id) ?? [];
-        const names =
-          category === "skills"
-            ? translatedData?.translated?.[category] ?? []
-            : translatedData?.[category]?.element?.map(
-                (category) => category.name
-              ) ?? [];
+        const namesBg = translatedData?.translated?.[category] ?? [];
+        const namesEn =
+          translatedData?.[category]?.element?.map(
+            (category) => category.name
+          ) ?? [];
         const importance =
           translatedData?.[category]?.element?.map(
             (item) => item.score?.value
@@ -469,9 +484,10 @@ const saveCategoryData = (translatedData, callback) => {
 
         if (
           ids.length === 0 ||
-          names.length === 0 ||
+          namesBg.length === 0 ||
+          namesEn.length === 0 ||
           importance.length === 0 ||
-          ids.length !== names.length ||
+          ids.length !== namesEn.length ||
           ids.length !== importance.length
         ) {
           console.warn(
@@ -483,9 +499,8 @@ const saveCategoryData = (translatedData, callback) => {
         const categoryData = ids.map((id, index) => [
           id,
           occupationCode,
-          category === "skills"
-            ? names[index]?.translated_name ?? null
-            : names[index],
+          namesEn[index],
+          namesBg[index]?.translated_name ?? null,
           importance[index] ?? null
         ]);
 
@@ -493,7 +508,7 @@ const saveCategoryData = (translatedData, callback) => {
         await db.promise().query(deleteQuery, [occupationCode]);
 
         const insertQuery = `
-          INSERT INTO ${category} (onet_id, occupation_code, name, importance)
+          INSERT INTO ${category} (onet_id, occupation_code, name_en, name_bg, importance)
           VALUES ?;
         `;
         await db.promise().query(insertQuery, [categoryData]);
@@ -512,51 +527,67 @@ const saveCategoryData = (translatedData, callback) => {
         switch (table) {
           case "related_occupations":
             data =
-              translatedData?.related_occupations?.occupation?.map((occ) => [
-                null, // Auto-increment ID will not be replaced
-                occ.code,
-                occupationCode,
-                occ.title
-              ]) ?? [];
+              translatedData?.related_occupations?.occupation?.map(
+                (occ, index) => [
+                  null, // Auto-increment ID will not be replaced
+                  occ.code, // O*NET ID
+                  occupationCode, // Parent occupation code
+                  occ.title, // English title
+                  translatedData?.translated?.related_occupations?.[index]
+                    ?.translated_name // Bulgarian title
+                ]
+              ) ?? [];
             insertQuery = `
-              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              INSERT INTO ${table} (id, onet_id, occupation_code, name_en, name_bg)
               VALUES ?;
             `;
             break;
           case "work_activities":
             data =
               translatedData?.detailed_work_activities?.activity?.map(
-                (activity) => [null, activity.id, occupationCode, activity.name]
+                (activity, index) => [
+                  null,
+                  activity.id,
+                  occupationCode,
+                  activity.name,
+                  translatedData?.translated?.detailed_work_activities?.[index]
+                    ?.translated_name
+                ]
               ) ?? [];
             insertQuery = `
-              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              INSERT INTO ${table} (id, onet_id, occupation_code, name_en, name_bg)
               VALUES ?;
             `;
             break;
           case "technology_skills":
             data =
-              translatedData?.technology_skills?.category?.map((techSkill) => [
-                null,
-                techSkill.title.id,
-                occupationCode,
-                techSkill.title.name
-              ]) ?? [];
+              translatedData?.technology_skills?.category?.map(
+                (techSkill, index) => [
+                  null,
+                  techSkill.title.id,
+                  occupationCode,
+                  techSkill.title.name,
+                  translatedData?.translated?.technology_skills?.[index]
+                    ?.translated_name
+                ]
+              ) ?? [];
             insertQuery = `
-              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              INSERT INTO ${table} (id, onet_id, occupation_code, name_en, name_bg)
               VALUES ?;
             `;
             break;
           case "tasks":
             data =
-              translatedData?.tasks?.task?.map((task) => [
+              translatedData?.tasks?.task?.map((task, index) => [
                 null,
                 task.id,
                 occupationCode,
                 task.statement,
+                translatedData?.translated?.tasks?.[index]?.translated_name,
                 task.score.value
               ]) ?? [];
             insertQuery = `
-              INSERT INTO ${table} (id, onet_id, occupation_code, name, importance)
+              INSERT INTO ${table} (id, onet_id, occupation_code, name_en, name_bg, importance)
               VALUES ?;
             `;
             break;
