@@ -431,7 +431,12 @@ const saveOccupation = (translatedData, userId, date, callback) => {
 
 const saveCategoryData = (translatedData, callback) => {
   const categories = ["abilities", "knowledge", "skills", "interests"];
-  //related_occupations(id - auto increment, occupation_code, related_occupation_code), work_activities(id - auto increment, onet_id, occupation_code, description), technology_skills(id, onet_id, occupation_code, name), tasks(id, onet_id, occupation_code, descript ion)
+  const additionalTables = [
+    "related_occupations",
+    "work_activities",
+    "technology_skills",
+    "tasks"
+  ];
   const occupationCode = translatedData?.code ?? null;
 
   if (!occupationCode) {
@@ -452,7 +457,7 @@ const saveCategoryData = (translatedData, callback) => {
         const ids =
           translatedData?.[category]?.element?.map((item) => item.id) ?? [];
         const names =
-          category == "skills"
+          category === "skills"
             ? translatedData?.translated?.[category] ?? []
             : translatedData?.[category]?.element?.map(
                 (category) => category.name
@@ -461,8 +466,6 @@ const saveCategoryData = (translatedData, callback) => {
           translatedData?.[category]?.element?.map(
             (item) => item.score?.value
           ) ?? [];
-
-        console.log(`Processing category: ${category}`);
 
         if (
           ids.length === 0 ||
@@ -486,40 +489,105 @@ const saveCategoryData = (translatedData, callback) => {
           importance[index] ?? null
         ]);
 
-        // Delete all previous records for this occupation and category
-        const deleteQuery = `
-          DELETE FROM ${category} WHERE occupation_code = ?;
-        `;
+        const deleteQuery = `DELETE FROM ${category} WHERE occupation_code = ?;`;
         await db.promise().query(deleteQuery, [occupationCode]);
 
-        // Insert new data
         const insertQuery = `
           INSERT INTO ${category} (onet_id, occupation_code, name, importance)
           VALUES ?;
         `;
         await db.promise().query(insertQuery, [categoryData]);
-
-        console.log(
-          `${
-            category.charAt(0).toUpperCase() + category.slice(1)
-          } for occupation "${occupationCode}" saved successfully.`
-        );
       } catch (error) {
         console.error(`Error processing ${category}:`, error.message);
         hasErrorOccurred = true;
       }
     };
 
-    // Process each category sequentially
+    const processAdditionalTable = async (table) => {
+      try {
+        let data = [];
+        let deleteQuery = `DELETE FROM ${table} WHERE occupation_code = ?;`;
+        let insertQuery = "";
+
+        switch (table) {
+          case "related_occupations":
+            data =
+              translatedData?.related_occupations?.occupation?.map((occ) => [
+                null, // Auto-increment ID will not be replaced
+                occ.code,
+                occupationCode,
+                occ.title
+              ]) ?? [];
+            insertQuery = `
+              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              VALUES ?;
+            `;
+            break;
+          case "work_activities":
+            data =
+              translatedData?.detailed_work_activities?.activity?.map(
+                (activity) => [null, activity.id, occupationCode, activity.name]
+              ) ?? [];
+            insertQuery = `
+              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              VALUES ?;
+            `;
+            break;
+          case "technology_skills":
+            data =
+              translatedData?.technology_skills?.category?.map((techSkill) => [
+                null,
+                techSkill.title.id,
+                occupationCode,
+                techSkill.title.name
+              ]) ?? [];
+            insertQuery = `
+              INSERT INTO ${table} (id, onet_id, occupation_code, name)
+              VALUES ?;
+            `;
+            break;
+          case "tasks":
+            data =
+              translatedData?.tasks?.task?.map((task) => [
+                null,
+                task.id,
+                occupationCode,
+                task.statement,
+                task.score.value
+              ]) ?? [];
+            insertQuery = `
+              INSERT INTO ${table} (id, onet_id, occupation_code, name, importance)
+              VALUES ?;
+            `;
+            break;
+          default:
+            return;
+        }
+
+        if (data.length > 0) {
+          await db.promise().query(deleteQuery, [occupationCode]);
+          await db.promise().query(insertQuery, [data]);
+        }
+      } catch (error) {
+        console.error(`Error processing ${table}:`, error.message);
+        hasErrorOccurred = true;
+      }
+    };
+
     (async () => {
       for (const category of categories) {
         await processCategory(category);
-        if (hasErrorOccurred) break; // Stop further processing if an error occurs
+        if (hasErrorOccurred) break;
+      }
+
+      for (const table of additionalTables) {
+        await processAdditionalTable(table);
+        if (hasErrorOccurred) break;
       }
 
       if (hasErrorOccurred) {
         db.rollback(() => {
-          callback(new Error("An error occurred while saving category data."));
+          callback(new Error("An error occurred while saving data."));
         });
       } else {
         db.commit((err) => {
