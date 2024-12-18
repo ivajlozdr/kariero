@@ -449,7 +449,7 @@ app.post("/save-responses-scores", (req, res) => {
 });
 
 app.post("/save-occupation", (req, res) => {
-  const { token, keyword, date } = req.body;
+  const { token, keyword, date, reason } = req.body;
 
   // Verify the token to get the userId
   let userId;
@@ -474,7 +474,7 @@ app.post("/save-occupation", (req, res) => {
     })
     .then((translatedData) => {
       // Save occupation data
-      db.saveOccupation(translatedData, userId, date, (err) => {
+      db.saveOccupation(translatedData, userId, date, reason, (err) => {
         if (err) {
           console.error("Error saving occupation data:", err);
           return res

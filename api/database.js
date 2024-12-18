@@ -310,7 +310,13 @@ const saveFinalScores = (userId, scores, date, callback) => {
 //   });
 // };
 
-const saveOccupation = async (translatedData, userId, date, callback) => {
+const saveOccupation = async (
+  translatedData,
+  userId,
+  date,
+  reason,
+  callback
+) => {
   try {
     const educationLevels =
       translatedData?.education?.level_required?.category ?? [];
@@ -322,12 +328,14 @@ const saveOccupation = async (translatedData, userId, date, callback) => {
         return `${translatedName}: ${level.score?.value}%`;
       })
     );
+    const translatedReason = await hf.translate(reason);
 
     const extractedData = {
       code: translatedData?.code ?? null,
       title_bg: translatedData?.translated?.title ?? null,
       title_en: translatedData?.occupation?.title ?? null,
       description: translatedData?.translated?.description ?? null,
+      reason: translatedReason ?? null,
       bright_outlook: JSON.stringify(
         translatedData?.occupation?.bright_outlook?.category ?? null
       ),
@@ -343,8 +351,8 @@ const saveOccupation = async (translatedData, userId, date, callback) => {
       }
 
       const occupationQuery = `
-        INSERT INTO occupations (code, user_id, title_bg, title_en, description, bright_outlook, education, date)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO occupations (code, user_id, title_bg, title_en, description, reason, bright_outlook, education, date)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       db.query(
@@ -355,6 +363,7 @@ const saveOccupation = async (translatedData, userId, date, callback) => {
           extractedData.title_bg,
           extractedData.title_en,
           extractedData.description,
+          extractedData.reason,
           extractedData.bright_outlook,
           extractedData.education,
           date

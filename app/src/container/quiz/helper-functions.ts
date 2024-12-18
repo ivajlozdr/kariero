@@ -319,7 +319,8 @@ export const fetchOnetData = async (
             body: JSON.stringify({
               token: token,
               keyword: career.career,
-              date: date
+              date: date,
+              reason: career.reason
             })
           }
         );
