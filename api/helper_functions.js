@@ -133,43 +133,72 @@ async function fetchAndTranslateDetails(code) {
   }
 
   const detailsData = await detailsResponse.json();
+
   const translatedTitle = await translate(detailsData.occupation.title);
   const translatedDescription = await translate(
     detailsData.occupation.description
   );
 
-  // Check if skills are available, then translate them if they exist
-  let translatedSkills = [];
-  if (
-    detailsData.skills &&
-    detailsData.skills.element &&
-    detailsData.skills.element.length > 0
-  ) {
-    // Combine all skills into one string for translation
-    const skillsString = detailsData.skills.element
-      .map((skill) => skill.name)
-      .join(", ");
+  // Helper function to translate lists of elements
+  const translateElements = async (elements, namePath) => {
+    if (elements && elements.length > 0) {
+      const combinedString = elements.map((el) => el[namePath]).join(", ");
+      const translatedString = await translate(combinedString);
+      return translatedString.split(", ").map((translatedName) => ({
+        translated_name: translatedName
+      }));
+    }
+    return [];
+  };
 
-    // Translate the combined skills string
-    const translatedSkillsString = await translate(skillsString);
+  // Extract and translate tasks
+  const tasks = detailsData.tasks?.task?.map((t) => t.statement) || [];
+  const translatedTasks = await translateElements(tasks, undefined);
 
-    // Split the translated skills string back into individual skills
-    translatedSkills = translatedSkillsString
-      .split(", ")
-      .map((translatedName) => {
-        return {
-          translated_name: translatedName
-        };
-      });
-  }
+  // Extract and translate technology skills
+  const techSkills =
+    detailsData.technology_skills?.category?.map((c) => c.title.name) || [];
+  const translatedTechSkills = await translateElements(techSkills, undefined);
 
-  // Return the data including translated skills (or empty array if no skills)
+  // Extract and translate work activities
+  const workActivities =
+    detailsData.detailed_work_activities?.activity?.map((a) => a.name) || [];
+  const translatedWorkActivities = await translateElements(
+    workActivities,
+    undefined
+  );
+
+  // Extract and translate other elements
+  const translatedSkills = await translateElements(
+    detailsData.skills?.element || [],
+    "name"
+  );
+  const translatedInterests = await translateElements(
+    detailsData.interests?.element || [],
+    "name"
+  );
+  const translatedAbilities = await translateElements(
+    detailsData.abilities?.element || [],
+    "name"
+  );
+  const translatedKnowledge = await translateElements(
+    detailsData.knowledge?.element || [],
+    "name"
+  );
+
+  // Return all translated data
   return {
     ...detailsData,
     translated: {
       title: translatedTitle,
       description: translatedDescription,
-      skills: translatedSkills // Empty array if no skills were present
+      skills: translatedSkills,
+      interests: translatedInterests,
+      abilities: translatedAbilities,
+      knowledge: translatedKnowledge,
+      detailed_work_activities: translatedWorkActivities,
+      technology_skills: translatedTechSkills,
+      tasks: translatedTasks
     }
   };
 }

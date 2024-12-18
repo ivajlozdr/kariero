@@ -503,6 +503,47 @@ app.post("/save-occupation", (req, res) => {
     });
 });
 
+app.get("/test-translate", (req, res) => {
+  // Verify the token to get the userId
+  let code = "15-1251.00";
+
+  // Fetch career code for the given keyword
+  hf.fetchCareerCode(keyword)
+    .then((code) => {
+      // Fetch and translate occupation details
+      return hf.fetchAndTranslateDetails(code);
+    })
+    .then((translatedData) => {
+      // Save occupation data
+      db.saveOccupation(translatedData, userId, date, (err) => {
+        if (err) {
+          console.error("Error saving occupation data:", err);
+          return res
+            .status(500)
+            .send("An error occurred while saving occupation data.");
+        }
+
+        db.saveCategoryData(translatedData, (err) => {
+          if (err) {
+            console.error("Error saving skills data:", err);
+            return res
+              .status(500)
+              .send("An error occurred while saving skills data.");
+          }
+
+          // Return the translated occupation data and skills data
+          res.status(200).json(translatedData);
+        });
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching or saving occupation data:", error);
+      res
+        .status(500)
+        .send("An error occurred while processing the occupation data.");
+    });
+});
+
 app.post("/save-ai-analysis", (req, res) => {
   const { token, date } = req.body;
 
