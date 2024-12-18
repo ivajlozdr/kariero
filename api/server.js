@@ -552,6 +552,8 @@ app.post("/save-ai-analysis", (req, res) => {
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     userId = decoded.id;
+
+    res.status(200).json(date);
   } catch (err) {
     console.error("Token verification failed:", err);
     return res.status(401).send("Invalid token.");
