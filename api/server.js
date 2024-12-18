@@ -545,19 +545,38 @@ app.get("/test-translate", (req, res) => {
 });
 
 app.post("/save-ai-analysis", (req, res) => {
-  const { token, date } = req.body;
+  const { token, date, recommendations } = req.body;
 
   // Verify the token to get the userId
   let userId;
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     userId = decoded.id;
-
-    res.status(200).json(date);
   } catch (err) {
     console.error("Token verification failed:", err);
     return res.status(401).send("Invalid token.");
   }
+
+  // Extract the specified parts of the recommendations object
+  const analysisData = {
+    Abilities: recommendations.Abilities,
+    Skills: recommendations.Skills,
+    Knowledge: recommendations.Knowledge,
+    Interests: recommendations.Interests,
+    WorkStyle: recommendations.WorkStyle,
+    WorkValues: recommendations.WorkValues,
+    TechnologySkills: recommendations.TechnologySkills
+  };
+
+  console.log("AI Analysis Data Received:", analysisData);
+
+  // For now, return the extracted data back to the client
+  return res.status(200).json({
+    message: "AI analysis data received successfully",
+    userId,
+    date,
+    analysisData
+  });
 });
 
 // Start server
