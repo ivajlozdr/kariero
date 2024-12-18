@@ -381,7 +381,7 @@ const saveCategoryData = (translatedData, callback) => {
                 occupationCode,
                 task.statement,
                 translatedData?.translated?.tasks?.[index]?.translated_name,
-                task.score.value
+                task.score?.value ?? null
               ]) ?? [];
             insertQuery = `
               INSERT INTO ${table} (id, onet_id, occupation_code, name_en, name_bg, importance)
