@@ -522,7 +522,7 @@ app.get("/test-translate", (req, res) => {
 });
 
 app.post("/save-ai-analysis", (req, res) => {
-  const { token, date, recommendations } = req.body;
+  const { token, recommendations } = req.body;
 
   // Verify the token to get the userId
   let userId;
@@ -545,7 +545,7 @@ app.post("/save-ai-analysis", (req, res) => {
     TechnologySkills: recommendations.TechnologySkills
   };
 
-  db.saveAIAnalysis(userId, date, analysisData, (err, results) => {
+  db.saveAIAnalysis(userId, analysisData, (err, results) => {
     if (err) {
       return res.status(500).json({
         message: "Failed to save AI analysis data",

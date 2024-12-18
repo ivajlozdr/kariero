@@ -283,7 +283,6 @@ export const fetchOnetData = async (
         },
         body: JSON.stringify({
           token: token,
-          date: date,
           recommendations: {
             Abilities: recommendations.Abilities,
             Skills: recommendations.Skills,
