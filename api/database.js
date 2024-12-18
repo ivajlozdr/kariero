@@ -431,7 +431,7 @@ const saveOccupation = (translatedData, userId, date, callback) => {
 
 const saveCategoryData = (translatedData, callback) => {
   const categories = ["abilities", "knowledge", "skills", "interests"];
-  //related_occupations, work_activities, technology_skills, tasks
+  //related_occupations(id - auto increment, occupation_code, related_occupation_code), work_activities(id - auto increment, onet_id, occupation_code, description), technology_skills(id, onet_id, occupation_code, name), tasks(id, onet_id, occupation_code, descript ion)
   const occupationCode = translatedData?.code ?? null;
 
   if (!occupationCode) {
