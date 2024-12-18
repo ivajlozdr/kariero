@@ -273,6 +273,36 @@ export const fetchOnetData = async (
       throw new Error(`Error saving responses and scores: ${response.status}`);
     }
 
+    // Now send the AI analysis data (Abilities, Skills, Knowledge, etc.)
+    const aiAnalysisResponse = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/save-ai-analysis`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          token: token,
+          date: date,
+          recommendations: {
+            Abilities: recommendations.Abilities,
+            Skills: recommendations.Skills,
+            Knowledge: recommendations.Knowledge,
+            Interests: recommendations.Interests,
+            WorkStyle: recommendations.WorkStyle,
+            WorkValues: recommendations.WorkValues,
+            TechnologySkills: recommendations.TechnologySkills
+          }
+        })
+      }
+    );
+
+    if (!aiAnalysisResponse.ok) {
+      throw new Error(
+        `Error saving AI analysis data: ${aiAnalysisResponse.status}`
+      );
+    }
+
     // Now process each career in the careerNames array
     const promises = recommendations.CareerRecommendations.flatMap(
       (rec) => rec.listOfCareers
