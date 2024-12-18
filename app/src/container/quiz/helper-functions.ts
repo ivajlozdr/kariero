@@ -2,6 +2,7 @@ import { likertScale } from "./quiz-data";
 import {
   CareerRecommendation,
   FullCareerDetails,
+  FullRecommendationsObject,
   PreferenceKeys,
   QuestionMapping,
   RiasecCategory,
@@ -237,14 +238,14 @@ export const fetchOpenAIResponse = async (
  *
  * Функцията изпраща POST заявки към бекенд API за всяко име на кариера, предоставяйки потребителски отговори и оценка (scores). Тя обработва отговорите и връща подробни данни за всяка кариера, ако има успешно получен отговор. Ако има грешка, тя я отчита и премахва грешните отговори от резултатите.
  *
- * @param {string[]} careerNames - Масив с имена на кариери, които трябва да бъдат търсени.
+ * @param {Recommendations} recommendations - Пълен обекст с препоръки, съдържащ детайли за кариерата и причина, защо тя е подходяща за дадения потребител.
  * @param {Scores} scores - Оценки за RIASEC модел и други детайли, свързани с потребителя.
  * @param {UserResponses[]} userResponses - Отговори на потребителя, които да бъдат изпратени към API-то.
  * @param {string | null} token - Токен за авторизация към API-то.
  * @returns {Promise<FullCareerDetails[]>} - Обещание, което връща масив с подробности за кариерите или празен масив, ако има грешки.
  */
 export const fetchOnetData = async (
-  careerNames: string[],
+  recommendations: FullRecommendationsObject,
   scores: Scores,
   userResponses: UserResponses[],
   token: string | null,
@@ -273,7 +274,9 @@ export const fetchOnetData = async (
     }
 
     // Now process each career in the careerNames array
-    const promises = careerNames.map(async (careerName) => {
+    const promises = recommendations.CareerRecommendations.flatMap(
+      (rec) => rec.listOfCareers
+    ).map(async (career) => {
       try {
         // Send the career data (occupation) to be saved
         const occupationResponse = await fetch(
@@ -285,7 +288,7 @@ export const fetchOnetData = async (
             },
             body: JSON.stringify({
               token: token,
-              keyword: careerName,
+              keyword: career.career,
               date: date
             })
           }
@@ -293,7 +296,7 @@ export const fetchOnetData = async (
 
         if (!occupationResponse.ok) {
           throw new Error(
-            `Error saving occupation data for ${careerName}: ${occupationResponse.status}`
+            `Error saving occupation data for ${career.career}: ${occupationResponse.status}`
           );
         }
 
@@ -301,7 +304,7 @@ export const fetchOnetData = async (
         const occupationData = await occupationResponse.json();
         return occupationData; // Return the occupation details as part of the result
       } catch (error) {
-        console.error(`Error processing career ${careerName}:`, error);
+        console.error(`Error processing career ${career.career}:`, error);
         return null; // In case of error, return null for that career
       }
     });
@@ -660,14 +663,8 @@ export const submitQuiz = async (
 
     setCareerRecommendations(recommendations.CareerRecommendations);
 
-    const careerNames = recommendations.CareerRecommendations.flatMap((rec) =>
-      rec.listOfCareers.map((career) => career.career)
-    );
-
-    console.log("Career Names for O*NET Fetching:", careerNames);
-
     const onetData = await fetchOnetData(
-      careerNames,
+      recommendations,
       hardCodedScores,
       hardCodedUserResponses,
       token,

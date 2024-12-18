@@ -56,6 +56,17 @@ export interface CareerRecommendation {
   listOfCareers: Career[];
 }
 
+export interface FullRecommendationsObject {
+  Abilities: string[];
+  Skills: string[];
+  Knowledge: string[];
+  Interests: string[];
+  WorkStyle: string[];
+  WorkValues: string[];
+  TechnologySkills: string[];
+  CareerRecommendations: CareerRecommendation[];
+}
+
 export type UserProfileData = {
   Abilities: string[];
   Skills: string[];
