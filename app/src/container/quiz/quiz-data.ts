@@ -185,11 +185,11 @@ export const questions: QuestionMapping[] = [
  * @type {Array<{label: string, weight: number}>}
  */
 export const likertScale = [
-  { label: "Strongly Agree", weight: 3 },
-  { label: "Agree", weight: 2 },
-  { label: "Neutral", weight: 0 },
-  { label: "Disagree", weight: -2 },
-  { label: "Strongly Disagree", weight: -3 }
+  { label: "Напълно съгласен", weight: 3 },
+  { label: "Съгласен", weight: 2 },
+  { label: "Неутрален", weight: 0 },
+  { label: "Несъгласен", weight: -2 },
+  { label: "Напълно несъгласен", weight: -3 }
 ];
 
 /**
