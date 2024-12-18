@@ -545,14 +545,15 @@ app.post("/save-ai-analysis", (req, res) => {
     TechnologySkills: recommendations.TechnologySkills
   };
 
-  console.log("AI Analysis Data Received:", analysisData);
+  db.saveAIAnalysis(userId, date, analysisData, (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        message: "Failed to save AI analysis data",
+        error: err
+      });
+    }
 
-  // For now, return the extracted data back to the client
-  return res.status(200).json({
-    message: "AI analysis data received successfully",
-    userId,
-    date,
-    analysisData
+    res.status(200).send("AI analysis data saved successfully.");
   });
 });
 
