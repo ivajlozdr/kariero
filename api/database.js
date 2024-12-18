@@ -267,18 +267,6 @@ const saveCategoryData = (translatedData, callback) => {
             (item) => item.score?.value
           ) ?? [];
 
-        console.log(
-          "category: ",
-          category,
-          "ids: ",
-          ids,
-          "namesBg: ",
-          namesBg,
-          "namesEn: ",
-          namesEn,
-          "importance: ",
-          importance
-        );
         if (
           ids.length === 0 ||
           namesBg.length === 0 ||
