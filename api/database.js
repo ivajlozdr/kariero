@@ -420,7 +420,7 @@ const saveCategoryData = (translatedData, callback) => {
   });
 };
 
-const saveAIAnalysis = (userId, analysisData, callback) => {
+const saveAIAnalysis = (userId, analysisData, date, callback) => {
   const {
     Abilities,
     Skills,
@@ -432,8 +432,8 @@ const saveAIAnalysis = (userId, analysisData, callback) => {
   } = analysisData;
 
   const query = `
-    INSERT INTO users_ai_analysis (user_id, abilities, skills, knowledge, interests, work_style, work_values, technology_skills)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO users_ai_analysis (user_id, abilities, skills, knowledge, interests, work_style, work_values, technology_skills, date)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE 
       abilities = VALUES(abilities),
       skills = VALUES(skills),
@@ -452,7 +452,8 @@ const saveAIAnalysis = (userId, analysisData, callback) => {
     Interests.join(", "),
     WorkStyle.join(", "),
     WorkValues.join(", "),
-    TechnologySkills.join(", ")
+    TechnologySkills.join(", "),
+    date
   ];
 
   db.query(query, values, (err, results) => {

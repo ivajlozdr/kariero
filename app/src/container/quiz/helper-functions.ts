@@ -291,7 +291,8 @@ export const fetchOnetData = async (
             WorkStyle: recommendations.WorkStyle,
             WorkValues: recommendations.WorkValues,
             TechnologySkills: recommendations.TechnologySkills
-          }
+          },
+          date: date
         })
       }
     );

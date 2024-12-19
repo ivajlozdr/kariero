@@ -503,26 +503,8 @@ app.post("/save-occupation", (req, res) => {
     });
 });
 
-app.get("/test-translate", (req, res) => {
-  // Verify the token to get the userId
-  let code = "15-1251.00";
-
-  // Fetch career code for the given keyword
-  hf.fetchAndTranslateDetails(code)
-    .then((translatedData) => {
-      // Save occupation data
-      res.status(200).json(translatedData);
-    })
-    .catch((error) => {
-      console.error("Error fetching or saving occupation data:", error);
-      res
-        .status(500)
-        .send("An error occurred while processing the occupation data.");
-    });
-});
-
 app.post("/save-ai-analysis", (req, res) => {
-  const { token, recommendations } = req.body;
+  const { token, recommendations, date } = req.body;
 
   // Verify the token to get the userId
   let userId;
@@ -545,7 +527,7 @@ app.post("/save-ai-analysis", (req, res) => {
     TechnologySkills: recommendations.TechnologySkills
   };
 
-  db.saveAIAnalysis(userId, analysisData, (err, results) => {
+  db.saveAIAnalysis(userId, analysisData, date, (err, results) => {
     if (err) {
       return res.status(500).json({
         message: "Failed to save AI analysis data",
