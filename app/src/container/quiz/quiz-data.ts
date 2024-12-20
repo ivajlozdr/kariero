@@ -1,5 +1,5 @@
 import { QuestionMapping, Scores } from "./quiz-types";
-
+//reee
 /**
  * Масив от въпроси за теста, използвани за оценка на потребителя. Всеки въпрос
  * включва уникален ID, текста на въпроса, категорията му и типа на очаквания отговор.
@@ -88,8 +88,7 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 11,
-    question:
-      "Кое от тези най-добре ви описва? (Изберете всички, които се отнасят): Аналитичен мислител, Креативен решавач на проблеми, Емпатичен слушател, Организиран до детайли, Уверен лидер, Практически ориентиран работник",
+    question: "Кое от тези най-добре Ви описва?",
     category: "Preferences",
     field: "PersonalityTypes",
     answerType: "MultipleChoice",
@@ -144,7 +143,7 @@ export const questions: QuestionMapping[] = [
     category: "WorkStyle",
     field: "WorkEnvironment",
     answerType: "MultipleChoice",
-    options: ["Бърза и динамична", "Стабилен и предсказуем"]
+    options: ["Бърза и динамична", "Стабилна и предсказуема"]
   },
   {
     id: 17,
@@ -152,12 +151,11 @@ export const questions: QuestionMapping[] = [
     category: "Preferences",
     field: "EducationLevel",
     answerType: "MultipleChoice",
-    options: ["Основно", "Средно", "Висше", "Магистър", "Доктор"]
+    options: ["Основно", "Средно", "Бакалавър", "Магистър", "Докторант"]
   },
   {
     id: 18,
-    question:
-      "Къде виждате себе си професионално след 5 години? (Лидерска роля, технически експерт, креативна позиция и т.н.)",
+    question: "Какъв тип професионална роля искате да заемате след 5 години?",
     category: "Preferences",
     field: "CareerGoals",
     answerType: "MultipleChoice",
@@ -166,14 +164,15 @@ export const questions: QuestionMapping[] = [
   {
     id: 19,
     question:
-      "Какъв тип работа ви носи най-голямо удовлетворение: да помагате на другите, да решавате проблеми или да създавате нещо осезаемо?",
-    category: "RIASEC",
+      "Какъв тип дейности в работата ви носят най-голямо удовлетворение?",
+    category: "Preferences",
     field: "JobSatisfaction",
     answerType: "MultipleChoice",
     options: [
-      "Помагате на другите",
-      "Решавате проблеми",
-      "Създавате нещо осезаемо"
+      "Решаване на сложни проблеми",
+      "Създаване на нещо ново и иновативно",
+      "Работа с данни и анализи",
+      "Придобиване на нови знания и изследване"
     ]
   }
 ];

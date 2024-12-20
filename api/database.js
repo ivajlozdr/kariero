@@ -93,6 +93,7 @@ const saveFinalScores = (userId, scores, date, callback) => {
       PersonalityTypes: personality_types_preferences = [],
       WorkEnvironment: work_environment_preferences = [],
       JobPriority: job_priority_preferences = [],
+      JobSatisfaction: job_satisfaction_preferences = [],
       EducationLevel: education_level_preferences = [],
       CareerGoals: career_goals_preferences = []
     } = {},
@@ -112,11 +113,11 @@ const saveFinalScores = (userId, scores, date, callback) => {
       artistic_creative_riasec, social_social_riasec, social_collaboration_riasec,
       enterprising_enterprising_riasec, conventional_conventional_riasec,
       personality_types_preferences, work_environment_preferences,
-      job_priority_preferences, education_level_preferences, career_goals_preferences,
+      job_priority_preferences, job_satisfaction_preferences, education_level_preferences, career_goals_preferences,
       structure_preference_workstyle, collaboration_workstyle, work_environment_workstyle
     ) VALUES (
       ?, ?,
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
   `;
 
@@ -136,6 +137,7 @@ const saveFinalScores = (userId, scores, date, callback) => {
     JSON.stringify(personality_types_preferences),
     JSON.stringify(work_environment_preferences),
     JSON.stringify(job_priority_preferences),
+    JSON.stringify(job_satisfaction_preferences),
     JSON.stringify(education_level_preferences),
     JSON.stringify(career_goals_preferences),
     structure_preference_workstyle,

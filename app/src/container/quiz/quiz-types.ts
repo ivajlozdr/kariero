@@ -17,6 +17,7 @@ export interface Scores {
     JobPriority?: string[];
     EducationLevel?: string[];
     CareerGoals?: string[];
+    JobSatisfaction?: string[];
   };
   WorkStyle: {
     StructurePreference: string;
@@ -38,7 +39,8 @@ export type PreferenceKeys =
   | "WorkEnvironment"
   | "JobPriority"
   | "EducationLevel"
-  | "CareerGoals";
+  | "CareerGoals"
+  | "JobSatisfaction";
 
 export type WorkStyleKeys =
   | "StructurePreference"
