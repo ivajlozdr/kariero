@@ -1,16 +1,19 @@
 import { FC, Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
-  Conversionratio,
   Dealsstatistics,
-  Profit,
-  Profitearned,
   Revenueanalytics,
   Sourcedata,
+  widgetData,
+  Conversionratio,
+  Profit,
+  Profitearned,
   Totalcustomers,
   Totaldeals,
   Totalrevenue
 } from "./crmdata";
+import RedirectCard from "./components/RedirectCard";
+import Widget from "./components/Widget"; // Import the Widget component
+import { Link } from "react-router-dom";
 import face10 from "../../assets/images/faces/10.jpg";
 import face12 from "../../assets/images/faces/12.jpg";
 
@@ -92,6 +95,27 @@ const Crm: FC<CrmProps> = () => {
           </button>
         </div>
       </div>
+      <div className="grid grid-cols-12 gap-x-6">
+        {widgetData.map((widget, index) => (
+          <Widget
+            key={index}
+            title={widget.title}
+            value={widget.value}
+            options={widget.options}
+            showSorting={widget.showSorting}
+            icon={widget.icon}
+          />
+        ))}
+      </div>
+      <div className="card hover-effect">
+        <div className="grid grid-cols-4 gap-x-6">
+          <RedirectCard />
+          <RedirectCard />
+          <RedirectCard />
+          <RedirectCard />
+        </div>
+      </div>
+      /*DO NOT PLACE STUFF BELOW THIS LINE!*/
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
@@ -1267,7 +1291,6 @@ const Crm: FC<CrmProps> = () => {
           </div>
         </div>
       </div>
-      <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
     </Fragment>
   );
 };

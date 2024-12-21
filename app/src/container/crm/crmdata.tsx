@@ -7,6 +7,40 @@ import face11 from "../../assets/images/faces/11.jpg";
 import face8 from "../../assets/images/faces/8.jpg";
 import face9 from "../../assets/images/faces/9.jpg";
 
+export const widgetData = [
+  {
+    title: "Total Revenue",
+    value: 120000,
+    options: [
+      { label: "Total Revenue", value: 120000 },
+      { label: "Smthn Else", value: 23872 }
+    ],
+    showSorting: true,
+    icon: "bi-cash"
+  },
+  {
+    title: "Total Deals",
+    value: 150,
+    options: [],
+    showSorting: false,
+    icon: "bi-briefcase"
+  },
+  {
+    title: "Profit Earned",
+    value: 20000,
+    options: [],
+    showSorting: false,
+    icon: "bi-piggy-bank"
+  },
+  {
+    title: "Total Customers",
+    value: 500,
+    options: [],
+    showSorting: false,
+    icon: "bi-person-circle"
+  }
+];
+
 //
 interface spark3 {
   options?: ApexOptions;

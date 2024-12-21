@@ -110,15 +110,14 @@ Background Image
 /* SerifBold */
 @font-face {
   font-family: "SerifBold";
-  src: local("RobotoBold"),
-    url("./fonts/RobotoBold.ttf") format("truetype");
+  src: local("RobotoBold"), url("./fonts/RobotoBold.ttf") format("truetype");
 }
 
 :root {
   --body-bg: 240 241 247;
-  --primary: 154 17 10;
-  --primary-rgb: 154 17 10;
-  --secondary: 193 46 23;
+  --primary: 37 102 91;
+  --primary-rgb: 37 102 91;
+  --secondary: 63 135 118;
   --warning: 245 184 73;
   --info: 73 182 245;
   --success: 38 191 148;
@@ -20066,6 +20065,41 @@ option.selectionList {
 .button:hover {
   background-color: #0056b3;
   transform: scale(1.05);
+}
+
+.card-container {
+  @apply flex justify-center my-5;
+}
+
+.card-link {
+  @apply no-underline text-inherit;
+}
+
+.card {
+  @apply min-h-[200px] bg-primary p-5 rounded-lg flex flex-col justify-between transition-all;
+}
+
+.card.hover-effect:hover {
+  @apply bg-secondary;
+}
+
+.card-header {
+  @apply flex items-center justify-between;
+}
+
+.gradient-text {
+  font-size: 1.25rem;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.icon {
+  @apply w-5 h-5 ml-2 text-white;
+}
+
+.card-body {
+  @apply mt-2 text-center text-base font-medium;
 }
 
 /*# sourceMappingURL=style.css.map */
