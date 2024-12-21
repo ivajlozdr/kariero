@@ -1,5 +1,5 @@
 {
-  "name": "ynex-ts",
+  "name": "kariero",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,6 +18,7 @@
     "@simonwep/pickr": "^1.9.0",
     "@tailwindcss/forms": "^0.5.7",
     "apexcharts": "^3.45.2",
+    "chroma-js": "^3.1.2",
     "email-validator": "^2.0.4",
     "ldrs": "^1.0.2",
     "leaflet": "^1.9.4",
@@ -30,6 +31,7 @@
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.4",
     "react-redux": "^8.1.3",
+    "react-responsive": "^10.0.0",
     "react-router-dom": "^6.21.3",
     "react-transition-group": "^4.4.5",
     "redux": "^4.2.1",
@@ -41,6 +43,7 @@
     "tailwind-clip-path": "^1.0.0"
   },
   "devDependencies": {
+    "@types/chroma-js": "^2.4.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-transition-group": "^4.4.11",

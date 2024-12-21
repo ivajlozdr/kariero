@@ -31,15 +31,15 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
         darkBg: "",
         inputBorder: ""
       });
-      localStorage.setItem("cinelighttheme", "light");
-      localStorage.removeItem("cinedarktheme");
-      localStorage.removeItem("cineMenu");
-      localStorage.removeItem("cineHeader");
+      localStorage.setItem("karierolighttheme", "light");
+      localStorage.removeItem("karierodarktheme");
+      localStorage.removeItem("karieroMenu");
+      localStorage.removeItem("karieroHeader");
     } else {
-      localStorage.setItem("cinedarktheme", "dark");
-      localStorage.removeItem("cinelighttheme");
-      localStorage.removeItem("cineMenu");
-      localStorage.removeItem("cineHeader");
+      localStorage.setItem("karierodarktheme", "dark");
+      localStorage.removeItem("karierolighttheme");
+      localStorage.removeItem("karieroMenu");
+      localStorage.removeItem("karieroHeader");
     }
   };
 

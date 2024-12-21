@@ -20,7 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <React.Suspense fallback={<div>Зареждане...</div>}>
         <Routes>
           <Route path="/" element={<Navigate to="/signin" />} />
-
           <Route
             path="/app"
             element={
@@ -29,12 +28,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               </ProtectedRoute>
             }
           >
-            {/* Default route */}
             <Route index path="home" element={<Crm />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
           </Route>
-
           <Route path="/" element={<Authenticationlayout />}>
             <Route
               path="resetpassword/resetbasic/:token"
