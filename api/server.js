@@ -539,6 +539,54 @@ app.post("/save-ai-analysis", (req, res) => {
   });
 });
 
+// Вземане на данни за общ брой на потребители в платформата
+app.get("/stats/platform/users-count", (req, res) => {
+  db.getUsersCount((err, result) => {
+    if (err) {
+      return res.status(500).json({ error: "Error fetching users count" });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за брой на професии, групирани по 'code'
+app.get("/stats/platform/distinct-occupations-with-count", (req, res) => {
+  db.getDistinctOccupations((err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на данни за професиите" });
+    }
+    res.json({
+      count: result.length,
+      data: result
+    });
+  });
+});
+
+// Вземане на данни за най-препоръчваните професии
+app.get("/stats/platform/top-recommended-occupations", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да е положително число." });
+  }
+
+  db.getTopRecommendedOccupations(limit, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на най-препоръчваната професия" });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Няма професии с препоръки" });
+    }
+    res.json(result);
+  });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");

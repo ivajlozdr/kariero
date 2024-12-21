@@ -466,6 +466,47 @@ const saveAIAnalysis = (userId, analysisData, callback) => {
   });
 };
 
+const getUsersCount = (callback) => {
+  const query = `
+    SELECT COUNT(*) AS user_count
+    FROM users
+  `;
+  db.query(query, callback);
+};
+
+const getDistinctOccupations = (callback) => {
+  const query = `
+    SELECT 
+      code, 
+      title_bg, 
+      title_en, 
+      description, 
+      bright_outlook, 
+      education
+    FROM occupations
+    GROUP BY code;
+  `;
+  db.query(query, callback);
+};
+
+const getTopRecommendedOccupations = (limit, callback) => {
+  const query = `
+    SELECT 
+      code, 
+      title_bg, 
+      title_en, 
+      description, 
+      bright_outlook, 
+      education, 
+      COUNT(code) AS recommendation_count
+    FROM occupations
+    GROUP BY code
+    ORDER BY recommendation_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -477,5 +518,8 @@ module.exports = {
   saveFinalScores,
   saveOccupation,
   saveCategoryData,
-  saveAIAnalysis
+  saveAIAnalysis,
+  getUsersCount,
+  getDistinctOccupations,
+  getTopRecommendedOccupations
 };
