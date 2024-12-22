@@ -507,6 +507,36 @@ const getTopRecommendedOccupations = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getMostNeededAbilities = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM abilities
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostNeededKnowledge = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM knowledge
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -521,5 +551,7 @@ module.exports = {
   saveAIAnalysis,
   getUsersCount,
   getDistinctOccupations,
-  getTopRecommendedOccupations
+  getTopRecommendedOccupations,
+  getMostNeededAbilities,
+  getMostNeededKnowledge
 };

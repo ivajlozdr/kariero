@@ -587,6 +587,64 @@ app.get("/stats/platform/top-recommended-occupations", (req, res) => {
   });
 });
 
+// Вземане на данни за най-нужните умения
+app.get("/stats/platform/most-needed-abilities", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните умения от базата данни
+  db.getMostNeededAbilities(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на най-нужните умения." });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res.status(404).json({ error: "Няма намерени умения." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-нужните знания
+app.get("/stats/platform/most-needed-knowledge", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните знания от базата данни
+  db.getMostNeededKnowledge(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на най-нужните знания." });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res.status(404).json({ error: "Няма намерени знания." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");
