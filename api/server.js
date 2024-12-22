@@ -576,11 +576,9 @@ app.get("/stats/platform/top-recommended-occupations", (req, res) => {
 
   db.getTopRecommendedOccupations(limit, (err, result) => {
     if (err) {
-      return res
-        .status(500)
-        .json({
-          error: "Грешка при вземането на най-препоръчваните професии директно"
-        });
+      return res.status(500).json({
+        error: "Грешка при вземането на най-препоръчваните професии директно"
+      });
     }
     if (result.length === 0) {
       return res.status(404).json({ error: "Няма професии с препоръки" });
@@ -601,12 +599,9 @@ app.get("/stats/platform/top-recommended-related-occupations", (req, res) => {
 
   db.getTopRecommendedRelatedOccupations(limit, (err, result) => {
     if (err) {
-      return res
-        .status(500)
-        .json({
-          error:
-            "Грешка при вземането на най-препоръчваните професии индиректно"
-        });
+      return res.status(500).json({
+        error: "Грешка при вземането на най-препоръчваните професии индиректно"
+      });
     }
     if (result.length === 0) {
       return res.status(404).json({ error: "Няма професии с препоръки" });
@@ -615,7 +610,7 @@ app.get("/stats/platform/top-recommended-related-occupations", (req, res) => {
   });
 });
 
-// Вземане на данни за най-нужните умения
+// Вземане на данни за най-нужните способности
 app.get("/stats/platform/most-needed-abilities", (req, res) => {
   // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
   const limit = parseInt(req.query.limit, 10) || 10;
@@ -627,17 +622,17 @@ app.get("/stats/platform/most-needed-abilities", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните умения от базата данни
+  // Извличане на данните за най-нужните способности от базата данни
   db.getMostNeededAbilities(limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
         .status(500)
-        .json({ error: "Грешка при вземането на най-нужните умения." });
+        .json({ error: "Грешка при вземането на най-нужните способности." });
     }
     if (result.length === 0) {
       // Връщане на съобщение, ако няма намерени резултати
-      return res.status(404).json({ error: "Няма намерени умения." });
+      return res.status(404).json({ error: "Няма намерени способности." });
     }
     // Връщане на резултатите в JSON формат
     res.json(result);
@@ -667,6 +662,124 @@ app.get("/stats/platform/most-needed-knowledge", (req, res) => {
     if (result.length === 0) {
       // Връщане на съобщение, ако няма намерени резултати
       return res.status(404).json({ error: "Няма намерени знания." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-нужните умения
+app.get("/stats/platform/most-needed-skills", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните знания от базата данни
+  db.getMostNeededSkills(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на най-нужните умения." });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res.status(404).json({ error: "Няма намерени умения." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-често срещаните задачи
+app.get("/stats/platform/most-needed-tasks", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните знания от базата данни
+  db.getMostNeededTasks(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res
+        .status(500)
+        .json({ error: "Грешка при вземането на най-често срещаните задачи." });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res.status(404).json({ error: "Няма намерени задачи." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-нужните технологични умения
+app.get("/stats/platform/most-needed-technology-skills", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните знания от базата данни
+  db.getMostNeededTechnologySkills(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res.status(500).json({
+        error: "Грешка при вземането на най-нужните технологични умения."
+      });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res
+        .status(404)
+        .json({ error: "Няма намерени технологични умения." });
+    }
+    // Връщане на резултатите в JSON формат
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-често срещаните трудови дейности
+app.get("/stats/platform/most-needed-work-activities", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на данните за най-нужните знания от базата данни
+  db.getMostNeededWorkActivities(limit, (err, result) => {
+    if (err) {
+      // Връщане на грешка при проблем с заявката към базата данни
+      return res.status(500).json({
+        error: "Грешка при вземането на най-често срещаните трудови дейности."
+      });
+    }
+    if (result.length === 0) {
+      // Връщане на съобщение, ако няма намерени резултати
+      return res.status(404).json({ error: "Няма намерени трудови дейности." });
     }
     // Връщане на резултатите в JSON формат
     res.json(result);

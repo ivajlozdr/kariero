@@ -552,6 +552,66 @@ const getMostNeededKnowledge = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getMostNeededSkills = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM skills
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostNeededTasks = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM tasks
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostNeededTechnologySkills = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM technology_skills
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostNeededWorkActivities = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en, 
+      name_bg, 
+      COUNT(onet_id) AS occurrence_count
+    FROM work_activities
+    GROUP BY onet_id
+    ORDER BY occurrence_count DESC;
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -569,5 +629,9 @@ module.exports = {
   getTopRecommendedOccupations,
   getTopRecommendedRelatedOccupations,
   getMostNeededAbilities,
-  getMostNeededKnowledge
+  getMostNeededKnowledge,
+  getMostNeededSkills,
+  getMostNeededTasks,
+  getMostNeededTechnologySkills,
+  getMostNeededWorkActivities
 };
