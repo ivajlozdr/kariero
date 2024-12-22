@@ -612,26 +612,6 @@ const getMostNeededWorkActivities = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
-const getMostSelectedCareerGoals = (limit, callback) => {
-  const query = `
-    SELECT preference, COUNT(*) AS occurrence_count
-    FROM (
-      SELECT JSON_UNQUOTE(JSON_EXTRACT(career_goals_preferences, CONCAT('$[', n, ']'))) AS preference
-      FROM final_scores
-      JOIN (
-        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
-        UNION ALL SELECT 10
-      ) AS numbers ON CHAR_LENGTH(career_goals_preferences)
-      -CHAR_LENGTH(REPLACE(career_goals_preferences, ',', '')) >= n
-    ) AS preferences
-    GROUP BY preference
-    ORDER BY occurrence_count DESC
-    LIMIT ?;
-  `;
-  db.query(query, [limit], callback);
-};
-
 const getMostSelectedPersonalityTypes = (limit, callback) => {
   const query = `
     SELECT preference, COUNT(*) AS occurrence_count
@@ -692,6 +672,26 @@ const getMostSelectedJobPriorities = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getMostSelectedJobSatisfactionLevels = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(job_satisfaction_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(job_satisfaction_preferences)
+      -CHAR_LENGTH(REPLACE(job_satisfaction_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 const getMostSelectedEducationLevels = (limit, callback) => {
   const query = `
     SELECT preference, COUNT(*) AS occurrence_count
@@ -704,6 +704,26 @@ const getMostSelectedEducationLevels = (limit, callback) => {
         UNION ALL SELECT 10
       ) AS numbers ON CHAR_LENGTH(education_level_preferences)
       -CHAR_LENGTH(REPLACE(education_level_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostSelectedCareerGoals = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(career_goals_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(career_goals_preferences)
+      -CHAR_LENGTH(REPLACE(career_goals_preferences, ',', '')) >= n
     ) AS preferences
     GROUP BY preference
     ORDER BY occurrence_count DESC
@@ -734,9 +754,10 @@ module.exports = {
   getMostNeededTasks,
   getMostNeededTechnologySkills,
   getMostNeededWorkActivities,
-  getMostSelectedCareerGoals,
   getMostSelectedPersonalityTypes,
   getMostSelectedWorkEnvironments,
   getMostSelectedJobPriorities,
-  getMostSelectedEducationLevels
+  getMostSelectedJobSatisfactionLevels,
+  getMostSelectedEducationLevels,
+  getMostSelectedCareerGoals
 };

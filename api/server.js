@@ -846,14 +846,45 @@ app.get("/stats/platform/most-selected-job-priorities", (req, res) => {
     if (err) {
       return res.status(500).json({
         error:
-          "Грешка при вземането на най-често срещаните приоритети за работа."
+          "Грешка при вземането на най-често срещаните приоритети за професия."
       });
     }
     if (result.length === 0) {
       return res
         .status(404)
-        .json({ error: "Няма намерени приоритети за работа." });
+        .json({ error: "Няма намерени приоритети за професия." });
     }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-предпочитаните дейности в търсената професия
+app.get("/stats/platform/most-selected-job-satisfaction-levels", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  // Проверка за валидност на лимита
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извикване на функцията за извличане на най-предпочитаните нива на удовлетворение от професията
+  db.getMostSelectedJobSatisfactionLevels(limit, (err, result) => {
+    if (err) {
+      // В случай на грешка при извършване на заявката
+      return res.status(500).json({
+        error:
+          "Грешка при вземането на най-предпочитаните нива на удовлетворение от професията."
+      });
+    }
+    if (result.length === 0) {
+      // Ако няма намерени резултати
+      return res.status(404).json({
+        error: "Няма намерени нива на удовлетворение от професията."
+      });
+    }
+    // Връщане на резултатите като JSON отговор
     res.json(result);
   });
 });
