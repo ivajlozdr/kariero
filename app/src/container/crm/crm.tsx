@@ -9,8 +9,16 @@ import {
   Profitearned,
   Totalcustomers,
   Totaldeals,
-  Totalrevenue
+  Totalrevenue,
+  hardcodedData
 } from "./crmdata";
+import TableComponent from "./components/TableComponent";
+import TreemapComponent from "./components/TreemapComponent";
+import TopRecommendationsChartComponent from "./components/TopRecommendationsChartComponent";
+import CountryBarChartComponent from "./components/CountryBarChartComponent";
+import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
+import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
+import MoviesAndSeriesByRatingsChartComponent from "./components/BarChartComponent";
 import RedirectCard from "./components/RedirectCard";
 import Widget from "./components/Widget"; // Import the Widget component
 import { Link } from "react-router-dom";
@@ -113,6 +121,21 @@ const Crm: FC<CrmProps> = () => {
           <RedirectCard />
           <RedirectCard />
           <RedirectCard />
+        </div>
+      </div>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-6 col-span-12">
+          <div className="xxl:col-span-6 col-span-12">
+            <MoviesByProsperityBubbleChartComponent data={hardcodedData} />
+            <GenrePopularityOverTimeComponent data={hardcodedData} />
+            <MoviesAndSeriesByRatingsChartComponent data={hardcodedData} />
+          </div>
+        </div>
+        <div className="xxl:col-span-6 col-span-12">
+          <TableComponent data={hardcodedData} />
+          <TopRecommendationsChartComponent data={hardcodedData} />
+          <TreemapComponent data={hardcodedData} />
+          <CountryBarChartComponent data={hardcodedData} />
         </div>
       </div>
       /*DO NOT PLACE STUFF BELOW THIS LINE!*/
