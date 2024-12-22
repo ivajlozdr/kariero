@@ -507,6 +507,21 @@ const getTopRecommendedOccupations = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getTopRecommendedRelatedOccupations = (limit, callback) => {
+  const query = `
+    SELECT 
+      onet_id, 
+      name_en,
+      name_bg, 
+      COUNT(onet_id) AS recommendation_count
+    FROM related_occupations
+    GROUP BY onet_id
+    ORDER BY recommendation_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 const getMostNeededAbilities = (limit, callback) => {
   const query = `
     SELECT 
@@ -552,6 +567,7 @@ module.exports = {
   getUsersCount,
   getDistinctOccupations,
   getTopRecommendedOccupations,
+  getTopRecommendedRelatedOccupations,
   getMostNeededAbilities,
   getMostNeededKnowledge
 };
