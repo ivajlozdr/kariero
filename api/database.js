@@ -606,7 +606,7 @@ const getMostNeededWorkActivities = (limit, callback) => {
       COUNT(onet_id) AS occurrence_count
     FROM work_activities
     GROUP BY onet_id
-    ORDER BY occurrence_count DESC;
+    ORDER BY occurrence_count DESC
     LIMIT ?;
   `;
   db.query(query, [limit], callback);
