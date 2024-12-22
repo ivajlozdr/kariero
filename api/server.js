@@ -786,6 +786,129 @@ app.get("/stats/platform/most-needed-work-activities", (req, res) => {
   });
 });
 
+// Вземане на данни за най-често срещаните характеристики на личността:
+app.get("/stats/platform/most-selected-personality-types", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  db.getMostSelectedPersonalityTypes(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Грешка при вземането на най-често срещаните типове характери."
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Няма намерени типове характери." });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-често предпочитаното работно място
+app.get("/stats/platform/most-selected-work-environments", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  db.getMostSelectedWorkEnvironments(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Грешка при вземането на най-често срещаните работни среди."
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Няма намерени работни среди." });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-често срещаните приоритети при търсене на професия
+app.get("/stats/platform/most-selected-job-priorities", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  db.getMostSelectedJobPriorities(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error:
+          "Грешка при вземането на най-често срещаните приоритети за работа."
+      });
+    }
+    if (result.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "Няма намерени приоритети за работа." });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-често срещаните постигнати нива на образование
+app.get("/stats/platform/most-selected-education-levels", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  db.getMostSelectedEducationLevels(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error:
+          "Грешка при вземането на най-често срещаните нива на образование."
+      });
+    }
+    if (result.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "Няма намерени нива на образование." });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-желани професионални роли
+app.get("/stats/platform/most-selected-career-goals", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на най-желани професионални роли
+  db.getMostSelectedCareerGoals(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Грешка при вземането на най-често срещаните цели за кариера."
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Няма намерени цели за кариера." });
+    }
+    res.json(result);
+  });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");

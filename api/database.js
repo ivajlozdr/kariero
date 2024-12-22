@@ -612,6 +612,106 @@ const getMostNeededWorkActivities = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getMostSelectedCareerGoals = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(career_goals_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(career_goals_preferences)
+      -CHAR_LENGTH(REPLACE(career_goals_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostSelectedPersonalityTypes = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(personality_types_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(personality_types_preferences)
+      -CHAR_LENGTH(REPLACE(personality_types_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostSelectedWorkEnvironments = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(work_environment_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(work_environment_preferences)
+      -CHAR_LENGTH(REPLACE(work_environment_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostSelectedJobPriorities = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(job_priority_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(job_priority_preferences)
+      -CHAR_LENGTH(REPLACE(job_priority_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostSelectedEducationLevels = (limit, callback) => {
+  const query = `
+    SELECT preference, COUNT(*) AS occurrence_count
+    FROM (
+      SELECT JSON_UNQUOTE(JSON_EXTRACT(education_level_preferences, CONCAT('$[', n, ']'))) AS preference
+      FROM final_scores
+      JOIN (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+        UNION ALL SELECT 10
+      ) AS numbers ON CHAR_LENGTH(education_level_preferences)
+      -CHAR_LENGTH(REPLACE(education_level_preferences, ',', '')) >= n
+    ) AS preferences
+    GROUP BY preference
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -633,5 +733,10 @@ module.exports = {
   getMostNeededSkills,
   getMostNeededTasks,
   getMostNeededTechnologySkills,
-  getMostNeededWorkActivities
+  getMostNeededWorkActivities,
+  getMostSelectedCareerGoals,
+  getMostSelectedPersonalityTypes,
+  getMostSelectedWorkEnvironments,
+  getMostSelectedJobPriorities,
+  getMostSelectedEducationLevels
 };
