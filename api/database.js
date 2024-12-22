@@ -286,7 +286,7 @@ const saveCategoryData = (translatedData, callback) => {
           id,
           occupationCode,
           namesEn[index],
-          namesBg[index]?.translated_name ?? null,
+          namesBg[index],
           importance[index] ?? null
         ]);
 
