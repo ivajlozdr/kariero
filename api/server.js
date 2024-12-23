@@ -549,7 +549,7 @@ app.get("/stats/platform/users-count", (req, res) => {
   });
 });
 
-// Вземане на данни за брой на професии, групирани по 'code'
+// Вземане на данни за общ брой на професии в платформата, групирани по 'code'
 app.get("/stats/platform/distinct-occupations-with-count", (req, res) => {
   db.getDistinctOccupations((err, result) => {
     if (err) {
@@ -939,6 +939,91 @@ app.get("/stats/platform/most-selected-career-goals", (req, res) => {
     res.json(result);
   });
 });
+
+// Вземане на данни за най-предпочитани типове структура:
+app.get("/stats/platform/most-preferred-workstyle-structure", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  // Извличане на най-предпочитани типове структура
+  db.getMostPreferredWorkstyleStructure(limit, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Грешка при вземането на най-предпочитани типове структура."
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Няма намерени типове структура." });
+    }
+    res.json(result);
+  });
+});
+
+// Вземане на данни за най-предпочитани начини за работа
+app.get(
+  "/stats/platform/most-preferred-workstyle-collaboration",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+    // Проверка дали лимитът е положително число
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да бъде положително число." });
+    }
+
+    // Извличане на най-предпочитани начини за работа
+    db.getMostPreferredWorkstyleCollaboration(limit, (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-предпочитани начини за работа."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени начини за работа." });
+      }
+      res.json(result);
+    });
+  }
+);
+
+// Вземане на данни за най-предпочитани работни атмосфери
+app.get(
+  "/stats/platform/most-preferred-workstyle-work-environment",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+    // Проверка дали лимитът е положително число
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да бъде положително число." });
+    }
+
+    // Извличане на най-предпочитани работни атмосфери
+    db.getMostPreferredWorkstyleWorkEnvironment(limit, (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-предпочитани работни атмосфери."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени работни атмосфери." });
+      }
+      res.json(result);
+    });
+  }
+);
 
 // Start server
 app.listen(5001, () => {

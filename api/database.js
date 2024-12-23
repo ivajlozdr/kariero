@@ -732,6 +732,39 @@ const getMostSelectedCareerGoals = (limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getMostPreferredWorkstyleStructure = (limit, callback) => {
+  const query = `
+    SELECT structure_preference_workstyle AS preference, COUNT(*) AS occurrence_count
+    FROM final_scores
+    GROUP BY structure_preference_workstyle
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostPreferredWorkstyleCollaboration = (limit, callback) => {
+  const query = `
+    SELECT collaboration_workstyle AS preference, COUNT(*) AS occurrence_count
+    FROM final_scores
+    GROUP BY collaboration_workstyle
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
+const getMostPreferredWorkstyleWorkEnvironment = (limit, callback) => {
+  const query = `
+    SELECT work_environment_workstyle AS preference, COUNT(*) AS occurrence_count
+    FROM final_scores
+    GROUP BY work_environment_workstyle
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -759,5 +792,8 @@ module.exports = {
   getMostSelectedJobPriorities,
   getMostSelectedJobSatisfactionLevels,
   getMostSelectedEducationLevels,
-  getMostSelectedCareerGoals
+  getMostSelectedCareerGoals,
+  getMostPreferredWorkstyleStructure,
+  getMostPreferredWorkstyleCollaboration,
+  getMostPreferredWorkstyleWorkEnvironment
 };
