@@ -623,7 +623,7 @@ app.get("/stats/platform/most-needed-abilities", (req, res) => {
   }
 
   // Извличане на данните за най-нужните способности от базата данни
-  db.getMostNeededAbilities(limit, (err, result) => {
+  db.getMostNeededAttributes("abilities", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
@@ -652,7 +652,7 @@ app.get("/stats/platform/most-needed-knowledge", (req, res) => {
   }
 
   // Извличане на данните за най-нужните знания от базата данни
-  db.getMostNeededKnowledge(limit, (err, result) => {
+  db.getMostNeededAttributes("knowledge", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
@@ -681,7 +681,7 @@ app.get("/stats/platform/most-needed-skills", (req, res) => {
   }
 
   // Извличане на данните за най-нужните знания от базата данни
-  db.getMostNeededSkills(limit, (err, result) => {
+  db.getMostNeededAttributes("skills", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
@@ -710,7 +710,7 @@ app.get("/stats/platform/most-needed-tasks", (req, res) => {
   }
 
   // Извличане на данните за най-нужните знания от базата данни
-  db.getMostNeededTasks(limit, (err, result) => {
+  db.getMostNeededAttributes("tasks", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
@@ -739,7 +739,7 @@ app.get("/stats/platform/most-needed-technology-skills", (req, res) => {
   }
 
   // Извличане на данните за най-нужните знания от базата данни
-  db.getMostNeededTechnologySkills(limit, (err, result) => {
+  db.getMostNeededAttributes("technology_skills", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res.status(500).json({
@@ -770,7 +770,7 @@ app.get("/stats/platform/most-needed-work-activities", (req, res) => {
   }
 
   // Извличане на данните за най-нужните знания от базата данни
-  db.getMostNeededWorkActivities(limit, (err, result) => {
+  db.getMostNeededAttributes("work_activities", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res.status(500).json({
@@ -796,17 +796,23 @@ app.get("/stats/platform/most-selected-personality-types", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  db.getMostSelectedPersonalityTypes(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Грешка при вземането на най-често срещаните типове характери."
-      });
+  db.getMostSelectedPreferences(
+    "personality_types_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-често срещаните типове характери."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени типове характери." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Няма намерени типове характери." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-често предпочитаното работно място
@@ -819,17 +825,21 @@ app.get("/stats/platform/most-selected-work-environments", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  db.getMostSelectedWorkEnvironments(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Грешка при вземането на най-често срещаните работни среди."
-      });
+  db.getMostSelectedPreferences(
+    "work_environment_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-често срещаните работни среди."
+        });
+      }
+      if (result.length === 0) {
+        return res.status(404).json({ error: "Няма намерени работни среди." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Няма намерени работни среди." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-често срещаните приоритети при търсене на професия
@@ -842,20 +852,24 @@ app.get("/stats/platform/most-selected-job-priorities", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  db.getMostSelectedJobPriorities(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error:
-          "Грешка при вземането на най-често срещаните приоритети за професия."
-      });
+  db.getMostSelectedPreferences(
+    "job_priority_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-често срещаните приоритети за професия."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени приоритети за професия." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Няма намерени приоритети за професия." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-предпочитаните дейности в търсената професия
@@ -870,23 +884,27 @@ app.get("/stats/platform/most-selected-job-satisfaction-levels", (req, res) => {
   }
 
   // Извикване на функцията за извличане на най-предпочитаните нива на удовлетворение от професията
-  db.getMostSelectedJobSatisfactionLevels(limit, (err, result) => {
-    if (err) {
-      // В случай на грешка при извършване на заявката
-      return res.status(500).json({
-        error:
-          "Грешка при вземането на най-предпочитаните нива на удовлетворение от професията."
-      });
+  db.getMostSelectedPreferences(
+    "job_satisfaction_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        // В случай на грешка при извършване на заявката
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-предпочитаните нива на удовлетворение от професията."
+        });
+      }
+      if (result.length === 0) {
+        // Ако няма намерени резултати
+        return res.status(404).json({
+          error: "Няма намерени нива на удовлетворение от професията."
+        });
+      }
+      // Връщане на резултатите като JSON отговор
+      res.json(result);
     }
-    if (result.length === 0) {
-      // Ако няма намерени резултати
-      return res.status(404).json({
-        error: "Няма намерени нива на удовлетворение от професията."
-      });
-    }
-    // Връщане на резултатите като JSON отговор
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-често срещаните постигнати нива на образование
@@ -899,20 +917,24 @@ app.get("/stats/platform/most-selected-education-levels", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  db.getMostSelectedEducationLevels(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error:
-          "Грешка при вземането на най-често срещаните нива на образование."
-      });
+  db.getMostSelectedPreferences(
+    "education_level_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-често срещаните нива на образование."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени нива на образование." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Няма намерени нива на образование." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-желани професионални роли
@@ -927,17 +949,23 @@ app.get("/stats/platform/most-selected-career-goals", (req, res) => {
   }
 
   // Извличане на най-желани професионални роли
-  db.getMostSelectedCareerGoals(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Грешка при вземането на най-често срещаните цели за кариера."
-      });
+  db.getMostSelectedPreferences(
+    "career_goals_preferences",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-често срещаните цели за кариера."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени цели за кариера." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Няма намерени цели за кариера." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-предпочитани типове структура:
@@ -952,17 +980,23 @@ app.get("/stats/platform/most-preferred-workstyle-structure", (req, res) => {
   }
 
   // Извличане на най-предпочитани типове структура
-  db.getMostPreferredWorkstyleStructure(limit, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Грешка при вземането на най-предпочитани типове структура."
-      });
+  db.getMostPreferredWorkstyle(
+    "structure_preference_workstyle",
+    limit,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error: "Грешка при вземането на най-предпочитани типове структура."
+        });
+      }
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Няма намерени типове структура." });
+      }
+      res.json(result);
     }
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Няма намерени типове структура." });
-    }
-    res.json(result);
-  });
+  );
 });
 
 // Вземане на данни за най-предпочитани начини за работа
@@ -979,19 +1013,23 @@ app.get(
     }
 
     // Извличане на най-предпочитани начини за работа
-    db.getMostPreferredWorkstyleCollaboration(limit, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          error: "Грешка при вземането на най-предпочитани начини за работа."
-        });
+    db.getMostPreferredWorkstyle(
+      "collaboration_workstyle",
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error: "Грешка при вземането на най-предпочитани начини за работа."
+          });
+        }
+        if (result.length === 0) {
+          return res
+            .status(404)
+            .json({ error: "Няма намерени начини за работа." });
+        }
+        res.json(result);
       }
-      if (result.length === 0) {
-        return res
-          .status(404)
-          .json({ error: "Няма намерени начини за работа." });
-      }
-      res.json(result);
-    });
+    );
   }
 );
 
@@ -1009,19 +1047,23 @@ app.get(
     }
 
     // Извличане на най-предпочитани работни атмосфери
-    db.getMostPreferredWorkstyleWorkEnvironment(limit, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          error: "Грешка при вземането на най-предпочитани работни атмосфери."
-        });
+    db.getMostPreferredWorkstyle(
+      "work_environment_workstyle",
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error: "Грешка при вземането на най-предпочитани работни атмосфери."
+          });
+        }
+        if (result.length === 0) {
+          return res
+            .status(404)
+            .json({ error: "Няма намерени работни атмосфери." });
+        }
+        res.json(result);
       }
-      if (result.length === 0) {
-        return res
-          .status(404)
-          .json({ error: "Няма намерени работни атмосфери." });
-      }
-      res.json(result);
-    });
+    );
   }
 );
 
