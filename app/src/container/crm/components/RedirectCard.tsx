@@ -1,46 +1,29 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 
 const RedirectCard: React.FC = () => {
-  // Redux selectors and dispatch
-  const local_variable = useSelector((state: any) => state);
-  const dispatch = useDispatch();
-
-  // Determine color mode based on Redux state
-  const colorMode = local_variable.class;
-
-  const color = colorMode === "light" ? "#715ffa" : "#422afb";
-
   return (
-    <div className="card-container">
-      <a href="#/admin/mealplan" className="card-link">
-        <div className="box">
-          <div className="card-header">
+    <div className="redirect-card-wrapper p-4">
+      <a
+        href="#/admin/mealplan"
+        className="card-link hover:scale-105 transition-transform duration-300 ease-in-out"
+      >
+        <div className="card">
+          <div className="card-header p-3">
             <span className="gradient-text">
               <b>Хранителен план</b>
             </span>
             <svg
+              viewBox="0 0 1024 1024"
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
               className="icon"
-              style={{ color: color }}
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-9A2.25 2.25 0 002.25 5.25v13.5A2.25 2.25 0 004.5 21h9a2.25 2.25 0 002.25-2.25V15"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18 15l-3 3m0 0l3 3m-3-3h12.75"
+                d="M653.328 125.024l-56.576 56.704L734.88 320H399.68C240.88 320 112 448.992 112 607.776c0 158.816 128 287.952 288 287.952v-80c-112 0-208-93.312-208-208.016 0-114.688 93.152-208 207.84-208h334.96l-137.888 137.856 56.528 56.56 234.48-234.496L653.344 125.024z"
+                fill="currentColor"
               />
             </svg>
           </div>
-          <div className="card-body">
+          <div className="card-body p-3">
             <p>
               Създайте подходящия за вас хранителен план с изкуствен интелект в
               зависимост от интензивността на физическо натоварване!

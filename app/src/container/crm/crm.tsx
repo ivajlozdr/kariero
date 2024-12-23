@@ -115,8 +115,8 @@ const Crm: FC<CrmProps> = () => {
           />
         ))}
       </div>
-      <div className="card hover-effect">
-        <div className="grid grid-cols-4 gap-x-6">
+      <div className="card-container">
+        <div className="grid grid-cols-4 gap-4">
           <RedirectCard />
           <RedirectCard />
           <RedirectCard />

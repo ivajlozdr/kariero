@@ -67,6 +67,7 @@ export default {
         primary: "rgb(var(--primary))",
         primaryrgb: "rgb(var(--primary-rgb))",
         secondary: "rgb(var(--secondary))",
+        tertiary: "rgb(var(--tertiary))",
         success: "rgb(var(--success))",
         info: "rgb(var(--info))",
         warning: "rgb(var(--warning))",

@@ -118,6 +118,7 @@ Background Image
   --primary: 37 102 91;
   --primary-rgb: 37 102 91;
   --secondary: 63 135 118;
+  --tertiary: 92 110 133;
   --warning: 245 184 73;
   --info: 73 182 245;
   --success: 38 191 148;
@@ -11163,6 +11164,7 @@ label {
     @apply fill-[#536485];
   }
 }
+
 [data-menu-styles="light"][data-vertical-style="icontext"][data-toggled="icon-text-close"]:not(
     [icon-text="open"]
   )
@@ -16027,7 +16029,7 @@ body {
 }
 
 .box .box-header .box-title {
-  @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-[#2c0700] before:rounded-md;
+  @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary before:rounded-md;
 }
 
 .custom-box .custom-box-header .box-title {
@@ -16035,7 +16037,7 @@ body {
 }
 
 .custom-box .custom-box-header .box-title::before {
-  @apply absolute h-4 w-[0.2rem] top-[0.15rem] -start-[0.65rem] bg-gradient-to-b from-primary/50 to-[#2c0700] rounded-md;
+  @apply absolute h-4 w-[0.2rem] top-[0.15rem] -start-[0.65rem] bg-gradient-to-b from-primary/50 to-secondary rounded-md;
 }
 
 .box-body {
@@ -20050,6 +20052,10 @@ option.selectionList {
   color: #4b4b4b;
 }
 
+.charts-options-unselected {
+  @apply text-secondary bg-tertiary/10
+}
+
 .button {
   background-color: #007bff;
   color: #fff;
@@ -20068,38 +20074,31 @@ option.selectionList {
 }
 
 .card-container {
-  @apply flex justify-center my-5;
-}
-
-.card-link {
-  @apply no-underline text-inherit;
-}
-
-.card {
-  @apply min-h-[200px] bg-primary p-5 rounded-lg flex flex-col justify-between transition-all;
-}
-
-.card.hover-effect:hover {
-  @apply bg-secondary;
-}
-
-.card-header {
-  @apply flex items-center justify-between;
+  @apply bg-primary p-4 mb-6 rounded-lg flex flex-col justify-between transition-all;
 }
 
 .gradient-text {
-  font-size: 1.25rem;
-  background: linear-gradient(to right, #00c6ff, #0072ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  @apply text-[1.25rem] text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text;
 }
 
 .icon {
-  @apply w-5 h-5 ml-2 text-white;
+  @apply w-5 h-5 ml-2 text-primary;
+}
+
+.card-link {
+  @apply no-underline text-inherit hover:no-underline;
+}
+
+.card {
+  @apply flex flex-col shadow-lg rounded-lg overflow-hidden text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] relative dark:bg-bodybg transition-shadow duration-300 hover:shadow-xl;
+}
+
+.card-header {
+  @apply flex items-center p-3 rounded-t-lg;
 }
 
 .card-body {
-  @apply mt-2 text-center text-base font-medium;
+  @apply mt-2 text-center text-base font-medium p-3 bg-white dark:bg-bodybg rounded-b-lg;
 }
 
 /*# sourceMappingURL=style.css.map */
