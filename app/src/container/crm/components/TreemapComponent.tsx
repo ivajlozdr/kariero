@@ -56,7 +56,7 @@ const TreemapComponent: FC<TreemapComponentProps> = ({ data }) => {
                       className={`ti-btn-group !border-0 !text-xs !py-2 !px-3 ${
                         category === topStatsSortCategory
                           ? "ti-btn-primary-full text-white"
-                          : "text-[#E74581] dark:text-[#CC3333] bg-[#AF0B48] dark:bg-[#9A110A] bg-opacity-10 dark:bg-opacity-10"
+                          : "charts-options-unselected"
                       } ${
                         index === 0
                           ? "rounded-l-md"

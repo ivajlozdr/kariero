@@ -116,12 +116,26 @@ const Crm: FC<CrmProps> = () => {
         ))}
       </div>
       <div className="card-container">
-        <div className="grid grid-cols-4 gap-4">
-          <RedirectCard />
-          <RedirectCard />
-          <RedirectCard />
-          <RedirectCard />
-        </div>
+        <RedirectCard
+          href="quiz"
+          title="Кариерни Насоки"
+          description="Решете кратък, интерактивен въпросник и открийте вашите кариерни възможности!"
+        />
+        <RedirectCard
+          href="contact"
+          title="За Контакт"
+          description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
+        />
+        <RedirectCard
+          href="comingsoon"
+          title="Индивидуални Статистики"
+          description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
+        />
+        <RedirectCard
+          href="comingsoon"
+          title="Очаквайте Скоро"
+          description="Имаме планове да разширим платформата все повече и все повече! Очаквайте още повече страници."
+        />
       </div>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 col-span-12">

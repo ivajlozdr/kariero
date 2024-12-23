@@ -1,3 +1,10 @@
+export interface RedirectCardProps {
+  href: string;
+  title: string;
+  description: string;
+}
+// ARTCOMPASS TEMP DATA BELOW
+
 // Общи данни за режисьори, актьори и писатели
 export interface CommonData {
   avg_imdb_rating: number; // Среден рейтинг в IMDb
