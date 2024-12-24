@@ -198,32 +198,9 @@ async function fetchAndTranslateDetails(code) {
   };
 }
 
-async function scrape() {
-  const url = `https://www.jobs.bg/front_job_search.php?s_c[0]=1168`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0",
-        Cookie:
-          "JOBSSESSID=fo4e23s7v2srg8bic4o1bg97uf; TS017554c9=01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c; FAV=5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29; RELOC=1; __cf_bm=_xBochdDo2cjp3VyGzU.VwMTgIrBnLuomqNvRi77ooc-1733647761-1.0.1.1-KPZtGU.pgUdu7FSPtC9xHixrZLIFi.n9iC1mZuGhnfEDKXQaEZem82HB.pL6U6WTeV3Y0ACNjn0Z.dRD8qM5FA; TS01caf967=01855380b02314502e83d2661215bc7cec304967f6f5ab6b6869f98a2bd3ffe0d551c1d45652da36f3b7cbe782459ce76f13c65119; datadome=DXoZRcj_xB4LYjVnPQ8tl6pL2Si0hSXHWyxCZdYsdoQ_lq0wyJv7vMt4vQchrG4_tRl~e6Q6hToCQc41EUZHwjM75JmYC9Q7uMS2FOozVdT1oy7cxTGjnvtV~tiuQK1e"
-      }
-    });
-    const data = await response.text();
-
-    return data;
-  } catch (error) {
-    console.error(`Error scraping: `, error);
-    return error;
-  }
-}
-
 module.exports = {
   translate,
   searchJobs,
   fetchCareerCode,
-  fetchAndTranslateDetails,
-  scrape
+  fetchAndTranslateDetails
 };
