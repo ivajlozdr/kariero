@@ -130,7 +130,7 @@ def scrape_jobs():
 
                     # Convert salary to base currency (BGN)
                     salary_value_bgn = salary_value * exchange_rates.get(currency, 1)
-                    
+
                     salaries.append(salary_value_bgn)
 
                 # Extract off days
@@ -172,7 +172,7 @@ def scrape_jobs():
                 print(f"Error parsing job: {e}", file=sys.stderr)
 
         # Calculate the average salary
-        average_salary = sum(salaries) / len(salaries) if salaries else 0
+        average_salary = round(sum(salaries) / len(salaries), 2) if salaries else 0
 
         # Include the average salary at the beginning of the results
         result = {
