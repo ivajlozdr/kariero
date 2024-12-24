@@ -312,9 +312,8 @@ app.get("/user-data", (req, res) => {
 });
 
 app.post("/run-python-script", async (req, res) => {
-  console.log("Received POST request to /run-python-script");
   try {
-    const { keyword } = req.body;
+    const { keyword, occupation_code } = req.body;
 
     // Translate the keyword
     console.log("Translating keyword:", keyword);
@@ -376,7 +375,19 @@ app.post("/run-python-script", async (req, res) => {
 
       try {
         const parsedResponse = JSON.parse(response.trim());
-        res.status(200).json(parsedResponse);
+
+        // Save to the database
+        db.saveOffers(parsedResponse, occupation_code, (err) => {
+          if (err) {
+            console.error("Error saving offers to database:", err);
+            return res
+              .status(500)
+              .json({ error: "Failed to save offers to database" });
+          }
+
+          // Send response to the client
+          res.status(200).json(parsedResponse);
+        });
       } catch (error) {
         console.error("Error parsing Python script response:", error);
         res.status(500).json({ error: "Failed to parse Python script output" });

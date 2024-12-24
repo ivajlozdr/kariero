@@ -466,6 +466,73 @@ const saveAIAnalysis = (userId, analysisData, callback) => {
   });
 };
 
+const saveOffers = (offers, occupation_code, callback) => {
+  const { average_salary, job_offers } = offers;
+
+  const offerQuery = `
+    INSERT INTO offers (
+      occupation_code, title, company, city, details, salary, off_days, url, date
+    ) VALUES ?;
+  `;
+
+  const updateOccupationQuery = `
+    UPDATE occupations
+    SET date = (SELECT date FROM occupations WHERE code = "27-1024.00"), average_salary = ?
+    WHERE code = ?;
+  `;
+
+  // Prepare values for the offers table
+  const offerValues = job_offers.map((offer) => [
+    occupation_code, // Occupation code
+    offer.title, // Job title
+    offer.company, // Company name
+    offer.city, // Job location
+    offer.details, // Job description or additional details
+    offer.salary, // Salary information
+    offer.off_days, // Days off or leave details
+    offer.url, // Job listing URL
+    offer.date // Date of posting
+  ]);
+
+  // Begin a transaction to ensure data integrity
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error("Error starting database transaction:", err);
+      return callback(err);
+    }
+
+    // Insert offers into the database
+    db.query(offerQuery, [offerValues], (insertErr, insertResult) => {
+      if (insertErr) {
+        console.error("Error inserting offers into database:", insertErr);
+        return db.rollback(() => callback(insertErr));
+      }
+
+      // Update the average_salary in the occupations table
+      db.query(
+        updateOccupationQuery,
+        [average_salary, occupation_code],
+        (updateErr, updateResult) => {
+          if (updateErr) {
+            console.error("Error updating average_salary:", updateErr);
+            return db.rollback(() => callback(updateErr));
+          }
+
+          // Commit the transaction
+          db.commit((commitErr) => {
+            if (commitErr) {
+              console.error("Error committing transaction:", commitErr);
+              return db.rollback(() => callback(commitErr));
+            }
+            console.log("Transaction successfully committed.");
+            callback(null, { insertResult, updateResult });
+          });
+        }
+      );
+    });
+  });
+};
+
 const getUsersCount = (callback) => {
   const query = `
     SELECT COUNT(*) AS user_count
@@ -571,6 +638,7 @@ module.exports = {
   saveOccupation,
   saveCategoryData,
   saveAIAnalysis,
+  saveOffers,
   getUsersCount,
   getDistinctOccupations,
   getTopRecommendedOccupations,
