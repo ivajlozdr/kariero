@@ -26,13 +26,13 @@ def scrape_jobs():
 
         # Add cookies to the page
         cookies = [
-            {"name": "JOBSSESSID", "value": "fo4e23s7v2srg8bic4o1bg97uf", "domain": ".jobs.bg", "path": "/"},
+            {"name": "JOBSSESSID", "value": "1lk230c3lcv70iabcd6j96b9k8", "domain": ".jobs.bg", "path": "/"},
             {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
             {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
             {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-            {"name": "__cf_bm", "value": "stOu3bFqYaRuR5029e66rvzzUyXu6GCUTgtFbKWgYQ-1734184401-1.0.1.1-gyDBZFtagWnWeCDp5cPohrcs_5WnwNi7_XnwpCydR.5XNo4xXO.Sy.MRWiUqyGEIuekZ6J8HdWW_PGQHg0kW.w", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS01caf967", "value": "01855380b09e6677d3f91093313406cac61cca4b64d36212287fb7196d9955a8be2d5863a904cb6e95b48ed035527ae352ea50a92b", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "8Qwbn06CXfnoqB8vSu5_4nQKtFKslfOMcb25Qa6zq8wzHxA59IiFkWiB1AAEA6eBCVsmJHJlqBLl6~fxBtoI2Q3qhyBCb8OipX1X_EvBg5gjo9AufnQqOV5wPIDnWHOv", "domain": ".jobs.bg", "path": "/"}
+            {"name": "__cf_bm", "value": "D.IKfdd7Z.VbZrx7kCAn5wg28.esU7eF5q7sO3UmrBw-1735033089-1.0.1.1-7QdMNG0uKk6y9Y8O_42ZgMbVe1SMXJjKFwIQFjGJJpV60gRaH.5zaOq0zCMIDJHwqxoYehWB.hMShqeNipIT0A", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS01caf967", "value": "01855380b0bd4dc85cfa7171b1fb2d137034aca7785e2098254b008c731a52f65fa82e8ec14febad74b4e3df5c308da9e4d2ddcba8", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "899kHdIYYCw_2v9uwTT89gr7pZ~ue87LzhPJiV_8T_PdoAMzA8vxB127YqMjGecgoLDl1O~45sugc12W3oj21l3hjWOxWvKWsY9Az_Jumx3QXnZB~LcZWE2Clv9xu22V", "domain": ".jobs.bg", "path": "/"}
         ]
         page.context.add_cookies(cookies)
 
@@ -51,8 +51,9 @@ def scrape_jobs():
         # Find all job listing elements
         job_list = soup.select("ul.page-1 > li")
 
+        salaries = []
         job_offers = []
-
+        
         for job in job_list:
             try:
                 # Extract job title
@@ -68,12 +69,9 @@ def scrape_jobs():
 
                 # Extract offer details
                 details_element = job.select_one("div.card-info.card__subtitle")
-
                 if details_element:
-                    # Remove any elements with 'material' in their classes
                     for tag in details_element.select("[class*='material']"):
                         tag.decompose()
-
                     offer_details = details_element.get_text(" ", strip=True)
 
                     # Clean up extra spaces in offer details
@@ -101,12 +99,20 @@ def scrape_jobs():
                 if salary_match:
                     offer_details = offer_details.replace(salary_match.group(0), "").strip()
 
+                # Add separate logic to parse numeric values from `salary` variable
+                salary_numbers = re.findall(r"\d+", salary)
+                if len(salary_numbers) == 2:  # "от X до Y"
+                    salary_min, salary_max = map(int, salary_numbers)
+                    salaries.append((salary_min + salary_max) / 2)
+                elif len(salary_numbers) == 1:  # Single value
+                    salaries.append(int(salary_numbers[0]))
+
                 # Extract off days
                 off_days_match = re.search(r"Отпуск\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни|\d+\s+до\s+\d+\s+дни)", offer_details)
                 off_days = off_days_match.group(1) if off_days_match else "N/A"
 
                 # Extract city from details (assuming it's one of the mentioned cities)
-                city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград|Димитровград|Варна|Стара Загора|Варвара \(Пазарджик\)|Плевен|Перник|Ботевград|Пазарджик|Ямбол|Враца|Шумен|Самоков|Казанлък|Велико Търново|Царацово|Добрич|Силистра|Кюстендил|Панаретовци|Габрово|Горна Оряховица|Разлог|Кърджали|Долна Диканя|Благоевград|Равно поле|Столник|Радиново|Гара Елин Пелин|Козлодуй|Оряховица|Елин Пелин|Девня|Огняново \(Пазарджик\)|Дупница|Ловеч|Карлово|Исперих|Сливен|Банско|Хасково|Монтана|Пампорово|Асеновград|Видин|Смолян|Севлиево|Троян|Петрич|Сандански|Костинброд|Панагюрище|Радомир|Боровец|Айтос|Чирпан)", offer_details)
+                city_match = re.search(r"(София|Търговище|Русе|Пловдив|Бургас|Разград|Димитровград|Варна|Стара Загора|Варвара \(Пазарджик\)|Плевен|Перник|Ботевград|Пазарджик|Ямбол|Враца|Шумен|Самоков|Казанлък|Велико Търново|Царацово|Добрич|Силистра|Кюстендил|Панаретовци|Габрово|Горна Оряховица|Разлог|Кърджали|Долна Диканя|Благоевград|Равно поле|Столник|Радиново|Гара Елин Пелин|Козлодуй|Оряховица|Елин Пелин|Девня|Огняново \(Пазарджик\)|Дупница|Ловеч|Карлово|Исперих|Сливен|Банско|Хасково|Монтана|Пампорово|Асеновград|Видин|Смолян|Севлиево|Стряма|Троян|Петрич|Сандански|Костинброд|Панагюрище|Радомир|Боровец|Айтос|Чирпан)", offer_details)
                 city = city_match.group(0) if city_match else "N/A"
 
                 # Remove unrelated text from offer details
@@ -139,18 +145,27 @@ def scrape_jobs():
             except Exception as e:
                 print(f"Error parsing job: {e}", file=sys.stderr)
 
-        # Step 8: Save results to a JSON file
+        # Calculate the average salary
+        average_salary = sum(salaries) / len(salaries) if salaries else 0
+
+        # Include the average salary at the beginning of the results
+        result = {
+            "average_salary": average_salary,
+            "job_offers": job_offers
+        }
+
+        # Save results to a JSON file
         # output_file = "/home/noit1/kariero-api/scraping/job_offers.json"
         output_file = "job_offers.json"
 
         try:
             with open(output_file, "w", encoding="utf-8") as file:
-                json.dump(job_offers, file, ensure_ascii=False, indent=4)
+                json.dump(result, file, ensure_ascii=False, indent=4)
         except Exception as e:
             print(f"Error saving to file: {e}", file=sys.stderr)
 
         # Return the job offers as output
-        print(json.dumps(job_offers))  # Print job offers in JSON format
+        print(json.dumps(result))  # Print job offers in JSON format
 
         # Close the browser
         browser.close()
