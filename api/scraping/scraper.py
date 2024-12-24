@@ -100,12 +100,38 @@ def scrape_jobs():
                     offer_details = offer_details.replace(salary_match.group(0), "").strip()
 
                 # Add separate logic to parse numeric values from `salary` variable
+
+                exchange_rates = {
+                    "BGN": 1,  # Base currency
+                    "USD": 1.85,  # Example rate: 1 USD = 1.85 BGN
+                    "EUR": 1.95  # Example rate: 1 EUR = 1.95 BGN
+                }
+                
                 salary_numbers = re.findall(r"\d+", salary)
+
+                currency = None
+                if "BGN" in salary:
+                    currency = "BGN"
+                elif "USD" in salary:
+                    currency = "USD"
+                elif "EUR" in salary:
+                    currency = "EUR"
+                    
                 if len(salary_numbers) == 2:  # "от X до Y"
                     salary_min, salary_max = map(int, salary_numbers)
-                    salaries.append((salary_min + salary_max) / 2)
+
+                    # Convert salary to base currency (BGN)
+                    salary_min_bgn = salary_min * exchange_rates.get(currency, 1)
+                    salary_max_bgn = salary_max * exchange_rates.get(currency, 1)
+                    
+                    salaries.append((salary_min_bgn + salary_max_bgn) / 2)
                 elif len(salary_numbers) == 1:  # Single value
-                    salaries.append(int(salary_numbers[0]))
+                    salary_value = int(salary_numbers[0])
+
+                    # Convert salary to base currency (BGN)
+                    salary_value_bgn = salary_value * exchange_rates.get(currency, 1)
+                    
+                    salaries.append(salary_value_bgn)
 
                 # Extract off days
                 off_days_match = re.search(r"Отпуск\s*(от\s+\d+\s+до\s+\d+\s+дни|\d+\s+дни|\d+\s+до\s+\d+\s+дни)", offer_details)
