@@ -12,15 +12,18 @@ const CareerCard: React.FC<CareerCardProps> = ({
 
   return (
     <div
-      className="relative group w-full max-w-sm h-[440px] cursor-pointer transition-all duration-300 hover:scale-105"
+      className="relative group w-full max-w-sm cursor-pointer transition-all duration-300 hover:scale-105"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="absolute inset-0 rounded-xl border-4 border-primary/50 group-hover:border-secondary group-hover:border-6"></div>
 
-      <div className="relative z-10 rounded-xl p-6 w-full h-full text-defaulttextcolor shadow-lg group-hover:shadow-2xl flex flex-col justify-between">
+      <div className="relative z-10 rounded-xl p-6 w-full text-defaulttextcolor shadow-lg group-hover:shadow-2xl flex flex-col justify-between">
         <div className="flex-grow mb-4">
-          <h3 className="font-bold text-2xl group-hover:text-secondary text-primary mb-4">
+          <h3
+            className="font-bold text-2xl group-hover:text-secondary text-primary mb-4 truncate"
+            title={title}
+          >
             {title}
           </h3>
           <p
@@ -29,7 +32,6 @@ const CareerCard: React.FC<CareerCardProps> = ({
                 ? "max-h-[80px] overflow-auto"
                 : "max-h-12 overflow-hidden"
             } transition-all duration-300`}
-            title={description}
           >
             {description}
           </p>
@@ -49,9 +51,9 @@ const CareerCard: React.FC<CareerCardProps> = ({
           <h4 className="text-lg group-hover:text-secondary group-hover:border-secondary text-primary font-semibold mb-2 border-l-4 border-primary pl-3">
             Умения, които са нужни
           </h4>
-          <div className="overflow-auto">
+          <div className="flex-grow">
             <ul
-              className={`list-none space-y-2 pr-2 transition-all duration-300 ${
+              className={`list-none overflow-y-auto space-y-2 pr-2 transition-all duration-300 ${
                 isHovered ? "h-[9rem]" : "h-[10rem]"
               }`}
             >

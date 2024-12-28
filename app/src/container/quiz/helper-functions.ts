@@ -536,7 +536,27 @@ export const submitQuiz = async (
 
     console.log("OpenAI Recommendations:", recommendations);
 
-    setCareerRecommendations(recommendations.CareerRecommendations);
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/translate/career-paths`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          careerPaths: recommendations.CareerRecommendations
+        })
+      }
+    );
+
+    if (response.ok) {
+      const translatedData = await response.json();
+      console.log(translatedData);
+      // Update the state with translated career recommendations
+      setCareerRecommendations(translatedData);
+    } else {
+      console.error("Failed to translate career recommendations");
+    }
 
     const onetData = await fetchOnetData(
       recommendations,

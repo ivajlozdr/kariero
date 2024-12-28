@@ -23,34 +23,6 @@ const QuizComponent: React.FC = () => {
     CareerRecommendation[]
   >([]);
 
-  const translateCareerRecommendations = async (
-    recommendations: CareerRecommendation[]
-  ) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/translate/career-paths`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ careerPaths: recommendations })
-        }
-      );
-
-      if (response.ok) {
-        const translatedData = await response.json();
-        console.log(translatedData);
-        // Update the state with translated career recommendations
-        setCareerRecommendations(translatedData);
-      } else {
-        console.error("Failed to translate career recommendations");
-      }
-    } catch (error) {
-      console.error("Error translating career recommendations:", error);
-    }
-  };
-
   useEffect(() => {
     const submitData = async () => {
       if (userResponses.length === 19 && scores.RIASEC.Realistic) {
@@ -64,7 +36,6 @@ const QuizComponent: React.FC = () => {
           setCareers
         );
         // After getting the career recommendations, translate them
-        await translateCareerRecommendations(careerRecommendations);
         setIsSubmitting(false);
       }
     };
