@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { hatch } from "ldrs"; // Import the Hatch spinner from ldrs
+import { hatch } from "ldrs";
 
-const Loader: React.FC = () => {
+interface LoaderProps {
+  description?: string;
+}
+
+const Loader: React.FC<LoaderProps> = ({ description }) => {
   const [dots, setDots] = useState<string>(".");
 
   hatch.register();
@@ -12,17 +16,24 @@ const Loader: React.FC = () => {
         if (prev.length < 3) {
           return prev + ".";
         }
-        return "."; // Reset to one dot after three
+        return ".";
       });
-    }, 500); // Change the dots every 500 ms
+    }, 500);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
-      <l-hatch size="28" stroke="4" speed="3.5" color="black"></l-hatch>
-      <p className="mt-4 text-lg text-gray-700">Моля изчакайте{dots}</p>
+    <div className="flex flex-col justify-center items-center h-screen">
+      <l-hatch
+        size="28"
+        stroke="4"
+        speed="3.5"
+        color="rgb(var(--default-text-color))"
+      ></l-hatch>
+      <p className="mt-4 text-lg text-defaulttextcolor dark:text-defaulttextcolor/70">
+        {description ? description + dots : `Моля изчакайте${dots}`}
+      </p>
     </div>
   );
 };

@@ -311,6 +311,61 @@ app.get("/user-data", (req, res) => {
   });
 });
 
+app.post("/translate/career-paths", async (req, res) => {
+  try {
+    const { careerPaths } = req.body;
+
+    // Helper function to translate individual pieces
+    const translateText = async (text) => {
+      try {
+        const translatedText = await hf.translate(text);
+        return translatedText;
+      } catch (error) {
+        console.error("Error translating text:", error);
+        return text;
+      }
+    };
+
+    // Process all career paths
+    const translatedCareerPaths = await Promise.all(
+      careerPaths.map(async (careerPath) => {
+        const translatedCareerPathTitle = await translateText(
+          careerPath.careerPath
+        );
+        const translatedCareerPathDescription = await translateText(
+          careerPath.reason
+        );
+
+        const translatedCareers = await Promise.all(
+          careerPath.listOfCareers.map(async (career) => {
+            const translatedCareerName = await translateText(career.career);
+            const translatedCareerReason = await translateText(career.reason);
+
+            return {
+              career: translatedCareerName,
+              reason: translatedCareerReason
+            };
+          })
+        );
+
+        return {
+          careerPath: translatedCareerPathTitle,
+          reason: translatedCareerPathDescription,
+          listOfCareers: translatedCareers
+        };
+      })
+    );
+
+    // Return the translated career paths
+    res.json(translatedCareerPaths);
+  } catch (error) {
+    console.error("Error in translating career paths:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the request." });
+  }
+});
+
 app.post("/run-python-script", async (req, res) => {
   try {
     const { keyword, occupation_code } = req.body;

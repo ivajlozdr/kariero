@@ -117,22 +117,22 @@ const Crm: FC<CrmProps> = () => {
       </div>
       <div className="card-container">
         <RedirectCard
-          href="quiz"
+          href="../app/quiz"
           title="Кариерни Насоки"
           description="Решете кратък, интерактивен въпросник и открийте вашите кариерни възможности!"
         />
         <RedirectCard
-          href="contact"
+          href="../app/contact"
           title="За Контакт"
           description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
-          href="comingsoon"
+          href="../app/comingsoon"
           title="Индивидуални Статистики"
           description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
         />
         <RedirectCard
-          href="comingsoon"
+          href="../app/comingsoon"
           title="Очаквайте Скоро"
           description="Имаме планове да разширим платформата все повече и все повече! Очаквайте още повече страници."
         />

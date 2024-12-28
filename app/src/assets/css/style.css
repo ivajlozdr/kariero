@@ -19781,39 +19781,6 @@ option.selectionList {
   animation: inflateFromRight 0.7s ease forwards;
 }
 
-.fade-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-.fade-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 500ms, transform 500ms;
-}
-.fade-exit {
-  opacity: 1;
-  transform: scale(1);
-}
-.fade-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 500ms, transform 500ms;
-}
-
-.fade-no-transform-enter {
-  opacity: 0;
-}
-.fade-no-transform-enter-active {
-  opacity: 1;
-  transition: opacity 500ms;
-}
-.fade-no-transform-exit {
-  opacity: 1;
-}
-.fade-no-transform-exit-active {
-  opacity: 0;
-  transition: opacity 500ms;
-}
 @layer utilities {
   .glow-effect {
     @apply shadow-[0_0_6px_rgb(var(--secondary))] dark:shadow-[0_0_6px_rgba(255,255,255,0.8)];
@@ -20009,6 +19976,21 @@ option.selectionList {
   opacity: 0;
   transform: scale(0.9);
   transition: opacity 500ms, transform 500ms;
+}
+
+.fade-no-transform-enter {
+  opacity: 0;
+}
+.fade-no-transform-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+.fade-no-transform-exit {
+  opacity: 1;
+}
+.fade-no-transform-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
 }
 
 .career-card {

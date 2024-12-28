@@ -2,18 +2,42 @@ import React, { useState } from "react";
 import { CareerPath, CareersProps } from "../quiz-types";
 import CareerCard from "./CareerCard";
 import CareerPathCard from "./CareerPathCard";
+import { CSSTransition } from "react-transition-group";
 
 // Основен компонент Careers
 const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
+  const [showCareerCards, setShowCareerCards] = useState(true);
+
+  const handlePathSelection = (path: CareerPath) => {
+    setShowCareerCards(false); // Start hiding CareerPathCards
+    setTimeout(() => {
+      setSelectedPath(path); // Update the selected path after fade-out
+      setShowCareerCards(true); // Show CareerCards after a short delay
+    }, 300); // Matches the fade-out duration
+  };
+
+  const handleBackToPaths = () => {
+    setShowCareerCards(false); // Start hiding CareerCards
+    setTimeout(() => {
+      setSelectedPath(null); // Reset selected path after fade-out
+      setShowCareerCards(true); // Show CareerPathCards after a short delay
+    }, 300); // Matches the fade-out duration
+  };
 
   const getCareerDetailsByIndex = (index: number) => {
     return careersData[index] || null;
   };
 
   return (
-    <div className="careers-container p-6 min-h-[500px]">
-      {selectedPath === null ? (
+    <div className="careers-container p-6 min-h-[500px] relative">
+      {/* Career Paths Transition */}
+      <CSSTransition
+        in={selectedPath === null && showCareerCards}
+        timeout={300}
+        classNames="fade"
+        unmountOnExit
+      >
         <div className="career-paths-container flex flex-wrap gap-6 justify-center items-center">
           {careerPaths.map((path, index) => (
             <CareerPathCard
@@ -21,23 +45,31 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
               pathName={path.careerPath}
               reason={path.reason}
               careers={path.listOfCareers.map((career, i) => career.career)}
-              onClick={() => setSelectedPath(path)}
+              onClick={() => handlePathSelection(path)}
             />
           ))}
         </div>
-      ) : (
+      </CSSTransition>
+
+      {/* Career Cards Transition */}
+      <CSSTransition
+        in={selectedPath !== null && showCareerCards}
+        timeout={300}
+        classNames="fade"
+        unmountOnExit
+      >
         <div className="careers-for-path">
           <button
             className="mb-4 px-4 py-2 bg-blue-500 text-white rounded shadow"
-            onClick={() => setSelectedPath(null)}
+            onClick={handleBackToPaths}
           >
             Back to Career Paths
           </button>
           <h2 className="text-2xl font-bold mb-6">
-            Careers in {selectedPath.careerPath}
+            Careers in {selectedPath?.careerPath}
           </h2>
           <div className="careers-list flex flex-wrap gap-6 justify-center items-center">
-            {selectedPath.listOfCareers.map((career, index) => {
+            {selectedPath?.listOfCareers.map((career, index) => {
               const careerIndex =
                 index +
                 3 *
@@ -62,7 +94,7 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
             })}
           </div>
         </div>
-      )}
+      </CSSTransition>
     </div>
   );
 };
