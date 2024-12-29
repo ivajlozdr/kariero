@@ -333,9 +333,16 @@ export interface CareerCardProps {
   title: string;
   description: string;
   skills: string[];
+  reason: string;
+  setNotification: React.Dispatch<
+    React.SetStateAction<{ message: string } | null>
+  >;
 }
 
 export interface CareersProps {
   careerPaths: CareerPath[];
   careersData: FullCareerDetails[];
+  setNotification: React.Dispatch<
+    React.SetStateAction<{ message: string } | null>
+  >;
 }

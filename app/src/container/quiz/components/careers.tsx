@@ -5,7 +5,11 @@ import CareerPathCard from "./CareerPathCard";
 import { CSSTransition } from "react-transition-group";
 
 // Основен компонент Careers
-const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
+const Careers: React.FC<CareersProps> = ({
+  careerPaths,
+  careersData,
+  setNotification
+}) => {
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
   const [showCareerCards, setShowCareerCards] = useState(true);
 
@@ -31,7 +35,6 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
 
   return (
     <div className="careers-container p-6 min-h-[500px] relative">
-      {/* Career Paths Transition */}
       <CSSTransition
         in={selectedPath === null && showCareerCards}
         timeout={300}
@@ -51,7 +54,6 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
         </div>
       </CSSTransition>
 
-      {/* Career Cards Transition */}
       <CSSTransition
         in={selectedPath !== null && showCareerCards}
         timeout={300}
@@ -96,6 +98,10 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
                     (path) => path.careerPath === selectedPath?.careerPath
                   );
               const fullCareerDetails = getCareerDetailsByIndex(careerIndex);
+              const careerPathReason = careerPaths.find(
+                (path) => path.careerPath === selectedPath?.careerPath
+              )?.reason;
+
               return fullCareerDetails ? (
                 <CareerCard
                   key={index}
@@ -104,6 +110,8 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
                   skills={fullCareerDetails.translated.skills.map(
                     (skill) => skill.translated_name
                   )}
+                  reason={careerPathReason || ""}
+                  setNotification={setNotification}
                 />
               ) : (
                 <div key={index} className="text-red-500">

@@ -5,10 +5,16 @@ import { CareerCardProps } from "../quiz-types";
 const CareerCard: React.FC<CareerCardProps> = ({
   title,
   description,
-  skills
+  skills,
+  reason,
+  setNotification
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hardcodedSalary = "60,000 - 90,000 лв.";
+
+  const handleClick = () => {
+    setNotification({ message: reason });
+  };
 
   return (
     <div
@@ -45,9 +51,17 @@ const CareerCard: React.FC<CareerCardProps> = ({
               </h4>
             </div>
           </div>
+          <div className="flex items-center">
+            <span
+              className="italic text-xs text-primary cursor-pointer"
+              onClick={handleClick}
+            >
+              Защо тази кариера?
+            </span>
+          </div>
         </div>
 
-        <div className="mt-6 flex-1">
+        <div className="flex-1">
           <h4 className="text-lg group-hover:text-secondary group-hover:border-secondary text-primary font-semibold mb-2 border-l-4 border-primary pl-3">
             Умения, които са нужни
           </h4>

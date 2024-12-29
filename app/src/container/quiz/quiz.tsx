@@ -11,6 +11,7 @@ import Careers from "./components/careers";
 import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 import Loader from "../../pages/Loader";
+import Notification from "../../components/common/notification/Notification";
 
 const QuizComponent: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -22,6 +23,9 @@ const QuizComponent: React.FC = () => {
   const [careerRecommendations, setCareerRecommendations] = useState<
     CareerRecommendation[]
   >([]);
+  const [notification, setNotification] = useState<{
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     const submitData = async () => {
@@ -48,6 +52,15 @@ const QuizComponent: React.FC = () => {
   }, [isSubmitting]);
   return (
     <div>
+      {notification && (
+        <Notification
+          message={notification.message}
+          onClose={() => {
+            console.log("Notification closed!");
+            setNotification(null);
+          }}
+        />
+      )}
       <CSSTransition
         in={isSubmitting}
         timeout={200}
@@ -83,6 +96,7 @@ const QuizComponent: React.FC = () => {
         <Careers
           careerPaths={careerRecommendations}
           careersData={careers || []}
+          setNotification={setNotification}
         />
       </CSSTransition>
       <button
