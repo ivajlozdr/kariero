@@ -19653,64 +19653,12 @@ input[type="color" i]::-webkit-color-swatch {
   @apply w-0;
 }
 
-/* Sign-In and Sign-Up */
 .empty-field {
   border: 2px solid #e6533c !important;
 }
 
-/*EMAILS*/
 .email-center {
   text-align: center;
-}
-
-/* AI-RECCOMENDATIONS */
-.bubble {
-  --r: 1em;
-  /* the radius */
-  --t: 1.5em;
-  /* the size of the tail */
-
-  font-size: 1.5em;
-  padding: 1em;
-  border-inline: var(--t) solid #0000;
-  border-radius: calc(var(--r) + var(--t)) / var(--r);
-  mask: radial-gradient(100% 100% at var(--_p) 0, #0000 99%, #000 102%)
-      var(--_p) 100% / var(--t) var(--t) no-repeat,
-    linear-gradient(#000 0 0) padding-box;
-  background: linear-gradient(135deg, #6f3508, #fd3636) border-box;
-  color: #fff;
-}
-
-.left {
-  max-width: 40%;
-  text-align: left;
-  --_p: 0;
-  border-bottom-left-radius: 0 0;
-  background: linear-gradient(135deg, #6f3508, #fd3636) border-box;
-  place-self: start;
-}
-
-.right {
-  max-width: 60%;
-  --_p: 1;
-  --r: 2em !important;
-  --t: 2.5em !important;
-  color: #f09433;
-  margin-left: 50%;
-  border-bottom-right-radius: 0 0;
-  background: linear-gradient(135deg, #fd3636, #6f3508) border-box;
-  place-self: end;
-}
-
-.multiCh {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5em;
-  margin-left: 40% !important;
-}
-
-.MChitem {
-  margin-bottom: 0.5em;
 }
 
 select.selectionList {
@@ -19749,141 +19697,12 @@ option.selectionList {
   font-size: 1em;
 }
 
-@keyframes inflateFromLeft {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes inflateFromRight {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.inflate-left {
-  animation: inflateFromLeft 0.7s ease forwards;
-}
-
-.inflate-right {
-  animation: inflateFromRight 0.7s ease forwards;
-}
-
-@layer utilities {
-  .glow-effect {
-    @apply shadow-[0_0_6px_rgb(var(--secondary))] dark:shadow-[0_0_6px_rgba(255,255,255,0.8)];
-  }
-}
-
-.glow-next {
-  @apply shadow-[0_0px_8px_rgba(255,255,255,0.8)];
-}
-
 .question {
   @apply flex flex-col rounded-md border-2 border-secondary dark:border-white text-secondary dark:text-defaulttextcolor/70 text-[0.813rem] relative bg-[rgb(var(--body-bg))];
 }
 
-.input-field {
-  @apply flex border-2 border-secondary dark:border-white glow-effect flex-col rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 text-[0.813rem] relative dark:bg-bodybg focus-within:ring-4 focus-within:ring-[#d94545] focus-within:border-[#d94545];
-}
-
-.input-field input:focus {
-  @apply outline-none ring-4 ring-secondary border-secondary;
-}
-
-.selected-answer {
-  @apply flex flex-col rounded-md text-white dark:text-defaulttextcolor/70 bg-secondary text-[0.813rem] relative;
-}
-
-.checkbox {
-  @apply mr-2 h-5 w-5 appearance-none bg-opacity-70 bg-white dark:bg-[#2a2a2a] rounded-md checked:bg-secondary checked:border-secondary transition-all duration-300 hover:scale-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#d94545];
-}
-
 .next {
   @apply flex flex-col rounded-md bg-primary text-[0.813rem] relative;
-}
-
-.slide-right-enter {
-  transform: translateX(100%);
-  opacity: 0;
-}
-.slide-right-enter-active {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 500ms ease-out, opacity 500ms ease-out;
-}
-.slide-right-exit {
-  transform: translateX(0);
-  opacity: 1;
-}
-.slide-right-exit-active {
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform 500ms ease-in, opacity 500ms ease-in;
-}
-
-/* Slide from left */
-.slide-left-enter {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-.slide-left-enter-active {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 500ms ease-out, opacity 500ms ease-out;
-}
-.slide-left-exit {
-  transform: translateX(0);
-  opacity: 1;
-}
-.slide-left-exit-active {
-  transform: translateX(100%);
-  opacity: 0;
-  transition: transform 500ms ease-in, opacity 500ms ease-in;
-}
-
-.arrows-enter {
-  opacity: 0;
-}
-
-.arrows-enter-active {
-  opacity: 1;
-  transition: opacity 1500ms ease-out;
-}
-
-/* Slide-out effect (when exiting) */
-.arrows-exit {
-  opacity: 1;
-}
-
-.arrows-exit-active {
-  opacity: 0;
-  transition: opacity 200ms ease-in;
-}
-
-.movie-card {
-  @apply flex flex-col items-center justify-between rounded-lg text-defaulttextcolor text-[0.813rem] relative p-8 max-w-7xl mx-auto;
-  background-color: rgb(var(--body-bg)); /* Normal background color */
-}
-
-.plot-modal {
-  @apply flex flex-col rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 text-[0.813rem] relative bg-white dark:bg-bodybg p-6 shadow-lg w-full max-w-lg space-y-4 z-50;
-}
-
-.movie-small-details {
-  @apply text-sm text-primary mb-4;
 }
 
 .spinner {
@@ -19900,64 +19719,6 @@ option.selectionList {
     transform: rotate(360deg);
   }
 }
-
-/* Global pulse animation keyframes */
-@keyframes outwardPulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(1.5); /* Final size */
-    opacity: 0;
-  }
-}
-
-/* Pulse container for the ring */
-.pulse-ring {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pulse-effect {
-  position: absolute;
-  border-radius: 50%; /* Ensure it's circular */
-  border: 3px solid currentColor; /* Use the button's current color */
-  animation: outwardPulse 1.5s ease-out forwards; /* Slowed down and plays only once */
-  pointer-events: none;
-  z-index: -1;
-}
-
-.pulse-ring button {
-  border-radius: 50%; /* Ensure the button itself is circular */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.next-question {
-  background-color: transparent; /* Keep it transparent */
-  color: inherit; /* Keep the text color the same */
-  border: none; /* Remove the border */
-  transition: background-color 0.3s; /* Smooth transition */
-}
-
-.next-question:hover {
-  background-color: transparent; /* Keep it transparent on hover */
-}
-
-/* Fade in/out animations
-.fade-in {
-  opacity: 1;
-  transition: opacity 0.5s ease-in; 
-}
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out; 
-} */
 
 .fade-enter {
   opacity: 0;
@@ -19995,13 +19756,13 @@ option.selectionList {
 
 .career-card {
   border-radius: 8px;
-  padding: 16px; /* Adjusted for better spacing */
-  width: 250px; /* Fixed width for uniformity */
-  height: 400px; /* Fixed height to keep the cards consistent */
+  padding: 16px;
+  width: 250px;
+  height: 400px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space out the content inside the card */
+  justify-content: space-between;
 }
 
 .career-title {
@@ -20012,14 +19773,14 @@ option.selectionList {
 
 .career-description {
   font-size: 1rem;
-  -webkit-line-clamp: 3; /* Clamp to 3 lines */
+  -webkit-line-clamp: 3;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  overflow: hidden; /* Hide overflow text */
+  overflow: hidden;
 }
 
 .skills-list {
-  margin-top: auto; /* Pushes the skills list to the bottom of the card */
+  margin-top: auto;
 }
 
 .skills-list h4 {

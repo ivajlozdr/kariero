@@ -31,7 +31,6 @@ const QuizComponent: React.FC = () => {
     const submitData = async () => {
       if (userResponses.length === 19 && scores.RIASEC.Realistic) {
         setIsSubmitting(true);
-        // Submit the quiz data and set the career recommendations
         await submitQuiz(
           scores,
           userResponses,
@@ -39,7 +38,6 @@ const QuizComponent: React.FC = () => {
           setCareerRecommendations,
           setCareers
         );
-        // After getting the career recommendations, translate them
         setIsSubmitting(false);
       }
     };

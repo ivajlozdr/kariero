@@ -11,7 +11,7 @@ const RedirectCard: React.FC<RedirectCardProps> = ({
       href={href}
       className="card-link hover:scale-105 transition-transform duration-300 ease-in-out"
     >
-      <div className="card flex flex-col hover:shadow-lg hover:scale-105">
+      <div className="card flex flex-col hover:shadow-lg">
         <div className="card-header p-3">
           <span className="gradient-text">
             <b>{title}</b>
