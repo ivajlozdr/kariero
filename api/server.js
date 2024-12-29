@@ -1121,6 +1121,180 @@ app.get(
   }
 );
 
+app.get("/stats/platform/all-data", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res.status(400).json({ error: "Limit must be a positive number." });
+  }
+
+  Promise.all([
+    new Promise((resolve, reject) => {
+      db.getUsersCount((err, result) => {
+        if (err) return reject("Error fetching users count");
+        resolve({ usersCount: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getDistinctOccupations((err, result) => {
+        if (err) return reject("Error fetching distinct occupations");
+        resolve({
+          distinctOccupations: { count: result.length, data: result }
+        });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getTopRecommendedOccupations(limit, (err, result) => {
+        if (err) return reject("Error fetching top recommended occupations");
+        resolve({ topRecommendedOccupations: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getTopRecommendedRelatedOccupations(limit, (err, result) => {
+        if (err)
+          return reject("Error fetching top recommended related occupations");
+        resolve({ topRecommendedRelatedOccupations: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("abilities", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed abilities");
+        resolve({ mostNeededAbilities: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("knowledge", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed knowledge");
+        resolve({ mostNeededKnowledge: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("skills", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed skills");
+        resolve({ mostNeededSkills: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("tasks", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed tasks");
+        resolve({ mostNeededTasks: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("technology_skills", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed technology skills");
+        resolve({ mostNeededTechnologySkills: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostNeededAttributes("work_activities", limit, (err, result) => {
+        if (err) return reject("Error fetching most needed work activities");
+        resolve({ mostNeededWorkActivities: result });
+      });
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "personality_types_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredPersonalityTypes: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "work_environment_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredWorkEnvironment: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "job_priority_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredJobPriority: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "job_satisfaction_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredJobSatisfaction: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "education_level_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredEducationLevel: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostSelectedPreferences(
+        "career_goals_preferences",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredCareerGoals: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostPreferredWorkstyle(
+        "structure_preference_workstyle",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredWorkStyleStructure: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostPreferredWorkstyle(
+        "collaboration_workstyle",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredWorkStyleCollaboration: result });
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      db.getMostPreferredWorkstyle(
+        "work_environment_workstyle",
+        limit,
+        (err, result) => {
+          if (err) return reject("Error fetching most needed work activities");
+          resolve({ mostPreferredWorkStyleWorkEnvironment: result });
+        }
+      );
+    })
+  ])
+    .then((results) => {
+      const combinedData = results.reduce(
+        (acc, curr) => ({ ...acc, ...curr }),
+        {}
+      );
+      res.json(combinedData);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on http://localhost:5001");
