@@ -60,13 +60,32 @@ const Careers: React.FC<CareersProps> = ({ careerPaths, careersData }) => {
       >
         <div className="careers-for-path">
           <button
-            className="mb-4 px-4 py-2 bg-blue-500 text-white rounded shadow"
+            className="mb-6 w-12 h-12 bg-gradient-to-r from-primary to-secondary text-white rounded-full shadow-lg transition-all duration-300 relative overflow-hidden group hover:w-52"
             onClick={handleBackToPaths}
           >
-            Back to Career Paths
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 absolute left-3.5 top-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+
+            <span className="opacity-0 font-bold whitespace-nowrap group-hover:opacity-100 group-hover:translate-x-4 ml-6 transition-all duration-300">
+              Връщане към сферите
+            </span>
           </button>
-          <h2 className="text-2xl font-bold mb-6">
-            Careers in {selectedPath?.careerPath}
+
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+            Кариери в{" "}
+            <span className="text-secondary">{selectedPath?.careerPath}</span>
           </h2>
           <div className="careers-list flex flex-wrap gap-6 justify-center items-center">
             {selectedPath?.listOfCareers.map((career, index) => {
