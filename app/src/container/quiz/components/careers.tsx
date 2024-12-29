@@ -41,16 +41,23 @@ const Careers: React.FC<CareersProps> = ({
         classNames="fade"
         unmountOnExit
       >
-        <div className="career-paths-container flex flex-wrap gap-6 justify-center items-center">
-          {careerPaths.map((path, index) => (
-            <CareerPathCard
-              key={index}
-              pathName={path.careerPath}
-              reason={path.reason}
-              careers={path.listOfCareers.map((career, i) => career.career)}
-              onClick={() => handlePathSelection(path)}
-            />
-          ))}
+        {/* <div className="career-paths-container flex flex-wrap gap-6 justify-center items-center">
+        </div> */}
+        <div className="careers-for-path">
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+            Подходящи за Вас сфери
+          </h2>
+          <div className="careers-list flex flex-wrap gap-6 justify-center items-center">
+            {careerPaths.map((path, index) => (
+              <CareerPathCard
+                key={index}
+                pathName={path.careerPath}
+                reason={path.reason}
+                careers={path.listOfCareers.map((career, i) => career.career)}
+                onClick={() => handlePathSelection(path)}
+              />
+            ))}
+          </div>
         </div>
       </CSSTransition>
 
@@ -98,9 +105,7 @@ const Careers: React.FC<CareersProps> = ({
                     (path) => path.careerPath === selectedPath?.careerPath
                   );
               const fullCareerDetails = getCareerDetailsByIndex(careerIndex);
-              const careerPathReason = careerPaths.find(
-                (path) => path.careerPath === selectedPath?.careerPath
-              )?.reason;
+              const careerReason = career.reason;
 
               return fullCareerDetails ? (
                 <CareerCard
@@ -110,7 +115,7 @@ const Careers: React.FC<CareersProps> = ({
                   skills={fullCareerDetails.translated.skills.map(
                     (skill) => skill.translated_name
                   )}
-                  reason={careerPathReason || ""}
+                  reason={careerReason}
                   setNotification={setNotification}
                 />
               ) : (
