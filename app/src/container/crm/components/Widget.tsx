@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
@@ -23,6 +23,11 @@ const Widget: FC<WidgetProps> = ({
 
   const is1803 = useMediaQuery({ query: "(max-width: 1803px)" });
   const is1488 = useMediaQuery({ query: "(max-width: 1488px)" });
+
+  // Sync selectedValue state with the value prop when it changes
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const toggleDropdown = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
