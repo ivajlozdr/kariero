@@ -139,8 +139,30 @@ export interface GenreSeriesData {
 // Формат на данни за топ жанровете
 export type HeatmapData = GenreSeriesData[];
 
-// Обобщени данни за платформата (топ препоръки, жанрове и др.)
+// Обобщени данни за платформата
 export type DataType = {
+  usersCount: UsersCountData[]; // Брой потребители
+  distinctOccupations: any[]; // Уникални професии с техния брой
+  topRecommendedOccupations: any[]; // Най-препоръчвани професии
+  topRecommendedRelatedOccupations: any[]; // Най-препоръчвани свързани професии
+  mostNeededAbilities: any[]; // Най-необходими умения
+  mostNeededKnowledge: any[]; // Най-необходими знания
+  mostNeededSkills: any[]; // Най-необходими способности
+  mostNeededTasks: any[]; // Най-необходими задачи
+  mostNeededTechnologySkills: any[]; // Най-необходими технологични умения
+  mostNeededWorkActivities: any[]; // Най-необходими работни дейности
+  mostSelectedPersonalityTypes: any[]; // Най-избирани типове личност
+  mostSelectedWorkEnvironments: any[]; // Най-избирани работни среди
+  mostSelectedJobPriorities: any[]; // Най-избирани приоритети за работа
+  mostSelectedEducationLevels: any[]; // Най-избирани образователни нива
+  mostSelectedCareerGoals: any[]; // Най-избирани кариерни цели
+  mostSelectedJobSatisfactionLevels: any[]; // Най-избирани нива на удовлетворение от работа
+  mostPreferredWorkStyleStructure: any[]; // Най-предпочитана работна структура
+  mostPreferredWorkStyleCollaboration: any[]; // Най-предпочитан стил на сътрудничество
+  mostPreferredWorkStyleWorkEnvironment: any[]; // Най-предпочитана работна среда
+};
+
+export type TempDataType = {
   usersCount: UsersCountData[]; // Брой потребители
   topRecommendations: any[]; // Топ препоръки
   topGenres: any[]; // Топ жанрове

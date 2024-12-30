@@ -1,5 +1,5 @@
 import { FC, Fragment, useEffect, useState } from "react";
-import { DataType, MovieData, RecommendationData } from "../home-types";
+import { TempDataType, MovieData, RecommendationData } from "../home-types";
 import {
   getTotalBarChartPages,
   handleBarChartPageChange,
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { TopRecommendationsBarChart } from "./Charts";
 
 interface TopRecommendationsChartComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const TopRecommendationsChartComponent: FC<

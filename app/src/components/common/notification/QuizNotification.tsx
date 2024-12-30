@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-export type NotificationType = "success" | "error" | "warning";
-
-export interface NotificationState {
-  message: string;
-  type: NotificationType;
-}
-
 interface NotificationProps {
   message: string;
-  type: "success" | "error" | "warning";
   onClose: () => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({
+const QuizNotification: React.FC<NotificationProps> = ({
   message,
-  type,
   onClose
 }) => {
   const [visible, setVisible] = useState(false);
@@ -40,18 +31,10 @@ const Notification: React.FC<NotificationProps> = ({
       <div
         className={`p-6 rounded-lg shadow-lg bg-[rgb(var(--body-bg))] glow-effect border-2 dark:border-white border-secondary text-center w-96 transform transition-transform duration-300 ${
           visible ? "scale-100" : "scale-75"
-        } ${
-          type === "success"
-            ? "bg-green-500 dark:text-white text-secondary"
-            : type === "error"
-            ? "bg-red-500 dark:text-white text-secondary"
-            : "bg-yellow-500 dark:text-white text-secondary"
-        }`}
+        } bg-green-500 dark:text-white text-secondary`}
       >
         <h2 className="block text-xl font-semibold mb-4">
-          {type === "success" && "🎉 Успех!"}
-          {type === "error" && "⚠️ Възникна грешка!"}
-          {type === "warning" && "⚠️ Внимание!"}
+          Защо ви препоръчваме тази кариера?
         </h2>
         <span className="block text-lg font-medium mb-6">{message}</span>
         <button
@@ -66,4 +49,4 @@ const Notification: React.FC<NotificationProps> = ({
   );
 };
 
-export default Notification;
+export default QuizNotification;

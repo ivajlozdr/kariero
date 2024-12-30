@@ -1,10 +1,10 @@
 import { FC, Fragment } from "react";
-import { DataType } from "../home-types";
+import { TempDataType } from "../home-types";
 
 import { MoviesByProsperityBubbleChart } from "./Charts";
 
 interface MoviesByProsperityBubbleChartComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const MoviesByProsperityBubbleChartComponent: FC<

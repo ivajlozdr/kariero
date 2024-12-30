@@ -11,7 +11,7 @@ import Careers from "./components/careers";
 import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 import Loader from "../../pages/Loader";
-import Notification from "../../components/common/notification/Notification";
+import QuizNotification from "../../components/common/notification/QuizNotification";
 
 const QuizComponent: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -51,7 +51,7 @@ const QuizComponent: React.FC = () => {
   return (
     <div>
       {notification && (
-        <Notification
+        <QuizNotification
           message={notification.message}
           onClose={() => {
             console.log("Notification closed!");

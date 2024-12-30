@@ -2,6 +2,10 @@
 // Импортиране на типове и интерфейси
 // ==============================
 import {
+  NotificationState,
+  NotificationType
+} from "../../components/common/notification/Notification";
+import {
   FilteredTableData,
   DirectorData,
   ActorData,
@@ -80,56 +84,79 @@ export const fetchData = async (
     const endpoints = [
       { key: "usersCount", endpoint: "/stats/platform/users-count" },
       {
-        key: "topRecommendations",
-        endpoint: "/stats/platform/top-recommendations-with-all-data"
-      },
-      { key: "topGenres", endpoint: "/stats/platform/top-genres" },
-      {
-        key: "genrePopularityOverTime",
-        endpoint: "/stats/platform/genre-popularity-over-time"
-      },
-      { key: "topActors", endpoint: "/stats/platform/top-actors" },
-      {
-        key: "averageBoxOfficeAndScores",
-        endpoint: "/stats/platform/average-scores"
-      },
-      { key: "topCountries", endpoint: "/stats/platform/top-countries" },
-      { key: "topDirectors", endpoint: "/stats/platform/top-directors" },
-      { key: "topWriters", endpoint: "/stats/platform/top-writers" },
-      { key: "oscarsByMovie", endpoint: "/stats/platform/oscars-by-movie" },
-      {
-        key: "totalAwardsByMovieOrSeries",
-        endpoint: "/stats/platform/total-awards-by-movie"
-      },
-      { key: "totalAwards", endpoint: "/stats/platform/total-awards" },
-      {
-        key: "sortedDirectorsByProsperity",
-        endpoint: "/stats/platform/sorted-directors-by-prosperity"
+        key: "distinctOccupations",
+        endpoint: "/stats/platform/distinct-occupations-with-count"
       },
       {
-        key: "sortedActorsByProsperity",
-        endpoint: "/stats/platform/sorted-actors-by-prosperity"
+        key: "topRecommendedOccupations",
+        endpoint: "/stats/platform/top-recommended-occupations?limit=2"
       },
       {
-        key: "sortedWritersByProsperity",
-        endpoint: "/stats/platform/sorted-writers-by-prosperity"
+        key: "topRecommendedRelatedOccupations",
+        endpoint: "/stats/platform/top-recommended-related-occupations?limit=2"
       },
       {
-        key: "sortedMoviesByProsperity",
-        endpoint: "/stats/platform/sorted-movies-by-prosperity"
+        key: "mostNeededAbilities",
+        endpoint: "/stats/platform/most-needed-abilities?limit=2"
       },
       {
-        key: "sortedMoviesAndSeriesByMetascore",
-        endpoint: "/stats/platform/sorted-movies-and-series-by-metascore"
+        key: "mostNeededKnowledge",
+        endpoint: "/stats/platform/most-needed-knowledge?limit=2"
       },
       {
-        key: "sortedMoviesAndSeriesByIMDbRating",
-        endpoint: "/stats/platform/sorted-movies-and-series-by-imdb-rating"
+        key: "mostNeededSkills",
+        endpoint: "/stats/platform/most-needed-skills?limit=2"
       },
       {
-        key: "sortedMoviesAndSeriesByRottenTomatoesRating",
+        key: "mostNeededTasks",
+        endpoint: "/stats/platform/most-needed-tasks?limit=2"
+      },
+      {
+        key: "mostNeededTechnologySkills",
+        endpoint: "/stats/platform/most-needed-technology-skills?limit=2"
+      },
+      {
+        key: "mostNeededWorkActivities",
+        endpoint: "/stats/platform/most-needed-work-activities?limit=2"
+      },
+      {
+        key: "mostSelectedPersonalityTypes",
+        endpoint: "/stats/platform/most-selected-personality-types?limit=2"
+      },
+      {
+        key: "mostSelectedWorkEnvironments",
+        endpoint: "/stats/platform/most-selected-work-environments?limit=2"
+      },
+      {
+        key: "mostSelectedJobPriorities",
+        endpoint: "/stats/platform/most-selected-job-priorities?limit=2"
+      },
+      {
+        key: "mostSelectedEducationLevels",
+        endpoint: "/stats/platform/most-selected-education-levels?limit=2"
+      },
+      {
+        key: "mostSelectedCareerGoals",
+        endpoint: "/stats/platform/most-selected-career-goals?limit=2"
+      },
+      {
+        key: "mostSelectedJobSatisfactionLevels",
         endpoint:
-          "/stats/platform/sorted-movies-and-series-by-rotten-tomatoes-rating"
+          "/stats/platform/most-selected-job-satisfaction-levels?limit=2"
+      },
+      {
+        key: "mostPreferredWorkStyleStructure",
+        endpoint: "/stats/platform/most-preferred-workstyle-structure?limit=2"
+      },
+      {
+        key: "mostPreferredWorkStyleCollaboration",
+        endpoint:
+          "/stats/platform/most-preferred-workstyle-collaboration?limit=2"
+      },
+      {
+        key: "mostPreferredWorkStyleWorkEnvironment",
+        endpoint:
+          "/stats/platform/most-preferred-workstyle-work-environment?limit=2"
       }
     ];
 
@@ -155,6 +182,24 @@ export const fetchData = async (
     console.error("Error in fetchData:", error);
     throw error;
   }
+};
+
+/**
+ * Показва известие.
+ *
+ * @param {React.Dispatch<React.SetStateAction<NotificationState | null>>} setNotification - Функция за задаване на състояние на уведомлението.
+ * @param {string} message - Съобщението, което ще се покаже в уведомлението.
+ * @param {NotificationType} type - Типът на уведомлението (например "success", "error" или "warning").
+ * @returns {void} Няма връщана стойност.
+ */
+export const showNotification = (
+  setNotification: React.Dispatch<
+    React.SetStateAction<NotificationState | null>
+  >,
+  message: string,
+  type: NotificationType
+) => {
+  setNotification({ message, type });
 };
 
 /**

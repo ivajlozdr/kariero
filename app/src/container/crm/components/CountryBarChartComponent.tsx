@@ -1,9 +1,9 @@
 import { FC, Fragment } from "react";
-import { DataType } from "../home-types";
+import { TempDataType } from "../home-types";
 
 import { CountryBarChart } from "./Charts";
 interface CountryBarChartComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const CountryBarChartComponent: FC<CountryBarChartComponentProps> = ({

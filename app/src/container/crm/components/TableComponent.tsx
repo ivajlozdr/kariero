@@ -1,5 +1,5 @@
 import { FC, Fragment, useEffect, useState, useMemo } from "react";
-import { Category, DataType, FilteredTableData } from "../home-types";
+import { Category, TempDataType, FilteredTableData } from "../home-types";
 import {
   filterTableData,
   isActor,
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { tableCategoryDisplayNames } from "../home-data";
 
 interface TableComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const TableComponent: FC<TableComponentProps> = ({ data }) => {

@@ -1,12 +1,12 @@
 import { FC, Fragment, useEffect, useState } from "react";
-import { DataType } from "../home-types";
+import { TempDataType } from "../home-types";
 import { handleDropdownClick } from "../helper_functions";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import { getAveragesOptions, getAwardOptions } from "../home-data";
 
 interface WidgetCardsComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {

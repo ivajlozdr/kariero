@@ -1,4 +1,4 @@
-import { Category, DataType } from "./home-types";
+import { Category, DataType, TempDataType } from "./home-types";
 
 /**
  * Мапинг на имената за категорията на рейтингите.
@@ -28,10 +28,10 @@ export const tableCategoryDisplayNames: Record<Category, string> = {
 /**
  * Генерира опции за награди въз основа на предоставените данни.
  *
- * @param {DataType} data - Данни за награди и номинации.
+ * @param {TempDataType} data - Данни за награди и номинации.
  * @returns {Array<{label: string, value: number}>} Списък с опции за награди.
  */
-export const getAwardOptions = (data: DataType) => [
+export const getAwardOptions = (data: TempDataType) => [
   {
     label: "Общ брой спечелени награди",
     value: data.totalAwards?.[0]?.total_awards_wins || 0
@@ -53,10 +53,10 @@ export const getAwardOptions = (data: DataType) => [
 /**
  * Генерира опции за средни стойности въз основа на предоставените данни.
  *
- * @param {DataType} data - Данни за средни стойности.
+ * @param {TempDataType} data - Данни за средни стойности.
  * @returns {Array<{label: string, value: number}>} Списък с опции за средни стойности.
  */
-export const getAveragesOptions = (data: DataType) => [
+export const getAveragesOptions = (data: TempDataType) => [
   {
     label: "Среден Боксофис",
     value: data.averageBoxOfficeAndScores?.[0]?.average_box_office || 0

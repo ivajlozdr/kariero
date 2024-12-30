@@ -21,44 +21,58 @@ import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTi
 import MoviesAndSeriesByRatingsChartComponent from "./components/BarChartComponent";
 import RedirectCard from "./components/RedirectCard";
 import Widget from "./components/Widget"; // Import the Widget component
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import face10 from "../../assets/images/faces/10.jpg";
 import face12 from "../../assets/images/faces/12.jpg";
+import { DataType, UserData } from "./home-types";
+import {
+  checkTokenValidity,
+  fetchData,
+  showNotification
+} from "./helper_functions";
+import Notification, {
+  NotificationState
+} from "../../components/common/notification/Notification";
 
 interface CrmProps {}
 
 const Crm: FC<CrmProps> = () => {
-  const [Data, setData] = useState(Dealsstatistics);
-  const [userName, setUserName] = useState<string | null>(null); // State to store the user's name
+  const navigate = useNavigate();
+  const [DataTemplate, setDataTemplate] = useState(Dealsstatistics);
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+  const [data, setData] = useState<DataType>({
+    usersCount: [], // Броя на потребителите
+    distinctOccupations: [], // Уникални професии с техния брой
+    topRecommendedOccupations: [], // Най-препоръчвани професии
+    topRecommendedRelatedOccupations: [], // Най-препоръчвани свързани професии
+    mostNeededAbilities: [], // Най-необходими умения
+    mostNeededKnowledge: [], // Най-необходими знания
+    mostNeededSkills: [], // Най-необходими способности
+    mostNeededTasks: [], // Най-необходими задачи
+    mostNeededTechnologySkills: [], // Най-необходими технологични умения
+    mostNeededWorkActivities: [], // Най-необходими работни дейности
+    mostSelectedPersonalityTypes: [], // Най-избирани типове личност
+    mostSelectedWorkEnvironments: [], // Най-избирани работни среди
+    mostSelectedJobPriorities: [], // Най-избирани приоритети за работа
+    mostSelectedEducationLevels: [], // Най-избирани образователни нива
+    mostSelectedCareerGoals: [], // Най-избирани кариерни цели
+    mostSelectedJobSatisfactionLevels: [], // Най-избирани нива на удовлетворение от работа
+    mostPreferredWorkStyleStructure: [], // Най-предпочитана работна структура
+    mostPreferredWorkStyleCollaboration: [], // Най-предпочитан стил на сътрудничество
+    mostPreferredWorkStyleWorkEnvironment: [] // Най-предпочитана работна среда
+  });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/user-data`,
-          {
-            headers: {
-              authorization: `Bearer ${token}`
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-
-        const user = await response.json();
-
-        setUserName(`${user.first_name} ${user.last_name}`);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [token]);
+  // Състояние за потребителски данни
+  const [userData, setUserData] = useState<UserData>({
+    id: 0, // ID на потребителя
+    first_name: "", // Име на потребителя
+    last_name: "", // Фамилия на потребителя
+    email: "" // Имейл на потребителя
+  });
+  const [notification, setNotification] = useState<NotificationState | null>(
+    null
+  );
 
   const userdata: any = [];
 
@@ -74,15 +88,62 @@ const Crm: FC<CrmProps> = () => {
         }
       }
     }
-    setData(userdata);
+    setDataTemplate(userdata);
   };
 
+  const handleNotificationClose = () => {
+    // Функция за затваряне на известията
+    if (notification?.type === "error") {
+      // Ако известието е от тип "грешка", пренасочване към страницата за вход
+      navigate("/signin");
+    }
+    setNotification(null); // Зануляване на известието
+  };
+
+  useEffect(() => {
+    const validateToken = async () => {
+      // Функция за проверка валидността на потребителския токен
+      const redirectUrl = await checkTokenValidity(); // Извикване на помощна функция за валидиране на токена
+      if (redirectUrl) {
+        // Ако токенът е невалиден, показване на известие
+        showNotification(
+          setNotification, // Функция за задаване на известие
+          "Вашата сесия е изтекла. Моля, влезте в профила Ви отново.", // Съобщение за известието
+          "error" // Типът на известието (грешка)
+        );
+      }
+    };
+
+    validateToken(); // Стартиране на проверката на токена при първоначално зареждане на компонента
+  }, []);
+
+  useEffect(() => {
+    const token =
+      localStorage.getItem("authToken") || sessionStorage.getItem("authToken"); // Вземане на токен от localStorage или sessionStorage
+    if (token) {
+      fetchData(token, setUserData, setData); // Извличане на данни с помощта на fetchData функцията
+      console.log("fetching"); // Лог за следене на извличането на данни
+    }
+  }, []); // Празен масив като зависимост, за да се извика само веднъж при рендиране на компонента
+
+  console.log("data: ", data);
   return (
     <Fragment>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={handleNotificationClose}
+        />
+      )}
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div>
           <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
-            Добре дошли, {userName ? userName : "Зареждане..."}!
+            Добре дошли,{" "}
+            {userData.first_name
+              ? userData.first_name + " " + userData.last_name
+              : "Зареждане..."}
+            !
           </p>
           <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
             Track your sales activity, leads and deals here.
@@ -753,7 +814,7 @@ const Crm: FC<CrmProps> = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Data.map((idx) => (
+                        {DataTemplate.map((idx) => (
                           <tr
                             className="border border-inherit border-solid hover:bg-gray-100 dark:border-defaultborder/10 dark:hover:bg-light"
                             key={Math.random()}

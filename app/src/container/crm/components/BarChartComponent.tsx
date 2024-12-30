@@ -1,7 +1,7 @@
 import { FC, Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MoviesAndSeriesByRatingsChart } from "./Charts";
-import { DataType } from "../home-types";
+import { TempDataType } from "../home-types";
 import {
   paginateBarChartData,
   getTotalBarChartPages,
@@ -12,7 +12,7 @@ import { useMediaQuery } from "react-responsive";
 import { moviesAndSeriesCategoryDisplayNames } from "../home-data";
 
 interface MoviesAndSeriesByRatingsChartComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const MoviesAndSeriesByRatingsChartComponent: FC<

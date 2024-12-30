@@ -1,10 +1,10 @@
 import { FC, Fragment } from "react";
-import { DataType } from "../home-types";
+import { TempDataType } from "../home-types";
 import { generateHeatmapSeriesData } from "../helper_functions";
 import { GenrePopularityOverTime } from "./Charts";
 
 interface GenrePopularityOverTimeComponentProps {
-  data: DataType;
+  data: TempDataType;
 }
 
 const GenrePopularityOverTimeComponent: FC<
