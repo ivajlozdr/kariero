@@ -33,6 +33,7 @@ import {
 import Notification, {
   NotificationState
 } from "../../components/common/notification/Notification";
+import WidgetCardsComponent from "./components/WidgetCards";
 
 interface CrmProps {}
 
@@ -43,7 +44,7 @@ const Crm: FC<CrmProps> = () => {
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const [data, setData] = useState<DataType>({
     usersCount: [], // Броя на потребителите
-    distinctOccupations: [], // Уникални професии с техния брой
+    distinctOccupations: { count: 0, data: [] }, // Уникални професии с техния брой
     topRecommendedOccupations: [], // Най-препоръчвани професии
     topRecommendedRelatedOccupations: [], // Най-препоръчвани свързани професии
     mostNeededAbilities: [], // Най-необходими умения
@@ -164,18 +165,7 @@ const Crm: FC<CrmProps> = () => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-12 gap-x-6">
-        {widgetData.map((widget, index) => (
-          <Widget
-            key={index}
-            title={widget.title}
-            value={widget.value}
-            options={widget.options}
-            showSorting={widget.showSorting}
-            icon={widget.icon}
-          />
-        ))}
-      </div>
+      <WidgetCardsComponent data={data} />
       <div className="card-container">
         <RedirectCard
           href="../app/quiz"

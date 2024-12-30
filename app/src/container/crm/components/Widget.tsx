@@ -6,7 +6,7 @@ interface WidgetProps {
   title: string;
   value: number;
   options?: { label: string; value: number }[];
-  showSorting: boolean;
+  showSorting?: boolean;
   icon?: string;
 }
 
