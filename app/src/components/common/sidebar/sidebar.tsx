@@ -447,7 +447,7 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
         }}
       ></div>
       <aside
-        className="app-sidebar"
+        className="app-sidebar bg-primary dark:bg-bodybg"
         id="sidebar"
         onMouseEnter={() => Onhover()}
         onMouseLeave={() => Outhover()}
@@ -465,7 +465,7 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
             <img src={logo6} alt="logo" className="toggle-white" />
           </a>
         </div>
-        <SimpleBar className="main-sidebar" id="sidebar-scroll">
+        <SimpleBar className="main-sidebar bg-primary dark:bg-bodybg" id="sidebar-scroll">
           <nav className="main-menu-container nav nav-pills flex-column sub-open">
             <ul className="main-menu" onClick={() => Sideclick()}>
               {MENUITEMS.map((levelone: any) => (

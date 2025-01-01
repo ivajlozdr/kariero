@@ -4654,10 +4654,10 @@ label {
 }
 
 .app-sidebar {
-  @apply w-[15rem] h-full bg-primary bg-bodybg border-e border-e-white/10 fixed top-0 start-0 font-Roboto z-[49] transition-all ease-linear duration-[0.05s];
+  @apply w-[15rem] h-full bg-primary border-e border-e-white/10 fixed top-0 start-0 font-Roboto z-[49] transition-all ease-linear duration-[0.05s];
 }
 .app-sidebar .main-sidebar-header {
-  @apply h-[3.75rem] w-[15rem] fixed flex bg-bodybg z-[9] items-center justify-center py-[0.813rem] px-5 border-b border-b-white/10 border-e border-e-white/10 transition-all ease-linear duration-[0.05s];
+  @apply h-[3.75rem] w-[15rem] fixed flex bg-primary z-[9] items-center justify-center py-[0.813rem] px-5 border-b border-b-white/10 border-e border-e-white/10 transition-all ease-linear duration-[0.05s];
 }
 .app-sidebar .main-sidebar-header .header-logo img {
   @apply h-8 leading-8;

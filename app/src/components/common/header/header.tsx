@@ -61,8 +61,7 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
   return (
     <Fragment>
       <header className="app-header relative overflow-hidden">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 z-[-1] opacity-70"></div>
+        <div className="absolute inset-0 bg-bodybg z-[-1]"></div>
 
         <nav className="main-header !h-[3.75rem]" aria-label="Global">
           <div className="main-header-container ps-[0.725rem] pe-[1rem] ">
