@@ -3,7 +3,6 @@ import {
   Dealsstatistics,
   Revenueanalytics,
   Sourcedata,
-  widgetData,
   Conversionratio,
   Profit,
   Profitearned,
@@ -20,7 +19,6 @@ import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsper
 import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import MoviesAndSeriesByRatingsChartComponent from "./components/BarChartComponent";
 import RedirectCard from "./components/RedirectCard";
-import Widget from "./components/Widget"; // Import the Widget component
 import { Link, useNavigate } from "react-router-dom";
 import face10 from "../../assets/images/faces/10.jpg";
 import face12 from "../../assets/images/faces/12.jpg";
@@ -40,8 +38,7 @@ interface CrmProps {}
 const Crm: FC<CrmProps> = () => {
   const navigate = useNavigate();
   const [DataTemplate, setDataTemplate] = useState(Dealsstatistics);
-  const token =
-    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+
   const [data, setData] = useState<DataType>({
     usersCount: [], // Броя на потребителите
     distinctOccupations: { count: 0, data: [] }, // Уникални професии с техния брой
@@ -166,6 +163,14 @@ const Crm: FC<CrmProps> = () => {
         </div>
       </div>
       <WidgetCardsComponent data={data} />
+      <div className="grid grid-cols-2 gap-x-6">
+        <div className="grid grid-cols-6 gap-x-6">
+          <div className="xxl:col-span-6 col-span-12">
+            <TableComponent data={hardcodedData} />
+          </div>
+        </div>
+        <div></div>
+      </div>
       <div className="card-container">
         <RedirectCard
           href="../app/quiz"

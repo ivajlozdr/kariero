@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 
 interface WidgetProps {
   title: string;
-  value: number;
+  value: number | string;
+  subValue?: number;
   options?: { label: string; value: number }[];
   showSorting?: boolean;
   icon?: string;
@@ -13,12 +14,13 @@ interface WidgetProps {
 const Widget: FC<WidgetProps> = ({
   title,
   value,
+  subValue,
   options = [],
   showSorting,
   icon
 }) => {
   const [selectedLabel, setSelectedLabel] = useState<string>(title);
-  const [selectedValue, setSelectedValue] = useState<number>(value);
+  const [selectedValue, setSelectedValue] = useState<number | string>(value);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const is1803 = useMediaQuery({ query: "(max-width: 1803px)" });
@@ -117,12 +119,19 @@ const Widget: FC<WidgetProps> = ({
                       >
                         {selectedValue}
                       </span>
+                      {subValue !== undefined && (
+                        <span
+                          className={`ml-2 text-sm text-[#8c9097] dark:text-white/50`}
+                        >
+                          ({subValue})
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div>
                     <span className="avatar avatar-md !rounded-full bg-primary/10 !text-secondary text-[1.125rem]">
                       <i
-                        className={`bi ${icon || "bi-info-circle"} text-[${
+                        className={`bx bx-line-chart text-[${
                           is1803 ? "1rem" : "0.875rem"
                         }] text-primary`}
                       ></i>
@@ -155,12 +164,19 @@ const Widget: FC<WidgetProps> = ({
                       >
                         {selectedValue}
                       </span>
+                      {subValue !== undefined && (
+                        <span
+                          className={`ml-2 text-sm text-[#8c9097] dark:text-white/50`}
+                        >
+                          ({subValue})
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div>
                     <span className="avatar avatar-md !rounded-full bg-primary/10 !text-secondary text-[1.125rem]">
                       <i
-                        className={`bi ${icon || "bi-info-circle"} text-[${
+                        className={`${icon || "bi-info-circle"} text-[${
                           is1803 ? "1rem" : "0.875rem"
                         }] text-primary`}
                       ></i>
