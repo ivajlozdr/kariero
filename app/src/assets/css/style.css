@@ -2374,7 +2374,7 @@ Background Image
   .landing-body
   .landing-banner
   .landing-banner-heading {
-  @apply leading-[1.25]  text-[3rem] font-[600] text-white dark:text-defaulttextcolor/10;
+  @apply leading-[1.25]  text-[3rem] font-[600] text-white;
 }
 [data-nav-layout="horizontal"] .landing-body .main-menu-container .main-menu {
   @apply ps-0;

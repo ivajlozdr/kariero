@@ -3,10 +3,10 @@ import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
 interface WidgetProps {
-  title: string;
-  value: number | string;
+  title?: string;
+  value?: number | string;
   subValue?: number;
-  options?: { label: string; value: number }[];
+  options?: { label: string; value: number | string; subValue: number }[];
   showSorting?: boolean;
   icon?: string;
 }
@@ -19,8 +19,10 @@ const Widget: FC<WidgetProps> = ({
   showSorting,
   icon
 }) => {
-  const [selectedLabel, setSelectedLabel] = useState<string>(title);
-  const [selectedValue, setSelectedValue] = useState<number | string>(value);
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>(title);
+  const [selectedValue, setSelectedValue] = useState<
+    number | string | undefined
+  >(value);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const is1803 = useMediaQuery({ query: "(max-width: 1803px)" });
@@ -36,7 +38,7 @@ const Widget: FC<WidgetProps> = ({
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleOptionSelect = (label: string, value: number) => {
+  const handleOptionSelect = (label: string, value: string | number) => {
     setSelectedLabel(label);
     setSelectedValue(value);
   };
@@ -131,7 +133,7 @@ const Widget: FC<WidgetProps> = ({
                   <div>
                     <span className="avatar avatar-md !rounded-full bg-primary/10 !text-secondary text-[1.125rem]">
                       <i
-                        className={`bx bx-line-chart text-[${
+                        className={`${icon || "bi-info-circle"} text-[${
                           is1803 ? "1rem" : "0.875rem"
                         }] text-primary`}
                       ></i>

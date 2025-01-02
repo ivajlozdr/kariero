@@ -13,13 +13,28 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
     data?.topRecommendedOccupations[0]?.title_bg;
   const mostRecommendedOccupationCount =
     data?.topRecommendedOccupations[0]?.recommendation_count;
-
+  const mostRecommendedRelatedOccupation =
+    data?.topRecommendedRelatedOccupations[0]?.name_bg;
+  const mostRecommendedRelatedOccupationCount =
+    data?.topRecommendedRelatedOccupations[0]?.recommendation_count;
+  const options = [
+    {
+      label: "Най-препоръчвани професии в платформата",
+      value: mostRecommendedOccupation,
+      subValue: mostRecommendedOccupationCount ?? 0
+    },
+    {
+      label: "Най-препоръчвани подобни професии в платформата",
+      value: mostRecommendedRelatedOccupation,
+      subValue: mostRecommendedRelatedOccupationCount ?? 0
+    }
+  ];
   return (
     <div className="grid grid-cols-9 gap-x-6">
       <Widget
         title="Общ брой потребители"
         value={userCount}
-        icon="bi-person-circle"
+        icon="bi bi-person-circle"
       />
       <Widget
         title="Общ брой професии в платформата"
@@ -27,7 +42,9 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
         icon="bx bx-line-chart"
       />
       <Widget
-        title="Най-често препоръчвана кариера в платформата"
+        showSorting
+        options={options}
+        title="Най-препоръчвани професии в платформата"
         value={mostRecommendedOccupation}
         subValue={mostRecommendedOccupationCount}
         icon="bi-briefcase"
