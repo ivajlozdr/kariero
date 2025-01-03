@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { DataType } from "../home-types";
 import Widget from "./Widget";
+import MostPreferredWorkstyleCards from "./MostPreferredWorkstyleCards";
 
 interface WidgetCardsComponentProps {
   data: DataType;
@@ -115,21 +116,13 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
         </div>
       </div>
       <div>
-        {categories.map(({ title, key, icon }) => {
-          const item = data[key]?.[0];
-          const name = item?.name_bg || "Няма данни";
-          const count = item?.occurrence_count ?? 0;
-
-          return (
-            <Widget
-              key={key}
-              title={title}
-              value={name}
-              subValue={count}
-              icon={icon}
-            />
-          );
-        })}
+        <MostPreferredWorkstyleCards data={data} />
+        <Widget
+          title={categories[0].title}
+          value={data[categories[0].key]?.[0]?.name_bg}
+          subValue={data[categories[0].key]?.[0]?.occurrence_count ?? 0}
+          icon={categories[0].icon}
+        />
       </div>
     </div>
   );
