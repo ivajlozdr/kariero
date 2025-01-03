@@ -64,6 +64,7 @@ export default {
         },
         bodybg: "rgb(var(--body-bg))",
         bodybg2: "rgb(var(--dark-bg))",
+        bodybglighter: "rgb(var(--body-bg-lighter))",
         primary: "rgb(var(--primary))",
         primaryrgb: "rgb(var(--primary-rgb))",
         secondary: "rgb(var(--secondary))",

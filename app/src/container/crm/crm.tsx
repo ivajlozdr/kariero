@@ -32,6 +32,7 @@ import Notification, {
   NotificationState
 } from "../../components/common/notification/Notification";
 import WidgetCardsComponent from "./components/WidgetCards";
+import MostNeededCards from "./components/MostNeededCards";
 
 interface CrmProps {}
 
@@ -163,6 +164,7 @@ const Crm: FC<CrmProps> = () => {
         </div>
       </div>
       <WidgetCardsComponent data={data} />
+      <MostNeededCards data={data} />
       <div className="grid grid-cols-2 gap-x-6">
         <div className="grid grid-cols-6 gap-x-6">
           <div className="xxl:col-span-6 col-span-12">

@@ -34,6 +34,11 @@ const Switcher: FC<SwitcherProps> = ({
       ? `--tertiary: ${local_varaiable.colorTertiary}`
       : ""
   };
+  ]${
+    local_varaiable.bodyBgLighter != ""
+      ? `--body-bg-lighter: ${local_varaiable.bodyBgLighter}`
+      : ""
+  };
   ${local_varaiable.darkBg != "" ? `--dark-bg: ${local_varaiable.darkBg}` : ""};
   ${local_varaiable.bodyBg != "" ? `--body-bg: ${local_varaiable.bodyBg}` : ""};
   ${

@@ -115,6 +115,7 @@ Background Image
 
 :root {
   --body-bg: 240 241 247;
+  --body-bg-lighter: 35 37 40;
   --primary: 37 102 91;
   --primary-rgb: 37 102 91;
   --secondary: 63 135 118;
@@ -7846,7 +7847,7 @@ label {
   @apply shadow-none bg-[#f3f6f8];
 }
 [data-page-style="modern"][class="dark"] {
-  --light: 20, 20, 20;
+  --light: 43, 46, 49;
   --custom-white: rgb(var(--body-bg));
 }
 [data-page-style="modern"][class="dark"] .box {
@@ -17524,36 +17525,39 @@ hr {
 }
 
 .accordion-button {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-3 px-4 text-[0.85rem] font-medium;
+  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-[0.875rem] px-4 text-[0.85rem] font-medium;
 }
 .accordion-button:not(.collapsed) {
-  @apply text-defaulttextcolor  shadow-none;
+  @apply text-defaulttextcolor shadow-none;
+}
+.accordion-button:hover {
+  @apply bg-defaultbackground dark:bg-primary/90 text-defaulttextcolor shadow-none transition duration-300;
 }
 .accordion-button:focus {
-  @apply bg-defaultbackground dark:bg-light text-defaulttextcolor shadow-none;
+  @apply bg-defaultbackground dark:bg-primary/70 text-defaulttextcolor shadow-none;
 }
 
 .accordion-body {
-  @apply py-3 px-4 text-[0.8125rem] text-textmuted;
+  @apply bg-bodybglighter/70 pt-3 py-1 px-4 text-[0.8125rem] text-textmuted;
 }
 
 .accordion-item {
-  @apply text-defaulttextcolor bg-white dark:bg-bodybg border border-solid border-defaultborder dark:border-defaultborder/10 dark:text-defaulttextcolor/70;
+  @apply text-defaulttextcolor bg-white dark:bg-bodybglighter/70 border border-solid border-defaultborder dark:border-defaultborder/10 dark:text-defaulttextcolor/70;
 }
 
 .accordions-items-seperate .accordion-item:not(:first-of-type) {
   @apply mt-2;
 }
 .accordions-items-seperate .accordion-item {
-  @apply border-t border-solid border-defaultborder dark:border-defaultborder/10 rounded-md overflow-hidden;
+  @apply border-t border-solid border-defaultborder dark:border-defaultborder/10 rounded-lg overflow-hidden;
 }
 
 .accordion-item:last-of-type {
-  @apply rounded-b-[0.35rem];
+  @apply rounded-lg;
 }
 
 .accordion-item:first-of-type {
-  @apply rounded-t-[0.35rem];
+  @apply rounded-lg;
 }
 
 .accordion.accordion-flush .accordion-button {
@@ -17563,176 +17567,6 @@ hr {
   @apply start-[98.5rem] !important;
 }
 
-/* Start:: light colored accordions */
-.accordion.accordion-primary .accordion-button {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-3 px-4 text-[0.85rem] font-medium;
-}
-.accordion.accordion-primary .accordion-button:focus {
-  @apply bg-primary/10 text-primary;
-}
-.accordion.accordion-primary .accordion-button:after,
-.accordion.accordion-primary .accordion-button:not(.collapsed)::after {
-  @apply bg-none;
-}
-.accordion.accordion-primary .accordion-button:after {
-  @apply bg-primary text-white;
-}
-.accordion.accordion-primary .accordion-button.collapsed {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor dark:text-defaulttextcolor/70;
-}
-.accordion.accordion-primary .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor dark:text-defaulttextcolor/70;
-}
-.accordion.accordion-secondary .accordion-button {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-3 px-4 text-[0.85rem] font-medium;
-}
-.accordion.accordion-secondary .accordion-button:focus {
-  @apply bg-secondary/10 text-secondary;
-}
-.accordion.accordion-secondary .accordion-button:after,
-.accordion.accordion-secondary .accordion-button:not(.collapsed)::after {
-  @apply bg-none;
-}
-.accordion.accordion-secondary .accordion-button:after {
-  @apply bg-secondary text-white;
-}
-.accordion.accordion-secondary .accordion-button.collapsed {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor;
-}
-.accordion.accordion-secondary .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-success .accordion-button {
-  @apply bg-success/10 text-success;
-}
-.accordion.accordion-success .accordion-button:after {
-  @apply bg-success text-white;
-}
-.accordion.accordion-success .accordion-button.collapsed {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor;
-}
-.accordion.accordion-success .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-danger .accordion-button {
-  @apply bg-danger/10 text-danger;
-}
-.accordion.accordion-danger .accordion-button:after {
-  @apply bg-danger text-white;
-}
-.accordion.accordion-danger .accordion-button.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-danger .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-warning .accordion-button {
-  @apply bg-warning/10 text-warning;
-}
-.accordion.accordion-warning .accordion-button:after {
-  @apply bg-warning text-white;
-}
-.accordion.accordion-warning .accordion-button.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-warning .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-info .accordion-button {
-  @apply bg-info/10 text-info;
-}
-.accordion.accordion-info .accordion-button:after {
-  @apply bg-info text-white;
-}
-.accordion.accordion-info .accordion-button.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-info .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-
-/* End:: light colored accordions */
-/* Start:: solid colored accordions */
-.accordion.accordion-solid-primary .accordion-button {
-  @apply bg-white text-defaulttextcolor py-3 px-4 text-[0.85rem] font-medium;
-}
-.accordion.accordion-solid-primary .accordion-button:focus {
-  @apply bg-primary text-white;
-}
-.accordion.accordion-solid-primary .accordion-button:after {
-  @apply bg-white text-primary;
-}
-.accordion.accordion-solid-primary .accordion-button.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-primary .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-solid-secondary .accordion-button {
-  @apply bg-white text-defaulttextcolor py-3 px-4 text-[0.85rem] font-medium;
-}
-.accordion.accordion-solid-secondary .accordion-button:focus {
-  @apply bg-secondary text-white;
-}
-.accordion.accordion-solid-secondary .accordion-button:after {
-  @apply bg-white text-secondary;
-}
-.accordion.accordion-solid-secondary .accordion-button.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-secondary .accordion-button.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-solid-success {
-  @apply bg-success text-white;
-}
-.accordion.accordion-solid-success:after {
-  @apply bg-white text-success;
-}
-.accordion.accordion-solid-success.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-success.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-solid-danger {
-  @apply bg-danger text-white;
-}
-.accordion.accordion-solid-danger:after {
-  @apply bg-white text-danger;
-}
-.accordion.accordion-solid-danger.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-danger.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-solid-warning {
-  @apply bg-danger text-white;
-}
-.accordion.accordion-solid-warning:after {
-  @apply bg-white text-danger;
-}
-.accordion.accordion-solid-warning.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-warning.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-.accordion.accordion-solid-info {
-  @apply bg-info text-white;
-}
-.accordion.accordion-solid-info:after {
-  @apply bg-white text-info;
-}
-.accordion.accordion-solid-info.collapsed {
-  @apply bg-white text-defaulttextcolor;
-}
-.accordion.accordion-solid-info.collapsed:after {
-  @apply bg-defaultbackground text-defaulttextcolor;
-}
-
-/* End:: solid colored accordions */
 /* Start:: border colors */
 .accordion.accordion-border-primary .accordion-item {
   @apply border border-solid border-primary;
@@ -19834,6 +19668,14 @@ option.selectionList {
 
 .card {
   @apply flex flex-col min-h-full shadow-lg rounded-lg overflow-hidden text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] relative dark:bg-bodybg transition-shadow duration-300 hover:shadow-xl;
+}
+
+.accordion-widget {
+  @apply flex flex-col shadow-sm rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] mb-3 relative dark:bg-bodybg;
+}
+
+.accordion-widget-body {
+  @apply p-4 text-defaulttextcolor dark:text-defaulttextcolor/70;
 }
 
 .card-header {

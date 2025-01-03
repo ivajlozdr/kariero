@@ -19,6 +19,7 @@ const initialState = {
   colorPrimary: "37 102 91",
   colorSecondary: "63 135 118",
   colorTertiary: "92, 110, 133",
+  bodyBgLighter: "35 37 40",
   bodyBg: "",
   Light: "",
   darkBg: "",
@@ -37,10 +38,11 @@ export default function reducer(state = initialState, action: any) {
     case "ThemeChanger":
       state = {
         ...payload,
+        bodyBgLighter: payload.class === "dark" ? "35 37 40" : "255 255 255",
         colorPrimaryRgb: payload.class === "dark" ? "76 181 174" : "37 102 91",
         colorPrimary: payload.class === "dark" ? "76 181 174" : "37 102 91",
         colorSecondary: payload.class === "dark" ? "136 229 204" : "63 135 118",
-        colorTertiary: payload.class === "dark" ? "90 118 149" : "92, 110, 133"
+        colorTertiary: payload.class === "dark" ? "90 118 149" : "92 110 133"
       };
       return state;
 

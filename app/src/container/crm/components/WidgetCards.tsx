@@ -30,7 +30,7 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
     }
   ];
   return (
-    <div className="grid grid-cols-9 gap-x-6">
+    <div className="grid xxl:grid-cols-3 xl:grid-cols-3 grid-cols-1 gap-x-6">
       <Widget
         title="Общ брой потребители"
         value={userCount}
