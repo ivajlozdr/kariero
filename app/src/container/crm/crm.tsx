@@ -33,6 +33,7 @@ import Notification, {
 } from "../../components/common/notification/Notification";
 import WidgetCardsComponent from "./components/WidgetCards";
 import MostNeededCards from "./components/MostNeededCards";
+import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 
 interface CrmProps {}
 
@@ -164,7 +165,26 @@ const Crm: FC<CrmProps> = () => {
         </div>
       </div>
       <WidgetCardsComponent data={data} />
-      <MostNeededCards data={data} />
+      <div
+        className="grid grid-areas-layout gap-x-6 auto-rows-[min-content]"
+        style={{
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateAreas: `
+            "accordion preferred"
+            "second-preferred preferred"
+          `
+        }}
+      >
+        <div style={{ gridArea: "accordion" }}>
+          <MostNeededCards data={data} />
+        </div>
+        <div style={{ gridArea: "preferred" }}>
+          <MostPreferredWorkstyleCards data={data} />
+        </div>
+        <div style={{ gridArea: "second-preferred" }}>
+          <MostPreferredWorkstyleCards data={data} />
+        </div>
+      </div>
       <div className="grid grid-cols-2 gap-x-6">
         <div className="grid grid-cols-6 gap-x-6">
           <div className="xxl:col-span-6 col-span-12">
