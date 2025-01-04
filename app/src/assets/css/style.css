@@ -17524,8 +17524,14 @@ hr {
   @apply rounded-full !important;
 }
 
+.accordion-title {
+  @apply relative font-[700] text-defaulttextcolor text-[.9375rem] ml-2 dark:text-defaulttextcolor/70 before:absolute;
+}
 .accordion-button {
-  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-[0.875rem] px-4 text-[0.85rem] font-medium;
+  @apply bg-white dark:bg-bodybg text-defaulttextcolor py-[0.875rem] px-4 text-[0.85rem] font-medium md:flex items-center gap-[0.25rem] flex-wrap;
+}
+.box-header {
+  @apply font-medium;
 }
 .accordion-button:not(.collapsed) {
   @apply text-defaulttextcolor shadow-none;
@@ -17537,7 +17543,7 @@ hr {
   @apply bg-defaultbackground dark:bg-primary/70 text-defaulttextcolor shadow-none;
 }
 .accordion-body {
-  @apply bg-bodybglighter/70 pt-[0.875rem] px-4 text-[0.8125rem] text-textmuted;
+  @apply bg-bodybglighter/70 pt-4 px-4 text-[0.8125rem] text-textmuted;
 }
 
 .accordion-item {
@@ -17560,7 +17566,7 @@ hr {
 }
 
 .accordion.accordion-flush .accordion-button {
-  @apply pe-[2.5rem];
+  @apply pe-[3rem];
 }
 .accordion.accordion-flush .accordion-button:after {
   @apply start-[98.5rem] !important;
@@ -19670,7 +19676,7 @@ option.selectionList {
 }
 
 .accordion-widget {
-  @apply flex flex-col shadow-sm rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] mb-5 relative dark:bg-bodybg;
+  @apply flex flex-col shadow-sm rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] mb-6 relative dark:bg-bodybg;
 }
 
 .accordion-widget-body {

@@ -139,8 +139,8 @@ const Widget: FC<WidgetProps> = ({
                 <div>
                   <span className="avatar avatar-md !rounded-full bg-primary/10 !text-secondary text-[1.125rem]">
                     <i
-                      className={`${icon || "bi-info-circle"} text-[${
-                        is1803 ? "1rem" : "0.875rem"
+                      className={`${icon || "ti ti-info-circle"} text-[${
+                        is1803 ? "1.5rem" : "1.25rem"
                       }] text-primary`}
                     ></i>
                   </span>
@@ -191,7 +191,7 @@ const Widget: FC<WidgetProps> = ({
                   <span className="avatar avatar-md !rounded-full bg-primary/10 !text-secondary text-[1.125rem]">
                     <i
                       className={`${icon || "bi-info-circle"} text-[${
-                        is1803 ? "1rem" : "0.875rem"
+                        is1803 ? "1.5rem" : "1.25rem"
                       }] text-primary`}
                     ></i>
                   </span>

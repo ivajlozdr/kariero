@@ -15,12 +15,12 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
       <Widget
         title="Общ брой потребители"
         value={widgetData.userCount}
-        icon="bi bi-person-circle"
+        icon="ti ti-users"
       />
       <Widget
         title="Общ брой професии в платформата"
         value={widgetData.distinctOccupations}
-        icon="bx bx-line-chart"
+        icon="ti ti-trending-up"
       />
       <Widget
         showSorting
@@ -28,7 +28,7 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
         title="Най-препоръчвани професии в платформата"
         value={widgetData.mostRecommendedOccupation}
         subValue={widgetData.mostRecommendedOccupationCount}
-        icon="bi-briefcase"
+        icon="ti ti-briefcase"
       />
     </div>
   );

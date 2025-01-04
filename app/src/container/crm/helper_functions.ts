@@ -269,25 +269,24 @@ export function generateOptions(componentName: string, data: any): Option[] {
       const mostPreferredWorkStyleStructureCount =
         data?.mostPreferredWorkStyleStructure[0]?.occurrence_count;
 
-      // Create the options array based on the data
       options = [
         {
-          label: "Предпочитание за работна среда",
+          label: "Предпочитание за работна атмосфера",
           name: mostPreferredWorkStyleWorkEnvironment,
           value: mostPreferredWorkStyleWorkEnvironmenCount ?? 0,
-          icon: "ti ti-home-eco" // Tabler icon class name
+          icon: "ti ti-home-eco"
         },
         {
           label: "Предпочитание за колаборация",
           name: mostPreferredWorkStyleCollaboration,
           value: mostPreferredWorkStyleCollaborationCount ?? 0,
-          icon: "ti ti-users-group" // Tabler icon class name
+          icon: "ti ti-users-group"
         },
         {
           label: "Предпочитание за работна структура",
           name: mostPreferredWorkStyleStructure,
           value: mostPreferredWorkStyleStructureCount ?? 0,
-          icon: "ti ti-hierarchy" // Tabler icon class name
+          icon: "ti ti-hierarchy"
         }
       ];
       break;
@@ -297,9 +296,9 @@ export function generateOptions(componentName: string, data: any): Option[] {
         data?.mostSelectedWorkEnvironments[0]?.preference || "Няма данни";
       const mostSelectedWorkEnvironmentCount =
         data?.mostSelectedWorkEnvironments[0]?.occurrence_count ?? 0;
-      const mostSelectedCollaboration =
+      const mostSelectedPersonalityTypes =
         data?.mostSelectedPersonalityTypes[0]?.preference || "Няма данни";
-      const mostSelectedCollaborationCount =
+      const mostSelectedPersonalityTypesCount =
         data?.mostSelectedPersonalityTypes[0]?.occurrence_count ?? 0;
       const mostSelectedJobSatisfaction =
         data?.mostSelectedJobSatisfactionLevels[0]?.preference || "Няма данни";
@@ -323,37 +322,37 @@ export function generateOptions(componentName: string, data: any): Option[] {
           label: "Предпочитание за работна среда",
           name: mostSelectedWorkEnvironment,
           value: mostSelectedWorkEnvironmentCount,
-          icon: "ri-home-2-line"
+          icon: "ti ti-buildings"
         },
         {
-          label: "Предпочитание за колаборация",
-          name: mostSelectedCollaboration,
-          value: mostSelectedCollaborationCount,
-          icon: "ri-team-line"
+          label: "Най-срещана характеристика на личността",
+          name: mostSelectedPersonalityTypes,
+          value: mostSelectedPersonalityTypesCount,
+          icon: "ti ti-mood-search"
         },
         {
-          label: "Удовлетвореност от работата",
+          label: "Най-задоволяваща дейност",
           name: mostSelectedJobSatisfaction,
           value: mostSelectedJobSatisfactionCount,
-          icon: "ri-smile-line"
+          icon: "ti ti-pencil-heart"
         },
         {
-          label: "Работни приоритети",
+          label: "Най-срещан приоритет",
           name: mostSelectedJobPriorities,
           value: mostSelectedJobPrioritiesCount,
-          icon: "ri-focus-line"
+          icon: "ti ti-zoom-exclamation"
         },
         {
-          label: "Ниво на образование",
+          label: "Най-срещано ниво на образование",
           name: mostSelectedEducationLevel,
           value: mostSelectedEducationLevelCount,
-          icon: "ri-graduation-cap-line"
+          icon: "ti ti-brain"
         },
         {
-          label: "Кариерни цели",
+          label: "Най-желани професионални роли",
           name: mostSelectedCareerGoals,
           value: mostSelectedCareerGoalsCount,
-          icon: "ri-road-map-line"
+          icon: "ti ti-flag-star"
         }
       ];
       break;
@@ -388,7 +387,7 @@ export function generateOptions(componentName: string, data: any): Option[] {
           icon: "bi-briefcase"
         },
         {
-          label: "Най-препоръчвани подобни професии в платформата",
+          label: "Най-препоръчвани професии по модела на други професии",
           value: mostRecommendedRelatedOccupation,
           subValue: mostRecommendedRelatedOccupationCount ?? 0,
           icon: "bi-briefcase"

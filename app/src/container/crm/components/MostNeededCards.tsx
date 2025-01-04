@@ -17,29 +17,29 @@ type CategoryKey =
 const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
   const categories: { title: string; key: CategoryKey; icon: string }[] = [
     {
-      title: "Най-често изисквани способности",
+      title: "Най-често изисквана способност",
       key: "mostNeededAbilities",
-      icon: "bx bx-line-chart"
+      icon: "ti ti-user-star"
     },
     {
-      title: "Най-често изисквани знания",
+      title: "Най-често изисквано знание",
       key: "mostNeededKnowledge",
-      icon: "bx bx-book"
+      icon: "ti ti-brain"
     },
     {
-      title: "Най-често изисквани умения",
+      title: "Най-често изисквано умение",
       key: "mostNeededSkills",
-      icon: "bx bx-brain"
+      icon: "ti ti-book"
     },
     {
-      title: "Най-често изисквани технологични умения",
+      title: "Най-често изисквано технологично умение",
       key: "mostNeededTechnologySkills",
-      icon: "bx bx-desktop"
+      icon: "ti ti-device-imac-code"
     },
     {
-      title: "Най-често изисквани работни дейности",
+      title: "Най-често изисквана трудова дейност",
       key: "mostNeededWorkActivities",
-      icon: "bx bx-briefcase"
+      icon: "ti ti-pencil-star"
     }
   ];
 
@@ -48,7 +48,7 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
       <div className="hs-accordion-group" data-hs-accordion-always-open="">
         <div className="hs-accordion accordion-item overflow-hidden active mb-6">
           <button
-            className="hs-accordion-toggle accordion-button hs-accordion-active:pb-3 group py-4 inline-flex items-center gap-x-3 w-full font-bold text-start transition"
+            className="hs-accordion-toggle accordion-button hs-accordion-active:pb-4 group inline-flex items-center gap-x-4 w-full font-bold text-lg text-start transition py-3 px-4"
             type="button"
           >
             <svg
@@ -81,7 +81,9 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
                 stroke-linecap="round"
               />
             </svg>
-            Най-често изисквани качества в платформата
+            <div className="accordion-title">
+              Най-често изисквани качества в платформата
+            </div>
           </button>
           <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300">
             <div className="accordion-body">
