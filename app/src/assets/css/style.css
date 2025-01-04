@@ -17536,9 +17536,8 @@ hr {
 .accordion-button:focus {
   @apply bg-defaultbackground dark:bg-primary/70 text-defaulttextcolor shadow-none;
 }
-
 .accordion-body {
-  @apply bg-bodybglighter/70 pt-3 py-1 px-4 text-[0.8125rem] text-textmuted;
+  @apply bg-bodybglighter/70 pt-[0.875rem] px-4 text-[0.8125rem] text-textmuted;
 }
 
 .accordion-item {
@@ -19671,7 +19670,7 @@ option.selectionList {
 }
 
 .accordion-widget {
-  @apply flex flex-col shadow-sm rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] mb-3 relative dark:bg-bodybg;
+  @apply flex flex-col shadow-sm rounded-md text-defaulttextcolor dark:text-defaulttextcolor/70 bg-white text-[0.813rem] mb-5 relative dark:bg-bodybg;
 }
 
 .accordion-widget-body {

@@ -48,7 +48,7 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
       <div className="hs-accordion-group" data-hs-accordion-always-open="">
         <div className="hs-accordion accordion-item overflow-hidden active mb-6">
           <button
-            className="hs-accordion-toggle accordion-button hs-accordion-active:pb-3 group py-0 inline-flex items-center gap-x-3 w-full font-bold text-start transition"
+            className="hs-accordion-toggle accordion-button hs-accordion-active:pb-3 group py-4 inline-flex items-center gap-x-3 w-full font-bold text-start transition"
             type="button"
           >
             <svg
