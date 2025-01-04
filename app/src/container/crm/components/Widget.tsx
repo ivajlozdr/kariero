@@ -1,12 +1,13 @@
 import { FC, Fragment, useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
+import { Option } from "../home-types";
 
 interface WidgetProps {
   title?: string;
   value?: number | string;
   subValue?: number;
-  options?: { label: string; value: number | string; subValue: number }[];
+  options?: Option[];
   showSorting?: boolean;
   accordionItem?: boolean;
   icon?: string;

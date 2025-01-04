@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@simonwep/pickr": "^1.9.0",
+    "@tabler/icons-webfont": "^3.26.0",
     "@tailwindcss/forms": "^0.5.7",
     "apexcharts": "^3.45.2",
     "chroma-js": "^3.1.2",

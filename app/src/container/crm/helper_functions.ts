@@ -16,7 +16,8 @@ import {
   MovieData,
   RecommendationData,
   Category,
-  DataType
+  DataType,
+  Option
 } from "./home-types";
 
 // ==============================
@@ -250,6 +251,171 @@ export const checkTokenValidity = async (): Promise<string | null> => {
   }
 };
 
+export function generateOptions(componentName: string, data: any): Option[] {
+  let options: Option[];
+
+  switch (componentName) {
+    case "MostPreferredWorkstyleCards": {
+      const mostPreferredWorkStyleWorkEnvironment =
+        data?.mostPreferredWorkStyleWorkEnvironment[0]?.preference;
+      const mostPreferredWorkStyleWorkEnvironmenCount =
+        data?.mostPreferredWorkStyleWorkEnvironment[0]?.occurrence_count;
+      const mostPreferredWorkStyleCollaboration =
+        data?.mostPreferredWorkStyleCollaboration[0]?.preference;
+      const mostPreferredWorkStyleCollaborationCount =
+        data?.mostPreferredWorkStyleCollaboration[0]?.occurrence_count;
+      const mostPreferredWorkStyleStructure =
+        data?.mostPreferredWorkStyleStructure[0]?.preference;
+      const mostPreferredWorkStyleStructureCount =
+        data?.mostPreferredWorkStyleStructure[0]?.occurrence_count;
+
+      // Create the options array based on the data
+      options = [
+        {
+          label: "Предпочитание за работна среда",
+          name: mostPreferredWorkStyleWorkEnvironment,
+          value: mostPreferredWorkStyleWorkEnvironmenCount ?? 0,
+          icon: "ti ti-home-eco" // Tabler icon class name
+        },
+        {
+          label: "Предпочитание за колаборация",
+          name: mostPreferredWorkStyleCollaboration,
+          value: mostPreferredWorkStyleCollaborationCount ?? 0,
+          icon: "ti ti-users-group" // Tabler icon class name
+        },
+        {
+          label: "Предпочитание за работна структура",
+          name: mostPreferredWorkStyleStructure,
+          value: mostPreferredWorkStyleStructureCount ?? 0,
+          icon: "ti ti-hierarchy" // Tabler icon class name
+        }
+      ];
+      break;
+    }
+    case "MostSelectedCards": {
+      const mostSelectedWorkEnvironment =
+        data?.mostSelectedWorkEnvironments[0]?.preference || "Няма данни";
+      const mostSelectedWorkEnvironmentCount =
+        data?.mostSelectedWorkEnvironments[0]?.occurrence_count ?? 0;
+      const mostSelectedCollaboration =
+        data?.mostSelectedPersonalityTypes[0]?.preference || "Няма данни";
+      const mostSelectedCollaborationCount =
+        data?.mostSelectedPersonalityTypes[0]?.occurrence_count ?? 0;
+      const mostSelectedJobSatisfaction =
+        data?.mostSelectedJobSatisfactionLevels[0]?.preference || "Няма данни";
+      const mostSelectedJobSatisfactionCount =
+        data?.mostSelectedJobSatisfactionLevels[0]?.occurrence_count ?? 0;
+      const mostSelectedJobPriorities =
+        data?.mostSelectedJobPriorities[0]?.preference || "Няма данни";
+      const mostSelectedJobPrioritiesCount =
+        data?.mostSelectedJobPriorities[0]?.occurrence_count ?? 0;
+      const mostSelectedEducationLevel =
+        data?.mostSelectedEducationLevels[0]?.preference || "Няма данни";
+      const mostSelectedEducationLevelCount =
+        data?.mostSelectedEducationLevels[0]?.occurrence_count ?? 0;
+      const mostSelectedCareerGoals =
+        data?.mostSelectedCareerGoals[0]?.preference || "Няма данни";
+      const mostSelectedCareerGoalsCount =
+        data?.mostSelectedCareerGoals[0]?.occurrence_count ?? 0;
+
+      options = [
+        {
+          label: "Предпочитание за работна среда",
+          name: mostSelectedWorkEnvironment,
+          value: mostSelectedWorkEnvironmentCount,
+          icon: "ri-home-2-line"
+        },
+        {
+          label: "Предпочитание за колаборация",
+          name: mostSelectedCollaboration,
+          value: mostSelectedCollaborationCount,
+          icon: "ri-team-line"
+        },
+        {
+          label: "Удовлетвореност от работата",
+          name: mostSelectedJobSatisfaction,
+          value: mostSelectedJobSatisfactionCount,
+          icon: "ri-smile-line"
+        },
+        {
+          label: "Работни приоритети",
+          name: mostSelectedJobPriorities,
+          value: mostSelectedJobPrioritiesCount,
+          icon: "ri-focus-line"
+        },
+        {
+          label: "Ниво на образование",
+          name: mostSelectedEducationLevel,
+          value: mostSelectedEducationLevelCount,
+          icon: "ri-graduation-cap-line"
+        },
+        {
+          label: "Кариерни цели",
+          name: mostSelectedCareerGoals,
+          value: mostSelectedCareerGoalsCount,
+          icon: "ri-road-map-line"
+        }
+      ];
+      break;
+    }
+    case "WidgetCardsComponent": {
+      const userCount = data?.usersCount[0]?.user_count ?? 0;
+      const distinctOccupations = data?.distinctOccupations.count ?? 0;
+      const mostRecommendedOccupation =
+        data?.topRecommendedOccupations[0]?.title_bg;
+      const mostRecommendedOccupationCount =
+        data?.topRecommendedOccupations[0]?.recommendation_count;
+      const mostRecommendedRelatedOccupation =
+        data?.topRecommendedRelatedOccupations[0]?.name_bg;
+      const mostRecommendedRelatedOccupationCount =
+        data?.topRecommendedRelatedOccupations[0]?.recommendation_count;
+
+      options = [
+        {
+          label: "Общ брой потребители",
+          value: userCount,
+          icon: "bi-person-circle"
+        },
+        {
+          label: "Общ брой професии в платформата",
+          value: distinctOccupations,
+          icon: "bx bx-line-chart"
+        },
+        {
+          label: "Най-препоръчвани професии в платформата",
+          value: mostRecommendedOccupation,
+          subValue: mostRecommendedOccupationCount ?? 0,
+          icon: "bi-briefcase"
+        },
+        {
+          label: "Най-препоръчвани подобни професии в платформата",
+          value: mostRecommendedRelatedOccupation,
+          subValue: mostRecommendedRelatedOccupationCount ?? 0,
+          icon: "bi-briefcase"
+        }
+      ];
+      break;
+    }
+    default:
+      options = [];
+  }
+
+  return options;
+}
+
+export function extractWidgetCardData(data: any) {
+  return {
+    userCount: data?.usersCount[0]?.user_count ?? 0,
+    distinctOccupations: data?.distinctOccupations.count ?? 0,
+    mostRecommendedOccupation: data?.topRecommendedOccupations[0]?.title_bg,
+    mostRecommendedOccupationCount:
+      data?.topRecommendedOccupations[0]?.recommendation_count ?? 0,
+    mostRecommendedRelatedOccupation:
+      data?.topRecommendedRelatedOccupations[0]?.name_bg,
+    mostRecommendedRelatedOccupationCount:
+      data?.topRecommendedRelatedOccupations[0]?.recommendation_count ?? 0
+  };
+}
 /**
  * Филтрира данни за таблица според категорията и връща определена страница.
  *

@@ -3,6 +3,81 @@ export interface RedirectCardProps {
   title: string;
   description: string;
 }
+
+export interface Option {
+  label: string;
+  name?: string | undefined;
+  value: number;
+  icon: string;
+  subValue?: number;
+}
+
+// Обобщени данни за платформата
+export interface DataType {
+  usersCount: UsersCount[];
+  distinctOccupations: DistinctOccupations;
+  topRecommendedOccupations: TopRecommendedOccupation[];
+  topRecommendedRelatedOccupations: MostNeededAbility[];
+  mostNeededAbilities: MostNeededAbility[];
+  mostNeededKnowledge: MostNeededAbility[];
+  mostNeededSkills: MostNeededAbility[];
+  mostNeededTasks: MostNeededT[];
+  mostNeededTechnologySkills: MostNeededT[];
+  mostNeededWorkActivities: MostNeededAbility[];
+  mostSelectedPersonalityTypes: Most[];
+  mostSelectedWorkEnvironments: Most[];
+  mostSelectedJobPriorities: Most[];
+  mostSelectedEducationLevels: Most[];
+  mostSelectedCareerGoals: Most[];
+  mostSelectedJobSatisfactionLevels: Most[];
+  mostPreferredWorkStyleStructure: Most[];
+  mostPreferredWorkStyleCollaboration: Most[];
+  mostPreferredWorkStyleWorkEnvironment: Most[];
+}
+
+export interface DistinctOccupations {
+  count: number;
+  data: TopRecommendedOccupation[];
+}
+
+export interface TopRecommendedOccupation {
+  code: string;
+  title_bg: string;
+  title_en: string;
+  description: string;
+  bright_outlook: BrightOutlook;
+  education: null | string;
+  recommendation_count?: number;
+}
+
+export enum BrightOutlook {
+  GrowRapidly = '["Grow Rapidly"]',
+  Null = "null"
+}
+
+export interface MostNeededAbility {
+  onet_id: string;
+  name_en: string;
+  name_bg: string;
+  occurrence_count?: number;
+  recommendation_count?: number;
+}
+
+export interface MostNeededT {
+  onet_id: number;
+  name_en: string;
+  name_bg: string;
+  occurrence_count: number;
+}
+
+export interface Most {
+  preference: string;
+  occurrence_count: number;
+}
+
+export interface UsersCount {
+  user_count: number;
+}
 // ARTCOMPASS TEMP DATA BELOW
 
 // Общи данни за режисьори, актьори и писатели
@@ -138,73 +213,6 @@ export interface GenreSeriesData {
 
 // Формат на данни за топ жанровете
 export type HeatmapData = GenreSeriesData[];
-
-// Обобщени данни за платформата
-export interface DataType {
-  usersCount: UsersCount[];
-  distinctOccupations: DistinctOccupations;
-  topRecommendedOccupations: TopRecommendedOccupation[];
-  topRecommendedRelatedOccupations: MostNeededAbility[];
-  mostNeededAbilities: MostNeededAbility[];
-  mostNeededKnowledge: MostNeededAbility[];
-  mostNeededSkills: MostNeededAbility[];
-  mostNeededTasks: MostNeededT[];
-  mostNeededTechnologySkills: MostNeededT[];
-  mostNeededWorkActivities: MostNeededAbility[];
-  mostSelectedPersonalityTypes: Most[];
-  mostSelectedWorkEnvironments: Most[];
-  mostSelectedJobPriorities: Most[];
-  mostSelectedEducationLevels: Most[];
-  mostSelectedCareerGoals: Most[];
-  mostSelectedJobSatisfactionLevels: Most[];
-  mostPreferredWorkStyleStructure: Most[];
-  mostPreferredWorkStyleCollaboration: Most[];
-  mostPreferredWorkStyleWorkEnvironment: Most[];
-}
-
-export interface DistinctOccupations {
-  count: number;
-  data: TopRecommendedOccupation[];
-}
-
-export interface TopRecommendedOccupation {
-  code: string;
-  title_bg: string;
-  title_en: string;
-  description: string;
-  bright_outlook: BrightOutlook;
-  education: null | string;
-  recommendation_count?: number;
-}
-
-export enum BrightOutlook {
-  GrowRapidly = '["Grow Rapidly"]',
-  Null = "null"
-}
-
-export interface MostNeededAbility {
-  onet_id: string;
-  name_en: string;
-  name_bg: string;
-  occurrence_count?: number;
-  recommendation_count?: number;
-}
-
-export interface MostNeededT {
-  onet_id: number;
-  name_en: string;
-  name_bg: string;
-  occurrence_count: number;
-}
-
-export interface Most {
-  preference: string;
-  occurrence_count: number;
-}
-
-export interface UsersCount {
-  user_count: number;
-}
 
 export type TempDataType = {
   usersCount: UsersCountData[]; // Брой потребители

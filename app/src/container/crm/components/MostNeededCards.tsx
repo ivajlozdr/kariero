@@ -44,12 +44,9 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
   ];
 
   return (
-    <div className="accordion accordionicon-left accordions-items-seperate">
-      <div className="hs-accordion-group">
-        <div
-          className="hover:bg-gray hs-accordion accordion-item mb-6"
-          id="hs-basic-heading21"
-        >
+    <div className="accordion accordionicon-left accordions-items-separate">
+      <div className="hs-accordion-group" data-hs-accordion-always-open="">
+        <div className="hs-accordion accordion-item overflow-hidden active mb-6">
           <button
             className="hs-accordion-toggle accordion-button hs-accordion-active:pb-3 group py-0 inline-flex items-center gap-x-3 w-full font-bold text-start transition"
             type="button"
@@ -86,7 +83,7 @@ const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
             </svg>
             Най-често изисквани качества в платформата
           </button>
-          <div className="hs-accordion-content accordion-collapse w-full hidden transition-[height] duration-300">
+          <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300">
             <div className="accordion-body">
               {categories.map(({ title, key, icon }) => {
                 const item = data[key]?.[0];

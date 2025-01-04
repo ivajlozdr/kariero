@@ -90,11 +90,11 @@ Background Image
 @import url("https://fonts.googleapis.com/css2?family=Ga+Maamli&family=Sour+Gummy:ital,wdth,wght@1,125,900&display=swap");
 /* End Tailwind Styles Styles */
 @import url("../iconfonts/RemixIcons/fonts/remixicon.css");
-@import url("../iconfonts/tabler-icons/iconfont/tabler-icons.css");
 @import url("../iconfonts/feather/feather.css");
 @import url("../iconfonts/bootstrap-icons/icons/font/bootstrap-icons.css");
 @import url("../iconfonts/line-awesome/1.3.0/css/line-awesome.css");
 @import url("../iconfonts/boxicons/css/boxicons.css");
+@import url("../../../node_modules/@tabler/icons-webfont/dist/tabler-icons.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

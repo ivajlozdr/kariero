@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { DataType } from "../home-types";
+import { generateOptions } from "../helper_functions";
 
 interface WidgetCardsComponentProps {
   data: DataType;
@@ -8,37 +9,7 @@ interface WidgetCardsComponentProps {
 const MostPreferredWorkstyleCards: FC<WidgetCardsComponentProps> = ({
   data
 }) => {
-  const mostPreferredWorkStyleWorkEnvironment =
-    data?.mostPreferredWorkStyleWorkEnvironment[0]?.preference;
-  const mostPreferredWorkStyleWorkEnvironmenCount =
-    data?.mostPreferredWorkStyleWorkEnvironment[0]?.occurrence_count;
-  const mostPreferredWorkStyleCollaboration =
-    data?.mostPreferredWorkStyleCollaboration[0]?.preference;
-  const mostPreferredWorkStyleCollaborationCount =
-    data?.mostPreferredWorkStyleCollaboration[0]?.occurrence_count;
-
-  const mostPreferredWorkStyleStructure =
-    data?.mostPreferredWorkStyleStructure[0]?.preference;
-  const mostPreferredWorkStyleStructureCount =
-    data?.mostPreferredWorkStyleStructure[0]?.occurrence_count;
-
-  const options = [
-    {
-      label: "Предпочитание за работна среда",
-      name: mostPreferredWorkStyleWorkEnvironment,
-      value: mostPreferredWorkStyleWorkEnvironmenCount ?? 0
-    },
-    {
-      label: "Предпочитание за колаборация",
-      name: mostPreferredWorkStyleCollaboration,
-      value: mostPreferredWorkStyleCollaborationCount ?? 0
-    },
-    {
-      label: "Предпочитание за работна структура",
-      name: mostPreferredWorkStyleStructure,
-      value: mostPreferredWorkStyleStructureCount ?? 0
-    }
-  ];
+  const options = generateOptions("MostPreferredWorkstyleCards", data);
 
   return (
     <div className="box custom-box">
@@ -50,15 +21,16 @@ const MostPreferredWorkstyleCards: FC<WidgetCardsComponentProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-          {options.map(({ label, name, value }, index) => (
+          {options.map(({ label, name, value, icon }, index) => (
             <div
               key={index}
               className="relative flex flex-col p-3 border-r border-dashed border-primary dark:border-defaultborder/10 transition-shadow duration-300 ease-in-out last:border-r-0"
             >
               <div className="flex items-start w-full">
                 <span className="avatar w-16 h-16 rounded-full bg-primary shadow-sm mr-4 flex justify-center items-center">
-                  <i className="ti ti-package text-[1.125rem]"></i>
+                  <i className={`${icon} text-[1.5rem]`}></i>
                 </span>
+
                 <div className="flex-grow">
                   <div className="flex flex-wrap items-center w-full">
                     <h5 className="font-semibold text-lg text-primary truncate mr-2 leading-tight">
@@ -81,7 +53,7 @@ const MostPreferredWorkstyleCards: FC<WidgetCardsComponentProps> = ({
                       )
                     </span>
                   </div>
-                  <p className="text-[#8c9097] dark:text-white/50 mb-0 text-sm">
+                  <p className="text-defaulttextcolor/70 dark:text-white/50 mb-0 text-sm">
                     {label || "Зареждане..."}
                   </p>
                 </div>

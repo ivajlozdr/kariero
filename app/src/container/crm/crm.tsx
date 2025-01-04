@@ -34,6 +34,7 @@ import Notification, {
 import WidgetCardsComponent from "./components/WidgetCards";
 import MostNeededCards from "./components/MostNeededCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
+import MostSelectedCards from "./components/MostSelectedPreferences";
 
 interface CrmProps {}
 
@@ -171,7 +172,7 @@ const Crm: FC<CrmProps> = () => {
           gridTemplateColumns: "1fr 1fr",
           gridTemplateAreas: `
             "accordion preferred"
-            "second-preferred preferred"
+            "accordion selected" 
           `
         }}
       >
@@ -181,17 +182,9 @@ const Crm: FC<CrmProps> = () => {
         <div style={{ gridArea: "preferred" }}>
           <MostPreferredWorkstyleCards data={data} />
         </div>
-        <div style={{ gridArea: "second-preferred" }}>
-          <MostPreferredWorkstyleCards data={data} />
+        <div style={{ gridArea: "selected" }}>
+          <MostSelectedCards data={data} />
         </div>
-      </div>
-      <div className="grid grid-cols-2 gap-x-6">
-        <div className="grid grid-cols-6 gap-x-6">
-          <div className="xxl:col-span-6 col-span-12">
-            <TableComponent data={hardcodedData} />
-          </div>
-        </div>
-        <div></div>
       </div>
       <div className="card-container">
         <RedirectCard
