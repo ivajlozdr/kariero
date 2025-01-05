@@ -216,7 +216,7 @@ const Crm: FC<CrmProps> = () => {
           description="Имаме планове да разширим платформата все повече и все повече! Очаквайте още повече страници."
         />
       </div>
-      <div className="grid grid-cols-12 gap-x-6">
+      {/* <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 col-span-12">
           <div className="xxl:col-span-6 col-span-12">
             <MoviesByProsperityBubbleChartComponent data={hardcodedData} />
@@ -231,9 +231,8 @@ const Crm: FC<CrmProps> = () => {
           />
           <CountryBarChartComponent data={hardcodedData} />
         </div>
-      </div>
-      /*DO NOT PLACE STUFF BELOW THIS LINE!*/
-      <div className="grid grid-cols-12 gap-x-6">
+      </div> */}
+      {/* <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
             <div className="xxl:col-span-4 xl:col-span-4  col-span-12">
@@ -1407,7 +1406,7 @@ const Crm: FC<CrmProps> = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </Fragment>
   );
 };
