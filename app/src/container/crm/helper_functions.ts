@@ -17,7 +17,8 @@ import {
   Category,
   DataType,
   Option,
-  TopRecommendedOccupation
+  TopRecommendedOccupation,
+  QualitiesCategory
 } from "./home-types";
 
 // ==============================
@@ -98,15 +99,15 @@ export const fetchData = async (
       },
       {
         key: "mostNeededAbilities",
-        endpoint: "/stats/platform/most-needed-abilities?limit=2"
+        endpoint: "/stats/platform/most-needed-abilities?limit=15"
       },
       {
         key: "mostNeededKnowledge",
-        endpoint: "/stats/platform/most-needed-knowledge?limit=2"
+        endpoint: "/stats/platform/most-needed-knowledge?limit=15"
       },
       {
         key: "mostNeededSkills",
-        endpoint: "/stats/platform/most-needed-skills?limit=2"
+        endpoint: "/stats/platform/most-needed-skills?limit=15"
       },
       {
         key: "mostNeededTasks",
@@ -114,11 +115,11 @@ export const fetchData = async (
       },
       {
         key: "mostNeededTechnologySkills",
-        endpoint: "/stats/platform/most-needed-technology-skills?limit=2"
+        endpoint: "/stats/platform/most-needed-technology-skills?limit=15"
       },
       {
         key: "mostNeededWorkActivities",
-        endpoint: "/stats/platform/most-needed-work-activities?limit=2"
+        endpoint: "/stats/platform/most-needed-work-activities?limit=15"
       },
       {
         key: "mostSelectedPersonalityTypes",
@@ -658,8 +659,10 @@ export const handleOccupationSortCategory = (
  * @param {React.Dispatch<React.SetStateAction<string>>} setTopStatsSortCategory - Функция за задаване на категорията.
  */
 export const handleTopStatsSortCategory = (
-  category: Category,
-  setTopStatsSortCategory: React.Dispatch<React.SetStateAction<Category>>
+  category: QualitiesCategory,
+  setTopStatsSortCategory: React.Dispatch<
+    React.SetStateAction<QualitiesCategory>
+  >
 ) => {
   setTopStatsSortCategory(category);
 };

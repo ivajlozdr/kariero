@@ -8,10 +8,10 @@ import {
   CountryData,
   DirectorData,
   MovieProsperityData,
-  RoleData,
   OccupationSeriesType,
   TopRecommendedOccupation,
-  WriterData
+  WriterData,
+  MostNeededQuality
 } from "../home-types";
 import { Link } from "react-router-dom";
 
@@ -850,7 +850,7 @@ export class MoviesByProsperityBubbleChart extends Component<
 }
 
 interface TreemapProps {
-  data: RoleData;
+  data: MostNeededQuality[];
   role: string;
 }
 
@@ -881,7 +881,7 @@ export class Treemap extends Component<TreemapProps, TreemapState> {
     this.state = {
       series: [
         {
-          data: Treemap.formatData(props.data, props.role) // Форматиране на данните за начално състояние
+          data: Treemap.formatData(props.data) // Форматиране на данните за начално състояние
         }
       ],
       options: {
@@ -912,7 +912,7 @@ export class Treemap extends Component<TreemapProps, TreemapState> {
       return {
         series: [
           {
-            data: Treemap.formatData(nextProps.data, nextProps.role) // Актуализиране на форматираните данни
+            data: Treemap.formatData(nextProps.data) // Актуализиране на форматираните данни
           }
         ]
       };
@@ -921,24 +921,9 @@ export class Treemap extends Component<TreemapProps, TreemapState> {
   }
 
   // Метод за форматиране на данните на база роля
-  static formatData(data: RoleData, role: string) {
+  static formatData(data: MostNeededQuality[]) {
     return data.map((item) => {
-      let name = ""; // Име на елемент
-      let count = 0; // Брой свързани записи
-
-      // Проверка на типа роля и съответните полета в данните
-      if (role === "Actors" && "actor_bg" in item) {
-        name = (item as ActorData).actor_bg!;
-        count = (item as ActorData).actor_count!;
-      } else if (role === "Directors" && "director_bg" in item) {
-        name = (item as DirectorData).director_bg!;
-        count = (item as DirectorData).director_count!;
-      } else if (role === "Writers" && "writer_bg" in item) {
-        name = (item as WriterData).writer_bg!;
-        count = (item as WriterData).writer_count!;
-      }
-
-      return { x: name, y: count }; // Връщане на форматиран обект
+      return { x: item.name_bg, y: item.occurrence_count || 0 }; // Directly return the formatted object
     });
   }
 

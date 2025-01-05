@@ -14,21 +14,28 @@ export interface Option {
 
 export interface OccupationSeriesType {
   regularOccupations: TopRecommendedOccupation[];
-  relatedOccupations: MostNeededAbility[];
+  relatedOccupations: MostNeededQuality[];
 }
+
+export type QualitiesCategory =
+  | "Abilities"
+  | "Knowledge"
+  | "Skills"
+  | "TechnologySkills"
+  | "WorkActivities";
 
 // Обобщени данни за платформата
 export interface DataType {
   usersCount: UsersCount[];
   distinctOccupations: DistinctOccupations;
   topRecommendedOccupations: TopRecommendedOccupation[];
-  topRecommendedRelatedOccupations: MostNeededAbility[];
-  mostNeededAbilities: MostNeededAbility[];
-  mostNeededKnowledge: MostNeededAbility[];
-  mostNeededSkills: MostNeededAbility[];
-  mostNeededTasks: MostNeededT[];
-  mostNeededTechnologySkills: MostNeededT[];
-  mostNeededWorkActivities: MostNeededAbility[];
+  topRecommendedRelatedOccupations: MostNeededQuality[];
+  mostNeededAbilities: MostNeededQuality[];
+  mostNeededKnowledge: MostNeededQuality[];
+  mostNeededSkills: MostNeededQuality[];
+  mostNeededTasks: MostNeededQuality[];
+  mostNeededTechnologySkills: MostNeededQuality[];
+  mostNeededWorkActivities: MostNeededQuality[];
   mostSelectedPersonalityTypes: Most[];
   mostSelectedWorkEnvironments: Most[];
   mostSelectedJobPriorities: Most[];
@@ -60,19 +67,12 @@ export enum BrightOutlook {
   Null = "null"
 }
 
-export interface MostNeededAbility {
-  onet_id: string;
+export interface MostNeededQuality {
+  onet_id: string | number;
   name_en: string;
   name_bg: string;
   occurrence_count?: number;
   recommendation_count?: number;
-}
-
-export interface MostNeededT {
-  onet_id: number;
-  name_en: string;
-  name_bg: string;
-  occurrence_count: number;
 }
 
 export interface Most {
@@ -124,9 +124,6 @@ export interface WriterData extends CommonData {
   movie_count: number; // Брой филми
   writer_count: number; // Брой писатели (преименувано, за да се избегне конфликт)
 }
-
-// Тип данни за роли (режисьор, актьор, писател)
-export type RoleData = DirectorData[] | ActorData[] | WriterData[];
 
 // Тип данни за филтрирани таблици (съюз от данни за режисьори, актьори и писатели)
 export type FilteredTableData = (DirectorData | ActorData | WriterData)[];

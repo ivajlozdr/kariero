@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { MostRecommendedOccupationsChart } from "./Charts";
 import {
   DataType,
-  MostNeededAbility,
+  MostNeededQuality,
   OccupationSeriesType,
   TopRecommendedOccupation
 } from "../home-types";
@@ -39,7 +39,7 @@ const TopRecommendedOccupationsAndRelated: FC<
       );
 
       // Пагиниране на свързани професии
-      const relatedOccupations = paginateBarChartData<MostNeededAbility>(
+      const relatedOccupations = paginateBarChartData<MostNeededQuality>(
         data.topRecommendedRelatedOccupations,
         currentChartPage,
         pageSize

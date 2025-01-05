@@ -12,7 +12,6 @@ import {
   hardcodedData
 } from "./crmdata";
 import TableComponent from "./components/TableComponent";
-import TreemapComponent from "./components/TreemapComponent";
 import TopRecommendationsChartComponent from "./components/TopRecommendationsChartComponent";
 import CountryBarChartComponent from "./components/CountryBarChartComponent";
 import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
@@ -35,6 +34,7 @@ import MostNeededCards from "./components/MostNeededCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 import MostSelectedCards from "./components/MostSelectedPreferences";
 import TopRecommendedOccupationsAndRelated from "./components/TopRecommendedOccupationsAndRelated";
+import TopNeededQualitiesTreemap from "./components/TopNeededQualitiesTreemap";
 
 interface CrmProps {}
 
@@ -191,10 +191,7 @@ const Crm: FC<CrmProps> = () => {
           <TopRecommendedOccupationsAndRelated data={data} />
         </div>
         <div className="col-span-6">
-          <TopRecommendationsChartComponent
-            dataOld={hardcodedData}
-            data={data}
-          />
+          <TopNeededQualitiesTreemap data={data} />
         </div>
       </div>
       <div className="card-container">
@@ -232,7 +229,6 @@ const Crm: FC<CrmProps> = () => {
             dataOld={hardcodedData}
             data={data}
           />
-          <TreemapComponent data={hardcodedData} />
           <CountryBarChartComponent data={hardcodedData} />
         </div>
       </div>
