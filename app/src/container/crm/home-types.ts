@@ -12,7 +12,7 @@ export interface Option {
   subValue?: number;
 }
 
-export interface OccupationOccupationSeriesType {
+export interface OccupationSeriesType {
   regularOccupations: TopRecommendedOccupation[];
   relatedOccupations: MostNeededAbility[];
 }

@@ -4,7 +4,7 @@ import { MostRecommendedOccupationsChart } from "./Charts";
 import {
   DataType,
   MostNeededAbility,
-  OccupationOccupationSeriesType,
+  OccupationSeriesType,
   TopRecommendedOccupation
 } from "../home-types";
 import {
@@ -29,7 +29,7 @@ const TopRecommendedOccupationsAndRelated: FC<
     useState("Occupations"); // Категория за сортиране (IMDb, Metascore, RottenTomatoes)
 
   // Меморизиране на данните за сериите за графиката на филмите
-  const seriesDataForMoviesAndSeriesByRatingsChart: OccupationOccupationSeriesType =
+  const seriesDataForMoviesAndSeriesByRatingsChart: OccupationSeriesType =
     useMemo(() => {
       // Пагиниране на обикновени професии
       const regularOccupations = paginateBarChartData<TopRecommendedOccupation>(
