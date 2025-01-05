@@ -35,6 +35,7 @@ import WidgetCardsComponent from "./components/WidgetCards";
 import MostNeededCards from "./components/MostNeededCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 import MostSelectedCards from "./components/MostSelectedPreferences";
+import TopRecommendedOccupationsAndRelated from "./components/TopRecommendedOccupationsAndRelated";
 
 interface CrmProps {}
 
@@ -186,6 +187,17 @@ const Crm: FC<CrmProps> = () => {
           <MostSelectedCards data={data} />
         </div>
       </div>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="col-span-6">
+          <TopRecommendedOccupationsAndRelated data={data} />
+        </div>
+        <div className="col-span-6">
+          <TopRecommendationsChartComponent
+            dataOld={hardcodedData}
+            data={data}
+          />
+        </div>
+      </div>
       <div className="card-container">
         <RedirectCard
           href="../app/quiz"
@@ -218,7 +230,10 @@ const Crm: FC<CrmProps> = () => {
         </div>
         <div className="xxl:col-span-6 col-span-12">
           <TableComponent data={hardcodedData} />
-          <TopRecommendationsChartComponent data={hardcodedData} />
+          <TopRecommendationsChartComponent
+            dataOld={hardcodedData}
+            data={data}
+          />
           <TreemapComponent data={hardcodedData} />
           <CountryBarChartComponent data={hardcodedData} />
         </div>

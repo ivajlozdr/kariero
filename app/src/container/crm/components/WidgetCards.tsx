@@ -25,7 +25,7 @@ const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
       <Widget
         showSorting
         options={options}
-        title="Най-препоръчвани професии в платформата"
+        title="Най-препоръчвана професия в платформата"
         value={widgetData.mostRecommendedOccupation}
         subValue={widgetData.mostRecommendedOccupationCount}
         icon="ti ti-briefcase"

@@ -1,18 +1,15 @@
-import { Category, DataType, TempDataType } from "./home-types";
+import { Category, TempDataType } from "./home-types";
 
 /**
  * Мапинг на имената за категорията на рейтингите.
  *
  * @type {Record<"IMDb" | "Metascore" | "RottenTomatoes", string>}
  */
-export const moviesAndSeriesCategoryDisplayNames: Record<
-  "IMDb" | "Metascore" | "RottenTomatoes",
-  string
-> = {
-  IMDb: "IMDb Рейтинг",
-  Metascore: "Метаскор",
-  RottenTomatoes: "Rotten Tomatoes Рейтинг"
-};
+export const occupationDisplayNames: Record<"Occupations" | "Related", string> =
+  {
+    Occupations: "Професии",
+    Related: "Професии по модела на други"
+  };
 
 /**
  * Мапинг на имената за категориите на таблицата.

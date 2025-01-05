@@ -4,15 +4,227 @@ import chroma from "chroma-js";
 
 import {
   ActorData,
+  BrightOutlook,
   CountryData,
   DirectorData,
+  MostNeededAbility,
   MovieData,
   MovieProsperityData,
   RecommendationData,
   RoleData,
+  OccupationSeriesType,
+  TopRecommendedOccupation,
   WriterData
 } from "../home-types";
 import { Link } from "react-router-dom";
+
+export class MostRecommendedOccupationsChart extends Component<
+  { seriesData: OccupationSeriesType; category: string },
+  State
+> {
+  private observer: MutationObserver | null = null;
+
+  constructor(props: { seriesData: OccupationSeriesType; category: string }) {
+    super(props);
+
+    // Вземане на първоначалния цвят за темата
+    const initialColor = updatePrimaryColor();
+
+    this.state = {
+      series: [],
+      options: {
+        chart: {
+          type: "bar", // Тип на диаграмата - хоризонтален бар
+          toolbar: { show: false } // Скриване на лентата с инструменти
+        },
+        plotOptions: { bar: { borderRadius: 4, horizontal: true } }, // Задаване на хоризонтална ориентация и радиус на колоните
+        grid: { borderColor: "#f2f5f7" }, // Цвят на мрежата
+        dataLabels: { enabled: false }, // Скриване на стойностите върху колоните
+        xaxis: {
+          title: { text: "Брой препоръчвания" }, // Заглавие на оста X
+          categories: [] // Категории, които ще бъдат зададени динамично
+        },
+        yaxis: { title: { text: "Професия" } }, // Заглавие на оста Y
+        colors: [
+          chroma(initialColor).darken(0.6).hex(), // По-ярък цвят за филми
+          chroma(initialColor).brighten(0.6).hex() // По-тъмен цвят за сериали
+        ],
+        legend: {
+          show: true, // Показване на легендата
+          position: "top", // Разположение на легендата
+          labels: {
+            colors: ["#000", "#000"] // Цвят на текстовете в легендата
+          }
+        }
+      }
+    };
+  }
+
+  static getDerivedStateFromProps(
+    props: { seriesData: OccupationSeriesType; category: string },
+    prevState: State
+  ) {
+    const occupationsData = props.seriesData;
+    if (occupationsData) {
+      // Подреждане на професиите по брой препоръчвания
+      const sortCategory = props.category;
+      const sortedData =
+        sortCategory === "Occupations"
+          ? props.seriesData.regularOccupations.sort(
+              (a, b) =>
+                (b.recommendation_count ?? 0) - (a.recommendation_count ?? 0)
+            )
+          : props.seriesData.relatedOccupations.sort(
+              (a, b) =>
+                (b.recommendation_count ?? 0) - (a.recommendation_count ?? 0)
+            );
+
+      // Актуализиране на данните и задаване на цветове
+      const updatedOccupations = sortedData.map((occupation) => {
+        // Type guard to check if occupation is of type TopRecommendedOccupation
+        const isTopRecommendedOccupation = (
+          occupation: any
+        ): occupation is TopRecommendedOccupation => {
+          return "bright_outlook" in occupation && "title_bg" in occupation;
+        };
+
+        // If it's a TopRecommendedOccupation, we can access bright_outlook and title_bg/title_en
+        if (isTopRecommendedOccupation(occupation)) {
+          const isBrightOutlook =
+            occupation.bright_outlook === BrightOutlook.GrowRapidly; // Проверка за перспективност
+          const color = !isBrightOutlook
+            ? prevState.options.colors[0] // Цвят за професии с перспективи
+            : prevState.options.colors[1]; // Цвят за останалите
+
+          return {
+            x: `${occupation.title_bg} (${occupation.title_en})`, // Заглавие (на български и английски)
+            y: occupation.recommendation_count ?? 0, // Брой препоръчвания
+            fillColor: color // Цвят на колоната
+          };
+        } else {
+          // For MostNeededAbility, use `name_bg` and `name_en` instead of `title_bg` and `title_en`
+          return {
+            x: `${occupation.name_bg} (${occupation.name_en})`, // Заглавие (на български и английски)
+            y: occupation.recommendation_count ?? 0, // Брой препоръчвания
+            fillColor: prevState.options.colors[0] // Цвят за свързани професии
+          };
+        }
+      });
+
+      return {
+        series: [
+          {
+            name: "Препоръчвания", // Име на серията
+            data: updatedOccupations
+          }
+        ],
+        options: {
+          ...prevState.options,
+          xaxis: {
+            ...prevState.options.xaxis,
+            categories: sortedData.map(
+              (occupation) =>
+                `${
+                  "name_bg" in occupation
+                    ? occupation.name_bg
+                    : occupation.title_bg
+                } (${
+                  "name_en" in occupation
+                    ? occupation.name_en
+                    : occupation.title_en
+                })`
+            ) // Категории за оста X
+          }
+        }
+      };
+    }
+
+    return null; // Няма промяна
+  }
+
+  componentDidMount() {
+    this.updateColorRange();
+
+    // Инициализиране на MutationObserver за наблюдение на промени в класа на document.documentElement
+    this.observer = new MutationObserver(() => {
+      this.updateColorRange();
+    });
+
+    // Наблюдение на промени в classList на главния елемент на документа (смени на темата)
+    this.observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+  }
+
+  componentWillUnmount() {
+    // Почистване на MutationObserver при премахване на компонента
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  updateColorRange() {
+    const primaryHex = updatePrimaryColor(); // Вземане на актуализирания цвят на темата
+
+    // Дефиниране на различни цветове на базата на актуализирания основен цвят
+    const brightOutlook = chroma(primaryHex).darken(0.6).hex(); // По-светъл цвят за филми
+    const nonBrightOutlook = chroma(primaryHex).brighten(0.6).hex(); // По-тъмен цвят за сериали
+
+    // Актуализиране на състоянието с новите цветове
+    this.setState((prevState) => ({
+      options: {
+        ...prevState.options,
+        colors: [brightOutlook, nonBrightOutlook] // Актуализиране на цветовете за двете категории
+      }
+    }));
+  }
+
+  render() {
+    const nonBrightOutlook = this.state.options.colors[0];
+    const brightOutlook = this.state.options.colors[1];
+
+    return (
+      <div>
+        <div className="flex justify-center items-center">
+          <div className="flex items-center mr-4">
+            <span
+              className="w-3 h-3 mr-1 rounded-full inline-block"
+              style={{ backgroundColor: nonBrightOutlook }}
+            ></span>
+            <span>Професия</span>
+          </div>
+          {this.props.category !== "Related" && (
+            <div className="flex items-center">
+              <span
+                className="w-3 h-3 mr-1 rounded-full inline-block"
+                style={{ backgroundColor: brightOutlook }}
+              ></span>
+              <span>Професия с ярко бъдеще</span>
+              <div
+                className="ml-2"
+                title="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии."
+              >
+                <i className="ti ti-info-circle text-[1rem] text-secondary"></i>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {this.state.series && this.state.series.length > 0 ? (
+          <ReactApexChart
+            options={this.state.options}
+            series={this.state.series}
+            type="bar"
+            height={320}
+          />
+        ) : (
+          <p>No data available</p>
+        )}
+      </div>
+    );
+  }
+}
 
 // Генерира данни за heatmap диаграмата
 export function generateData(count: any, yrange: any) {
@@ -233,184 +445,6 @@ export class GenrePopularityOverTime extends Component<
         height={350}
         width="100%" // Осигурява адаптивност спрямо контейнера
       />
-    );
-  }
-}
-
-export class MoviesAndSeriesByRatingsChart extends Component<
-  { seriesData: MovieData[]; category: string },
-  State
-> {
-  private observer: MutationObserver | null = null;
-
-  constructor(props: { seriesData: MovieData[]; category: string }) {
-    super(props);
-
-    // Вземане на първоначалния цвят за темата
-    const initialColor = updatePrimaryColor();
-
-    this.state = {
-      series: [],
-      options: {
-        chart: {
-          type: "bar",
-          toolbar: { show: false }
-        },
-        plotOptions: { bar: { borderRadius: 4, horizontal: true } },
-        grid: { borderColor: "#f2f5f7" },
-        dataLabels: { enabled: false },
-        xaxis: {
-          title: { text: [] },
-          categories: []
-        },
-        yaxis: { title: { text: "Заглавие" } },
-        colors: [
-          chroma(initialColor).darken(0.6).hex(), // По-светъл цвят за филми
-          chroma(initialColor).brighten(0.6).hex() // По-тъмен цвят за сериали
-        ]
-      }
-    };
-  }
-
-  static getDerivedStateFromProps(
-    nextProps: { seriesData: MovieData[]; category: string },
-    prevState: State
-  ) {
-    if (nextProps.seriesData && nextProps.seriesData.length > 0) {
-      const sortCategory = nextProps.category;
-      const sortedMovies =
-        sortCategory === "IMDb"
-          ? nextProps.seriesData.sort((a, b) => b.imdbRating - a.imdbRating)
-          : sortCategory === "Metascore"
-          ? nextProps.seriesData.sort((a, b) => b.metascore - a.metascore)
-          : nextProps.seriesData.sort(
-              (a, b) => b.rottenTomatoes - a.rottenTomatoes
-            );
-
-      return {
-        series: [
-          {
-            name:
-              sortCategory === "IMDb"
-                ? "IMDb рейтинг"
-                : sortCategory === "Metascore"
-                ? "Метаскор"
-                : "Rotten Tomatoes рейтинг",
-            data: sortedMovies.map((movie) => {
-              // Определяне на цвета според типа (филм или сериал)
-              const color =
-                movie.type === "movie"
-                  ? prevState.options.colors[0] // По-светъл цвят за филми
-                  : prevState.options.colors[1]; // По-тъмен цвят за сериали
-
-              return {
-                x: `${movie.title_bg} (${movie.title_en})`,
-                y:
-                  sortCategory === "IMDb"
-                    ? movie.imdbRating
-                    : sortCategory === "Metascore"
-                    ? movie.metascore
-                    : movie.rottenTomatoes,
-                fillColor: color // Използване на динамичен цвят за всеки филм/сериал
-              };
-            })
-          }
-        ],
-        options: {
-          ...prevState.options,
-          xaxis: {
-            ...prevState.options.xaxis,
-            title: {
-              text:
-                sortCategory === "IMDb"
-                  ? "IMDb рейтинг"
-                  : sortCategory === "Metascore"
-                  ? "Метаскор"
-                  : "Rotten Tomatoes рейтинг"
-            },
-            categories: sortedMovies.map(
-              (movie) => `${movie.title_bg} (${movie.title_en})`
-            )
-          }
-        }
-      };
-    }
-
-    return null;
-  }
-
-  componentDidMount() {
-    this.updateColorRange();
-
-    // Инициализиране на MutationObserver за наблюдение на промени в класа на document.documentElement
-    this.observer = new MutationObserver(() => {
-      this.updateColorRange();
-    });
-
-    // Наблюдение на промени в classList на главния елемент на документа (смени на темата)
-    this.observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"]
-    });
-  }
-
-  componentWillUnmount() {
-    // Почистване на MutationObserver при премахване на компонента
-    if (this.observer) {
-      this.observer.disconnect();
-    }
-  }
-
-  updateColorRange() {
-    const primaryHex = updatePrimaryColor(); // Вземане на актуализирания цвят на темата
-
-    // Дефиниране на различни цветове на базата на актуализирания основен цвят
-    const movieColor = chroma(primaryHex).darken(0.6).hex(); // По-светъл цвят за филми
-    const seriesColor = chroma(primaryHex).brighten(0.6).hex(); // По-тъмен цвят за сериали
-
-    // Актуализиране на състоянието с новите цветове
-    this.setState((prevState) => ({
-      options: {
-        ...prevState.options,
-        colors: [movieColor, seriesColor] // Актуализиране на цветовете за двете категории
-      }
-    }));
-  }
-
-  render() {
-    const movieColor = this.state.options.colors[0];
-    const seriesColor = this.state.options.colors[1];
-
-    return (
-      <div>
-        <div className="flex justify-center items-center">
-          <div className="flex items-center mr-4">
-            <span
-              className="w-3 h-3 mr-1 rounded-full inline-block"
-              style={{ backgroundColor: movieColor }}
-            ></span>
-            <span>Филм</span>
-          </div>
-          <div className="flex items-center">
-            <span
-              className="w-3 h-3 mr-1 rounded-full inline-block"
-              style={{ backgroundColor: seriesColor }}
-            ></span>
-            <span>Сериал</span>
-          </div>
-        </div>
-
-        {this.state.series && this.state.series.length > 0 ? (
-          <ReactApexChart
-            options={this.state.options}
-            series={this.state.series}
-            type="bar"
-            height={320}
-          />
-        ) : (
-          <p>No data available</p>
-        )}
-      </div>
     );
   }
 }
@@ -973,12 +1007,12 @@ export class Treemap extends Component<TreemapProps, TreemapState> {
 }
 
 export class TopRecommendationsBarChart extends Component<
-  { seriesData: RecommendationData[] | MovieData[] },
+  { seriesData: TopRecommendedOccupation[] },
   State
 > {
   private observer: MutationObserver | null = null;
 
-  constructor(props: { seriesData: RecommendationData[] }) {
+  constructor(props: { seriesData: TopRecommendedOccupation[] }) {
     super(props);
 
     // Извличане на началния цвят за темата
@@ -999,7 +1033,7 @@ export class TopRecommendationsBarChart extends Component<
           title: { text: "Брой препоръчвания" }, // Заглавие на оста X
           categories: [] // Категории, които ще бъдат зададени динамично
         },
-        yaxis: { title: { text: "Заглавие" } }, // Заглавие на оста Y
+        yaxis: { title: { text: "Професия" } }, // Заглавие на оста Y
         colors: [
           chroma(initialColor).darken(0.6).hex(), // По-ярък цвят за филми
           chroma(initialColor).brighten(0.6).hex() // По-тъмен цвят за сериали
@@ -1017,25 +1051,27 @@ export class TopRecommendationsBarChart extends Component<
 
   // Актуализация на състоянието при промяна на входните данни
   static getDerivedStateFromProps(
-    nextProps: { seriesData: RecommendationData[] },
+    props: { seriesData: TopRecommendedOccupation[] },
     prevState: State
   ) {
-    if (nextProps.seriesData && nextProps.seriesData.length > 0) {
-      // Подреждане на филмите/сериалите по брой препоръчвания
-      const sortedMovies = nextProps.seriesData.sort(
-        (a, b) => b.recommendations - a.recommendations
+    const occupationsData = props.seriesData;
+    if (occupationsData && occupationsData.length > 0) {
+      // Подреждане на професиите по брой препоръчвания
+      const sortedOccupations = occupationsData.sort(
+        (a, b) => (b.recommendation_count ?? 0) - (a.recommendation_count ?? 0)
       );
 
-      // Актуализиране на данните и задаване на цветове според типа
-      const updatedSeries = sortedMovies.map((movie) => {
-        const isMovie = movie.type === "movie"; // Проверка дали е филм
-        const color = isMovie
-          ? prevState.options.colors[0] // Цвят за филм
-          : prevState.options.colors[1]; // Цвят за сериал
+      // Актуализиране на данните и задаване на цветове
+      const updatedOccupations = sortedOccupations.map((occupation) => {
+        const isBrightOutlook =
+          occupation.bright_outlook === BrightOutlook.GrowRapidly; // Проверка за перспективност
+        const color = !isBrightOutlook
+          ? prevState.options.colors[0] // Цвят за професии с перспективи
+          : prevState.options.colors[1]; // Цвят за останалите
 
         return {
-          x: `${movie.title_bg} (${movie.title_en})`, // Заглавие (на български и английски)
-          y: movie.recommendations, // Брой препоръчвания
+          x: `${occupation.title_bg} (${occupation.title_en})`, // Заглавие (на български и английски)
+          y: occupation.recommendation_count ?? 0, // Брой препоръчвания
           fillColor: color // Цвят на колоната
         };
       });
@@ -1044,15 +1080,15 @@ export class TopRecommendationsBarChart extends Component<
         series: [
           {
             name: "Препоръчвания", // Име на серията
-            data: updatedSeries
+            data: updatedOccupations
           }
         ],
         options: {
           ...prevState.options,
           xaxis: {
             ...prevState.options.xaxis,
-            categories: sortedMovies.map(
-              (movie) => `${movie.title_bg} (${movie.title_en})`
+            categories: sortedOccupations.map(
+              (occupation) => `${occupation.title_bg} (${occupation.title_en})`
             ) // Категории за оста X
           }
         }
@@ -1089,13 +1125,13 @@ export class TopRecommendationsBarChart extends Component<
     const primaryHex = updatePrimaryColor(); // Извличане на новия цвят на темата
 
     // Определяне на отделни цветове за филми и сериали
-    const movieColor = chroma(primaryHex).darken(0.6).hex(); // Ярък цвят за филми
-    const seriesColor = chroma(primaryHex).brighten(0.6).hex(); // Тъмен цвят за сериали
+    const nonBrightOutlook = chroma(primaryHex).darken(0.6).hex(); // Ярък цвят за филми
+    const brightOutlook = chroma(primaryHex).brighten(0.6).hex(); // Тъмен цвят за сериали
 
     this.setState((prevState) => ({
       options: {
         ...prevState.options,
-        colors: [movieColor, seriesColor] // Актуализиране на цветовете
+        colors: [nonBrightOutlook, brightOutlook] // Актуализиране на цветовете
       }
     }));
   }

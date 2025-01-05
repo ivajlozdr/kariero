@@ -17,7 +17,9 @@ import {
   RecommendationData,
   Category,
   DataType,
-  Option
+  Option,
+  TopRecommendedOccupation,
+  MostNeededAbility
 } from "./home-types";
 
 // ==============================
@@ -90,11 +92,11 @@ export const fetchData = async (
       },
       {
         key: "topRecommendedOccupations",
-        endpoint: "/stats/platform/top-recommended-occupations?limit=2"
+        endpoint: "/stats/platform/top-recommended-occupations?limit=50"
       },
       {
         key: "topRecommendedRelatedOccupations",
-        endpoint: "/stats/platform/top-recommended-related-occupations?limit=2"
+        endpoint: "/stats/platform/top-recommended-related-occupations?limit=50"
       },
       {
         key: "mostNeededAbilities",
@@ -381,13 +383,13 @@ export function generateOptions(componentName: string, data: any): Option[] {
           icon: "bx bx-line-chart"
         },
         {
-          label: "Най-препоръчвани професии в платформата",
+          label: "Най-препоръчвана професия в платформата",
           value: mostRecommendedOccupation,
           subValue: mostRecommendedOccupationCount ?? 0,
           icon: "bi-briefcase"
         },
         {
-          label: "Най-препоръчвани професии по модела на други професии",
+          label: "Най-препоръчвана професия по модела на други професии",
           value: mostRecommendedRelatedOccupation,
           subValue: mostRecommendedRelatedOccupationCount ?? 0,
           icon: "bi-briefcase"
@@ -414,6 +416,21 @@ export function extractWidgetCardData(data: any) {
     mostRecommendedRelatedOccupationCount:
       data?.topRecommendedRelatedOccupations[0]?.recommendation_count ?? 0
   };
+}
+
+export function isTopRecommendedOccupationArray(
+  data: any
+): data is TopRecommendedOccupation[] {
+  return (
+    Array.isArray(data) &&
+    data.every(
+      (item) =>
+        typeof item.code === "string" &&
+        typeof item.title_bg === "string" &&
+        typeof item.title_en === "string" &&
+        typeof item.description === "string"
+    )
+  );
 }
 /**
  * Филтрира данни за таблица според категорията и връща определена страница.
@@ -470,45 +487,43 @@ export const paginateData = (
 };
 
 /**
- * Сортира данни за филми/сериали по категория.
+ * Сортира данни за професии по зададена категория.
  *
- * @param {MovieData[]} seriesData - Списък с данни за филми/сериали.
- * @param {string} category - Категория за сортиране (IMDb, Metascore, Rotten Tomatoes).
- * @returns {MovieData[]} - Сортирани данни.
+ * @template T - Типът данни (TopRecommendedOccupation или MostNeededAbility).
+ * @param {T[]} seriesData - Данни за професии.
+ * @param {string} category - Категория за сортиране (например "Count").
+ * @returns {T[]} - Сортирани данни по категория.
  */
-const sortByCategory = (
-  seriesData: MovieData[],
-  category: string
-): MovieData[] => {
-  const sorters: { [key: string]: (a: MovieData, b: MovieData) => number } = {
-    IMDb: (a, b) => b.imdbRating - a.imdbRating,
-    Metascore: (a, b) => b.metascore - a.metascore,
-    RottenTomatoes: (a, b) => b.rottenTomatoes - a.rottenTomatoes
+const sortByCategory = <T>(seriesData: T[], category: string): T[] => {
+  const sorters: { [key: string]: (a: T, b: T) => number } = {
+    Count: (a: any, b: any) =>
+      (b.recommendation_count ?? 0) - (a.recommendation_count ?? 0)
   };
+
   return sorters[category] ? seriesData.sort(sorters[category]) : seriesData;
 };
 
 /**
- * Пагинира сортирани данни за бар-чарт.
+ * Пагинира и сортира данни за бар-чарт.
  *
- * @param {MovieData[] | RecommendationData[]} seriesData - Списък с данни за филми/сериали.
+ * @template T - Типът данни (TopRecommendedOccupation или MostNeededAbility).
+ * @param {T[]} seriesData - Списък с данни за професии.
  * @param {number} currentPage - Текуща страница.
  * @param {number} pageSize - Брой елементи на страница.
- * @param {string} [category] - Категория за сортиране.
- * @returns {MovieData[] | RecommendationData[]} - Пагинирани и сортирани данни.
+ * @param {string} [category] - Категория за сортиране (по желание).
+ * @returns {T[]} - Сортирани и пагинирани данни.
  */
-export const paginateBarChartData = (
-  seriesData: (MovieData | RecommendationData)[], // Union of MovieData and RecommendationData
+export const paginateBarChartData = <T>(
+  seriesData: T[],
   currentPage: number,
   pageSize: number,
   category?: string
-): (MovieData | RecommendationData)[] => {
-  // Return type is also a union
+): T[] => {
   const sortedData = category
-    ? sortByCategory(seriesData, category)
+    ? sortByCategory<T>(seriesData, category)
     : seriesData;
-  const start = (currentPage - 1) * pageSize;
 
+  const start = (currentPage - 1) * pageSize;
   return sortedData.slice(start, start + pageSize);
 };
 
@@ -629,13 +644,13 @@ export const handleProsperityTableClick = (
  * Задава категория за сортиране на секция "Филми и сериали".
  *
  * @param {string} category - Избраната категория.
- * @param {React.Dispatch<React.SetStateAction<string>>} setMoviesAndSeriesSortCategory - Функция за задаване на категорията.
+ * @param {React.Dispatch<React.SetStateAction<string>>} setOccupationSortCategory - Функция за задаване на категорията.
  */
-export const handleMoviesAndSeriesSortCategory = (
+export const handleOccupationSortCategory = (
   category: string,
-  setMoviesAndSeriesSortCategory: React.Dispatch<React.SetStateAction<string>>
+  setOccupationSortCategory: React.Dispatch<React.SetStateAction<string>>
 ) => {
-  setMoviesAndSeriesSortCategory(category);
+  setOccupationSortCategory(category);
 };
 
 /**

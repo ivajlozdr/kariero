@@ -1,8 +1,15 @@
 import { FC, Fragment, useEffect, useState } from "react";
-import { TempDataType, MovieData, RecommendationData } from "../home-types";
+import {
+  TempDataType,
+  MovieData,
+  RecommendationData,
+  DataType,
+  TopRecommendedOccupation
+} from "../home-types";
 import {
   getTotalBarChartPages,
   handleBarChartPageChange,
+  isTopRecommendedOccupationArray,
   paginateBarChartData
 } from "../helper_functions";
 import { useMediaQuery } from "react-responsive";
@@ -10,31 +17,37 @@ import { Link } from "react-router-dom";
 import { TopRecommendationsBarChart } from "./Charts";
 
 interface TopRecommendationsChartComponentProps {
-  data: TempDataType;
+  dataOld: TempDataType;
+  data: DataType;
 }
 
 const TopRecommendationsChartComponent: FC<
   TopRecommendationsChartComponentProps
-> = ({ data }) => {
+> = ({ dataOld, data }) => {
   const [seriesDataForTopStatsChart, setSeriesDataForTopStatsChart] = useState<
-    (MovieData | RecommendationData)[]
+    TopRecommendedOccupation[]
   >([]);
 
   const pageSize = 5;
   const [currentTopChartPage, setCurrentTopChartPage] = useState(1);
 
   const totalTopChartPages = getTotalBarChartPages(
-    data.topRecommendations.length,
+    data.topRecommendedOccupations.length,
     pageSize
   );
 
   useEffect(() => {
     const paginatedDataForTopStats = paginateBarChartData(
-      data.topRecommendations,
+      data.topRecommendedOccupations,
       currentTopChartPage,
       pageSize
     );
-    setSeriesDataForTopStatsChart(paginatedDataForTopStats);
+
+    if (isTopRecommendedOccupationArray(paginatedDataForTopStats)) {
+      setSeriesDataForTopStatsChart(paginatedDataForTopStats);
+    } else {
+      console.warn("Invalid data type for paginatedDataForTopStats");
+    }
   }, [currentTopChartPage, data]);
 
   const handlePrevTopChartPage = () => {
@@ -42,7 +55,7 @@ const TopRecommendationsChartComponent: FC<
       "prev",
       currentTopChartPage,
       pageSize,
-      data.topRecommendations.length,
+      data.topRecommendedOccupations.length,
       setCurrentTopChartPage
     );
   };
@@ -52,11 +65,14 @@ const TopRecommendationsChartComponent: FC<
       "next",
       currentTopChartPage,
       pageSize,
-      data.topRecommendations.length,
+      data.topRecommendedOccupations.length,
       setCurrentTopChartPage
     );
   };
-
+  if (dataOld) console.log("adasdasdasd", dataOld.topRecommendations);
+  if (data) {
+    console.log("imsdanjjsdj", data.topRecommendedOccupations);
+  }
   const is1546 = useMediaQuery({ query: "(max-width: 1546px)" });
 
   return (
@@ -65,9 +81,7 @@ const TopRecommendationsChartComponent: FC<
         <div className="xl:col-span-6 col-span-12">
           <div className="box custom-box">
             <div className="custom-box-header">
-              <div className="box-title">
-                Най-често препоръчвани филми и сериали
-              </div>
+              <div className="box-title">Най-често препоръчвани професии</div>
             </div>
             <div className="box-body h-[22rem]">
               <div id="donut-simple">
@@ -92,10 +106,10 @@ const TopRecommendationsChartComponent: FC<
                   до{" "}
                   <b>
                     {currentTopChartPage === totalTopChartPages
-                      ? data.topRecommendations.length
+                      ? dataOld.topRecommendations.length
                       : currentTopChartPage * 5}{" "}
                   </b>
-                  от общо <b>{data.topRecommendations.length}</b> ( Страница{" "}
+                  от общо <b>{dataOld.topRecommendations.length}</b> ( Страница{" "}
                   <b>{currentTopChartPage}</b> )
                   <i className="bi bi-arrow-right ms-2 font-semibold"></i>
                 </div>

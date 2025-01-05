@@ -12,6 +12,11 @@ export interface Option {
   subValue?: number;
 }
 
+export interface OccupationOccupationSeriesType {
+  regularOccupations: TopRecommendedOccupation[];
+  relatedOccupations: MostNeededAbility[];
+}
+
 // Обобщени данни за платформата
 export interface DataType {
   usersCount: UsersCount[];

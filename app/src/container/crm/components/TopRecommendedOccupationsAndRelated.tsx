@@ -1,7 +1,12 @@
 import { FC, Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MostRecommendedOccupationsChart } from "./Charts";
-import { TempDataType } from "../home-types";
+import {
+  DataType,
+  MostNeededAbility,
+  OccupationOccupationSeriesType,
+  TopRecommendedOccupation
+} from "../home-types";
 import {
   paginateBarChartData,
   getTotalBarChartPages,
@@ -11,43 +16,49 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { occupationDisplayNames } from "../home-data";
 
-interface MoviesAndSeriesByRatingsChartComponentProps {
-  data: TempDataType;
+interface TopRecommendedOccupationsAndRelatedProps {
+  data: DataType;
 }
 
-const MoviesAndSeriesByRatingsChartComponent: FC<
-  MoviesAndSeriesByRatingsChartComponentProps
+const TopRecommendedOccupationsAndRelated: FC<
+  TopRecommendedOccupationsAndRelatedProps
 > = ({ data }) => {
   const pageSize = 5; // Размер на страницата (брой елементи на страница)
   const [currentChartPage, setCurrentChartPage] = useState(1); // Текущата страница на графиката
-  const [moviesAndSeriesSortCategory, setMoviesAndSeriesSortCategory] =
-    useState("IMDb"); // Категория за сортиране (IMDb, Metascore, RottenTomatoes)
+  const [occupationSortCategory, setOccupationSortCategory] =
+    useState("Occupations"); // Категория за сортиране (IMDb, Metascore, RottenTomatoes)
 
   // Меморизиране на данните за сериите за графиката на филмите
-  const seriesDataForMoviesAndSeriesByRatingsChart = useMemo(() => {
-    const sortedData =
-      moviesAndSeriesSortCategory === "IMDb"
-        ? data.sortedMoviesAndSeriesByIMDbRating // Ако е избрана IMDb, използвай IMDb рейтинги
-        : moviesAndSeriesSortCategory === "Metascore"
-        ? data.sortedMoviesAndSeriesByMetascore // Ако е избран Metascore, използвай Metascore
-        : data.sortedMoviesAndSeriesByRottenTomatoesRating; // Ако е избран RottenTomatoes, използвай Rotten Tomatoes рейтинг
+  const seriesDataForMoviesAndSeriesByRatingsChart: OccupationOccupationSeriesType =
+    useMemo(() => {
+      // Пагиниране на обикновени професии
+      const regularOccupations = paginateBarChartData<TopRecommendedOccupation>(
+        data.topRecommendedOccupations,
+        currentChartPage,
+        pageSize
+      );
 
-    // Връщаме данни с пагинация
-    return paginateBarChartData(
-      sortedData,
-      currentChartPage,
-      pageSize,
-      moviesAndSeriesSortCategory
-    );
-  }, [currentChartPage, moviesAndSeriesSortCategory, data]);
+      // Пагиниране на свързани професии
+      const relatedOccupations = paginateBarChartData<MostNeededAbility>(
+        data.topRecommendedRelatedOccupations,
+        currentChartPage,
+        pageSize
+      );
+
+      // Връщане на разделените данни
+      return {
+        regularOccupations,
+        relatedOccupations
+      };
+    }, [currentChartPage, data]);
 
   // Меморизиране на общия брой страници на графиката
   const totalChartPages = useMemo(() => {
     return getTotalBarChartPages(
-      data.sortedMoviesAndSeriesByIMDbRating.length, // Използваме дължината на IMDb рейтингите
+      data.topRecommendedOccupations.length, // Използваме дължината на IMDb рейтингите
       pageSize
     );
-  }, [data.sortedMoviesAndSeriesByIMDbRating.length, pageSize]);
+  }, [data.topRecommendedOccupations.length, pageSize]);
 
   // Обработчици за пагинация (предишна и следваща страница)
   const handlePrevChartPage = () => {
@@ -55,7 +66,7 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
       "prev", // Преминаване на предишната страница
       currentChartPage,
       pageSize,
-      data.sortedMoviesAndSeriesByIMDbRating.length,
+      data.topRecommendedOccupations.length,
       setCurrentChartPage
     );
   };
@@ -65,7 +76,7 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
       "next", // Преминаване на следващата страница
       currentChartPage,
       pageSize,
-      data.sortedMoviesAndSeriesByIMDbRating.length,
+      data.topRecommendedOccupations.length,
       setCurrentChartPage
     );
   };
@@ -95,7 +106,7 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
             >
               {`Най-препоръчвани ${
                 occupationDisplayNames[
-                  moviesAndSeriesSortCategory as keyof typeof occupationDisplayNames
+                  occupationSortCategory as keyof typeof occupationDisplayNames
                 ]
               }`}
             </div>
@@ -106,47 +117,46 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
                 role="group"
                 aria-label="Sort By"
               >
-                {["IMDb", "Metascore", "RottenTomatoes"].map(
-                  (category, index) => (
-                    <button
-                      key={category}
-                      type="button"
-                      className={`ti-btn-group !border-0 !text-xs !py-2 !px-3 ${
-                        category === moviesAndSeriesSortCategory
-                          ? "ti-btn-primary-full text-white"
-                          : "charts-options-unselected"
-                      } ${
-                        index === 0
-                          ? "rounded-l-md"
-                          : index === 2
-                          ? "rounded-r-md"
-                          : ""
-                      }`}
-                      // onClick={() =>
-                      //   handleMoviesAndSeriesSortCategory(
-                      //     category,
-                      //     setMoviesAndSeriesSortCategory
-                      //   )
-                      // }
-                    >
-                      {
-                        occupationDisplayNames[
-                          category as keyof typeof occupationDisplayNames
-                        ]
-                      }
-                    </button>
-                  )
-                )}
+                {["Occupations", "Related"].map((category, index) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className={`ti-btn-group !border-0 !text-xs !py-2 !px-3 ${
+                      category === occupationSortCategory
+                        ? "ti-btn-primary-full text-white"
+                        : "charts-options-unselected"
+                    } ${
+                      index === 0
+                        ? "rounded-l-md"
+                        : index === 2
+                        ? "rounded-r-md"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      handleOccupationSortCategory(
+                        category,
+                        setOccupationSortCategory
+                      )
+                    }
+                  >
+                    {
+                      occupationDisplayNames[
+                        category as keyof typeof occupationDisplayNames
+                      ]
+                    }
+                  </button>
+                ))}
               </div>
             </div>
           </div>
 
           <div className="box-body h-[21.75rem]">
             <div id="bar-basic">
-              {/* <MostRecommendedOccupationsChart
+              <MostRecommendedOccupationsChart
+                key={occupationSortCategory}
                 seriesData={seriesDataForMoviesAndSeriesByRatingsChart}
-                category={moviesAndSeriesSortCategory}
-              /> */}
+                category={occupationSortCategory}
+              />
             </div>
           </div>
           <div className="box-footer">
@@ -163,11 +173,11 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
                 до{" "}
                 <b>
                   {currentChartPage === totalChartPages
-                    ? data.sortedMoviesAndSeriesByIMDbRating.length
+                    ? data.topRecommendedOccupations.length
                     : currentChartPage * 5}{" "}
                 </b>
-                от общо <b>{data.sortedMoviesAndSeriesByIMDbRating.length}</b>{" "}
-                (Страница <b>{currentChartPage}</b> )
+                от общо <b>{data.topRecommendedOccupations.length}</b> (Страница{" "}
+                <b>{currentChartPage}</b> )
                 <i className="bi bi-arrow-right ms-2 font-semibold"></i>
               </div>
               <div className="ms-auto">
@@ -244,4 +254,4 @@ const MoviesAndSeriesByRatingsChartComponent: FC<
   );
 };
 
-export default MoviesAndSeriesByRatingsChartComponent;
+export default TopRecommendedOccupationsAndRelated;
