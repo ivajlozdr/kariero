@@ -14,12 +14,10 @@ import {
   HeatmapData,
   MovieProsperityData,
   MovieData,
-  RecommendationData,
   Category,
   DataType,
   Option,
-  TopRecommendedOccupation,
-  MostNeededAbility
+  TopRecommendedOccupation
 } from "./home-types";
 
 // ==============================
