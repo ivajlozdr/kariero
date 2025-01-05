@@ -17,7 +17,6 @@ import TopRecommendationsChartComponent from "./components/TopRecommendationsCha
 import CountryBarChartComponent from "./components/CountryBarChartComponent";
 import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
 import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
-import MoviesAndSeriesByRatingsChartComponent from "./components/BarChartComponent";
 import RedirectCard from "./components/RedirectCard";
 import { Link, useNavigate } from "react-router-dom";
 import face10 from "../../assets/images/faces/10.jpg";
@@ -225,7 +224,6 @@ const Crm: FC<CrmProps> = () => {
           <div className="xxl:col-span-6 col-span-12">
             <MoviesByProsperityBubbleChartComponent data={hardcodedData} />
             <GenrePopularityOverTimeComponent data={hardcodedData} />
-            <MoviesAndSeriesByRatingsChartComponent data={hardcodedData} />
           </div>
         </div>
         <div className="xxl:col-span-6 col-span-12">
