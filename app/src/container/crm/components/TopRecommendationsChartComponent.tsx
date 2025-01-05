@@ -1,8 +1,6 @@
 import { FC, Fragment, useEffect, useState } from "react";
 import {
   TempDataType,
-  MovieData,
-  RecommendationData,
   DataType,
   TopRecommendedOccupation
 } from "../home-types";
