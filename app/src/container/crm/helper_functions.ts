@@ -359,8 +359,6 @@ export function generateOptions(componentName: string, data: any): Option[] {
       break;
     }
     case "WidgetCardsComponent": {
-      const userCount = data?.usersCount[0]?.user_count ?? 0;
-      const distinctOccupations = data?.distinctOccupations.count ?? 0;
       const mostRecommendedOccupation =
         data?.topRecommendedOccupations[0]?.title_bg;
       const mostRecommendedOccupationCount =
@@ -371,16 +369,6 @@ export function generateOptions(componentName: string, data: any): Option[] {
         data?.topRecommendedRelatedOccupations[0]?.recommendation_count;
 
       options = [
-        {
-          label: "Общ брой потребители",
-          value: userCount,
-          icon: "bi-person-circle"
-        },
-        {
-          label: "Общ брой професии в платформата",
-          value: distinctOccupations,
-          icon: "bx bx-line-chart"
-        },
         {
           label: "Най-препоръчвана професия в платформата",
           value: mostRecommendedOccupation,
