@@ -1,10 +1,6 @@
 import { FC, Fragment } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
 import { Link } from "react-router-dom";
-import logo8 from "../../../../assets/images/company-logos/8.png";
-import logo6 from "../../../../assets/images/company-logos/6.png";
-import logo3 from "../../../../assets/images/company-logos/3.png";
-import logo5 from "../../../../assets/images/company-logos/5.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -12,9 +8,9 @@ import "swiper/css/navigation";
 // import required modules
 import { Autoplay, Navigation } from "swiper/modules";
 
-interface JobdetailsProps {}
+interface JobDetailsProps {}
 
-const Jobdetails: FC<JobdetailsProps> = () => {
+const JobDetails: FC<JobDetailsProps> = () => {
   return (
     <Fragment>
       <Pageheader
@@ -28,10 +24,7 @@ const Jobdetails: FC<JobdetailsProps> = () => {
             <div className="sm:flex align-top justify-between">
               <div>
                 <div className="sm:flex flex-wrap gap-2">
-                  <span className="avatar avatar-rounded avatar-lg">
-                    {" "}
-                    <img src={logo8} alt="" />{" "}
-                  </span>
+                  <span className="avatar avatar-rounded avatar-lg"> </span>
                   <div>
                     <h4 className="font-bold mb-0 flex items-center">
                       <Link to="#">UI Developer - Fresher</Link>
@@ -764,9 +757,7 @@ const Jobdetails: FC<JobdetailsProps> = () => {
                 <ul className="list-group list-group-flush">
                   <li className="list-group-item !border-t-0 !border-s-0 !border-e-0 mb-2">
                     <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border dark:border-defaultborder/10">
-                        <img src={logo3} alt="" />
-                      </span>
+                      <span className="avatar avatar-md !rounded-full bg-gray-200 border dark:border-defaultborder/10"></span>
                       <div className="ms-2 flex-grow">
                         <p className="font-semibold text-[.875rem] mb-1">
                           <Link to="#">Infratech PVT LTD</Link>
@@ -780,9 +771,7 @@ const Jobdetails: FC<JobdetailsProps> = () => {
                   </li>
                   <li className="list-group-item !border-s-0 !border-e-0  mb-2">
                     <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border">
-                        <img src={logo6} alt="" />
-                      </span>
+                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
                       <div className="ms-2 flex-grow">
                         <p className="font-semibold text-[.875rem] mb-1">
                           <Link to="#">Spruko Technologies PVT LTD</Link>
@@ -796,9 +785,7 @@ const Jobdetails: FC<JobdetailsProps> = () => {
                   </li>
                   <li className="list-group-item !border-s-0 !border-e-0  mb-2">
                     <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border">
-                        <img src={logo8} alt="" />
-                      </span>
+                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
                       <div className="ms-2 flex-grow">
                         <p className="font-semibold text-[.875rem] mb-1">
                           <Link to="#">Hardware Private Solutions </Link>
@@ -812,9 +799,7 @@ const Jobdetails: FC<JobdetailsProps> = () => {
                   </li>
                   <li className="list-group-item !border-b-0 !border-s-0 !border-e-0  mb-0">
                     <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border">
-                        <img src={logo5} alt="" />
-                      </span>
+                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
                       <div className="ms-2 flex-grow">
                         <p className="font-semibold text-[.875rem] mb-1">
                           <Link to="#"> G Technical Solutions</Link>
@@ -880,4 +865,4 @@ const Jobdetails: FC<JobdetailsProps> = () => {
   );
 };
 
-export default Jobdetails;
+export default JobDetails;

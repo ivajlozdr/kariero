@@ -16,6 +16,7 @@ import ResetRequest from "./container/authentication/resetpassword/resetrequest.
 import Contact from "./container/contact/Contact.tsx";
 import Landing from "./container/landing/landing.tsx";
 import LandingLayout from "./pages/LandingLayout.tsx";
+import JobDetails from "./container/jobdetails/JobDetails.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route index path="home" element={<Crm />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="job/details" element={<JobDetails />} />
           </Route>
           <Route path="/" element={<Authenticationlayout />}>
             <Route
