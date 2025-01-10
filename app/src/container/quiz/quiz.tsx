@@ -13,8 +13,11 @@ import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 import Loader from "../../pages/Loader";
 import QuizNotification from "../../components/common/notification/QuizNotification";
+import { fake } from "./hardcodedTestData";
+import { useNavigate } from "react-router-dom";
 
 const QuizComponent: React.FC = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
@@ -113,6 +116,15 @@ const QuizComponent: React.FC = () => {
         }}
       >
         print isSubmitting
+      </button>
+      <button
+        onClick={() => {
+          navigate("/app/job/details", {
+            state: { fullCareerDetails: fake }
+          });
+        }}
+      >
+        JUMP TO DETAILS
       </button>
     </div>
   );
