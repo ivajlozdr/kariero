@@ -56,8 +56,6 @@ const Careers: React.FC<CareersProps> = ({
         classNames="fade"
         unmountOnExit
       >
-        {/* <div className="career-paths-container flex flex-wrap gap-6 justify-center items-center">
-        </div> */}
         <div className="careers-for-path">
           <h2 className="text-3xl font-bold text-center text-primary mb-8">
             Подходящи за Вас сфери
@@ -68,7 +66,7 @@ const Careers: React.FC<CareersProps> = ({
                 key={index}
                 pathName={path.careerPath}
                 reason={path.reason}
-                careers={path.listOfCareers.map((career, i) => career.career)}
+                careers={path.listOfCareers.map((career) => career.career)}
                 onClick={() => handlePathSelection(path)}
               />
             ))}
