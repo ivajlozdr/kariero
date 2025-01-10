@@ -13,7 +13,11 @@ const CareerCard: React.FC<CareerCardProps> = ({
   const hardcodedSalary = "60,000 - 90,000 лв.";
 
   const handleClick = () => {
-    setNotification({ message: reason });
+    setNotification({ message: title, type: "confirm" });
+  };
+
+  const handleReasonClick = () => {
+    setNotification({ message: reason, type: "reason" });
   };
 
   return (
@@ -21,6 +25,7 @@ const CareerCard: React.FC<CareerCardProps> = ({
       className="relative group w-full max-w-sm cursor-pointer transition-all duration-300 hover:scale-105"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div className="absolute inset-0 rounded-xl border-4 border-primary/50 group-hover:border-secondary group-hover:border-6"></div>
 
@@ -54,7 +59,7 @@ const CareerCard: React.FC<CareerCardProps> = ({
           <div className="flex items-center">
             <span
               className="italic text-xs text-primary cursor-pointer"
-              onClick={handleClick}
+              onClick={handleReasonClick}
             >
               Защо тази кариера?
             </span>

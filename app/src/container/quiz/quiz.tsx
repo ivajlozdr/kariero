@@ -25,6 +25,7 @@ const QuizComponent: React.FC = () => {
   >([]);
   const [notification, setNotification] = useState<{
     message: string;
+    type: string;
   } | null>(null);
 
   useEffect(() => {
@@ -53,6 +54,7 @@ const QuizComponent: React.FC = () => {
       {notification && (
         <QuizNotification
           message={notification.message}
+          type={notification.type}
           onClose={() => {
             console.log("Notification closed!");
             setNotification(null);
