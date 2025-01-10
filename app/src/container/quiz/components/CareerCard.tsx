@@ -7,14 +7,11 @@ const CareerCard: React.FC<CareerCardProps> = ({
   description,
   skills,
   reason,
-  setNotification
+  setNotification,
+  handleClick
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hardcodedSalary = "60,000 - 90,000 лв.";
-
-  const handleClick = () => {
-    setNotification({ message: title, type: "confirm" });
-  };
 
   const handleReasonClick = () => {
     setNotification({ message: reason, type: "reason" });

@@ -3,7 +3,8 @@ import {
   Scores,
   FullCareerDetails,
   CareerRecommendation,
-  UserResponses
+  UserResponses,
+  QuizNotificationType
 } from "./quiz-types";
 import { initialScores } from "./quiz-data";
 import { CSSTransition } from "react-transition-group";
@@ -23,10 +24,9 @@ const QuizComponent: React.FC = () => {
   const [careerRecommendations, setCareerRecommendations] = useState<
     CareerRecommendation[]
   >([]);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: string;
-  } | null>(null);
+  const [notification, setNotification] = useState<QuizNotificationType | null>(
+    null
+  );
 
   useEffect(() => {
     const submitData = async () => {
@@ -59,6 +59,7 @@ const QuizComponent: React.FC = () => {
             console.log("Notification closed!");
             setNotification(null);
           }}
+          onConfirm={notification.onConfirm}
         />
       )}
       <CSSTransition

@@ -310,9 +310,10 @@ export interface UserResponses {
   answer: string;
 }
 
-interface QuizNotification {
+export interface QuizNotificationType {
   message: string;
   type: string;
+  onConfirm?: () => void;
 }
 
 export interface CareerPathCardProps {
@@ -340,14 +341,15 @@ export interface CareerCardProps {
   skills: string[];
   reason: string;
   setNotification: React.Dispatch<
-    React.SetStateAction<QuizNotification | null>
+    React.SetStateAction<QuizNotificationType | null>
   >;
+  handleClick: () => void;
 }
 
 export interface CareersProps {
   careerPaths: CareerPath[];
   careersData: FullCareerDetails[];
   setNotification: React.Dispatch<
-    React.SetStateAction<QuizNotification | null>
+    React.SetStateAction<QuizNotificationType | null>
   >;
 }

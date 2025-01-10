@@ -4,12 +4,14 @@ interface NotificationProps {
   message: string;
   type: string;
   onClose: () => void;
+  onConfirm?: () => void;
 }
 
 const QuizNotification: React.FC<NotificationProps> = ({
   message,
   type,
-  onClose
+  onClose,
+  onConfirm
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -22,6 +24,14 @@ const QuizNotification: React.FC<NotificationProps> = ({
     setTimeout(() => {
       onClose();
     }, 300);
+  };
+
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+      console.log("true!");
+    }
+    handleClose();
   };
 
   return (
@@ -64,7 +74,7 @@ const QuizNotification: React.FC<NotificationProps> = ({
           <div className="flex justify-center space-x-4">
             <button
               className="px-6 py-3 bg-white dark:text-black text-secondary font-bold rounded-lg hover:bg-gray-200 transition-colors"
-              onClick={handleClose}
+              onClick={handleConfirm}
               aria-label="Close notification"
             >
               Да

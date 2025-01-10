@@ -3,6 +3,7 @@ import { CareerPath, CareersProps } from "../quiz-types";
 import CareerCard from "./CareerCard";
 import CareerPathCard from "./CareerPathCard";
 import { CSSTransition } from "react-transition-group";
+import { useNavigate } from "react-router-dom";
 
 // Основен компонент Careers
 const Careers: React.FC<CareersProps> = ({
@@ -12,7 +13,7 @@ const Careers: React.FC<CareersProps> = ({
 }) => {
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
   const [showCareerCards, setShowCareerCards] = useState(true);
-
+  const navigate = useNavigate();
   const handlePathSelection = (path: CareerPath) => {
     setShowCareerCards(false); // Start hiding CareerPathCards
     setTimeout(() => {
@@ -31,6 +32,20 @@ const Careers: React.FC<CareersProps> = ({
 
   const getCareerDetailsByIndex = (index: number) => {
     return careersData[index] || null;
+  };
+
+  const handleClick = (fullCareerDetails: any) => {
+    const confirmNavigation = () => {
+      navigate("/app/job/details", {
+        state: { fullCareerDetails: fullCareerDetails }
+      });
+    };
+
+    setNotification({
+      message: fullCareerDetails.translated.title,
+      type: "confirm",
+      onConfirm: confirmNavigation
+    });
   };
 
   return (
@@ -117,6 +132,7 @@ const Careers: React.FC<CareersProps> = ({
                   )}
                   reason={careerReason}
                   setNotification={setNotification}
+                  handleClick={() => handleClick(fullCareerDetails)}
                 />
               ) : (
                 <div key={index} className="text-red-500">

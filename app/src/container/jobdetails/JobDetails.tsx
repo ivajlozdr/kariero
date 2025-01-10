@@ -1,6 +1,6 @@
 import { FC, Fragment } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -11,6 +11,8 @@ import { Autoplay, Navigation } from "swiper/modules";
 interface JobDetailsProps {}
 
 const JobDetails: FC<JobDetailsProps> = () => {
+  const location = useLocation();
+  const { fullCareerDetails } = location.state || {};
   return (
     <Fragment>
       <Pageheader
@@ -27,7 +29,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                   <span className="avatar avatar-rounded avatar-lg"> </span>
                   <div>
                     <h4 className="font-bold mb-0 flex items-center">
-                      <Link to="#">UI Developer - Fresher</Link>
+                      <Link to="#">{fullCareerDetails.translated.title}</Link>
                     </h4>
                     <Link to="#" className="font-semibold">
                       <i className="bi bi-building"></i> Spruko Technologies
