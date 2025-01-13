@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useState, useEffect } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
 import { Link, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,9 +12,24 @@ interface JobDetailsProps {}
 
 const JobDetails: FC<JobDetailsProps> = () => {
   const location = useLocation();
-  const { fullCareerDetails } = location.state || {};
+  const [isHovered, setIsHovered] = useState(false);
+  const [fullCareerDetails, setFullCareerDetails] = useState(() => {
+    const savedDetails = localStorage.getItem("fullCareerDetails");
+    return savedDetails
+      ? JSON.parse(savedDetails)
+      : location.state?.fullCareerDetails;
+  });
 
-  console.log("fullCareerDetails: ", fullCareerDetails)
+  useEffect(() => {
+    if (fullCareerDetails) {
+      localStorage.setItem(
+        "fullCareerDetails",
+        JSON.stringify(fullCareerDetails)
+      );
+    }
+  }, [fullCareerDetails]);
+
+  console.log("fullCareerDetails: ", fullCareerDetails);
   return (
     <Fragment>
       <Pageheader
@@ -30,13 +45,30 @@ const JobDetails: FC<JobDetailsProps> = () => {
                 <div className="sm:flex flex-wrap gap-2">
                   <span className="avatar avatar-rounded avatar-lg"> </span>
                   <div>
-                    <h4 className="font-bold mb-0 flex items-center">
-                      <Link to="#">{fullCareerDetails.translated.title}</Link>
+                    <div className="mb-4">
+                      <h4 className="font-bold mb-0 flex items-center relative leading-tight">
+                        {fullCareerDetails.translated.title}
+                        {fullCareerDetails.occupation.tags.bright_outlook && (
+                          <span className="relative group ml-2">
+                            <i className="ti ti-seedling text-primary"></i>
+                            <span className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-3 py-2 text-xs font-medium text-white bg-primary rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
+                              🌱 Зелена професия
+                              <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rotate-45 z-[-1]"></span>
+                            </span>
+                          </span>
+                        )}
+                      </h4>
+                      <h4 className="font-bold text-defaulttextcolor/65 mb-0 flex text-lg italic items-center relative leading-tight">
+                        ({fullCareerDetails.occupation.title})
+                      </h4>
+                    </div>
+                    <h4 className="font-semibold mb-0 flex items-center">
+                      {fullCareerDetails.occupation.tags.bright_outlook && (
+                        <span className="text-secondary text-sm">
+                          професия с ярко бъдеще
+                        </span>
+                      )}
                     </h4>
-                    <Link to="#" className="font-semibold">
-                      <i className="bi bi-building"></i> Spruko Technologies
-                      .PVT.LTD
-                    </Link>
                     <div className="sm:flex text-[.875rem] mt-4">
                       <div className="mb-2 sm:mb-0">
                         <p className="mb-1">
@@ -44,7 +76,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                           Karnataka
                         </p>
                         <p>
-                          <i className="bi bi-briefcase me-1"></i>1 - 3+ years
+                          <i className="ti ti-seedling me-1"></i>1 - 3+ years
                           Experience
                         </p>
                       </div>
@@ -148,68 +180,98 @@ const JobDetails: FC<JobDetailsProps> = () => {
               </div>
             </div>
             <div className="box custom-box">
-              <div className="box-body">
-                <h5 className="font-semibold">Job Description</h5>
-                <p className="opacity-[0.9]">
-                  Est amet sit vero sanctus labore no sed ipsum ipsum nonumy.
-                  Sit ipsum sanctus ea magna est. Aliquyam sed amet. Kasd diam
-                  rebum sit ipsum ipsum erat et kasd.Est amet sit vero sanctus
-                  labore no sed ipsum ipsum nonumy vero sanctus labore.A
-                  officiis optio temporibus minima facilis...
-                </p>
-                <p className="mb-6 opacity-[0.9]">
-                  Sit ipsum sanctus ea magna est. Aliquyam sed amet. Kasd diam
-                  rebum sit ipsum ipsum erat et kasd.Est amet sit vero sanctus
-                  labore no sed ipsum ipsum nonumy vero sanctus labore..
-                </p>
-                <h5 className="font-semibold">Key Responsibilities</h5>
-                <ol className="list-group !border-0 list-unstyled list-group-numbered mb-4 ps-8 list-decimal">
-                  <li className="list-group-item !border-0 !px-0">
-                    Design thoughtful, beautiful, and useful software user
-                    interfaces and experiences in a team environment..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Create user-centered designs by considering market analysis,
-                    customer feedback, site metrics, and usability findings.
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Work with stakeholders to plan projects for effective
-                    delivery while maintaining high standards for design..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Be a passionate and effective advocate for design with
-                    non-design audiences..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Use business requirements, user and market research to
-                    assist in developing scenarios, use cases, and high-level
-                    requirements..
-                  </li>
-                </ol>
-                <h5 className="font-semibold">Requirements</h5>
-                <ol className="list-group !border-0 list-unstyled list-group-numbered mb-0 ps-8 list-decimal">
-                  <li className="list-group-item !border-0 !px-0">
-                    Design thoughtful, beautiful, and useful software user
-                    interfaces and experiences in a team environment..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Create user-centered designs by considering market analysis,
-                    customer feedback, site metrics, and usability findings.
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Work with stakeholders to plan projects for effective
-                    delivery while maintaining high standards for design..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-1 !pt-0 !px-0">
-                    Be a passionate and effective advocate for design with
-                    non-design audiences..
-                  </li>
-                  <li className="list-group-item !border-0 !pb-0 !pt-0 !px-0">
-                    Use business requirements, user and market research to
-                    assist in developing scenarios, use cases, and high-level
-                    requirements..
-                  </li>
-                </ol>
+              <div className="box-body space-y-8">
+                <div>
+                  <h5 className="font-semibold text-lg text-primary mb-4">
+                    Описание на професията
+                  </h5>
+                  <p className="text-sm  opacity-90 leading-relaxed">
+                    {fullCareerDetails.translated.description}
+                  </p>
+                </div>
+
+                <div className="space-y-8">
+                  <h5 className="font-semibold text-lg text-primary">
+                    Най-нужни качества за тази професия
+                  </h5>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="space-y-4">
+                      <h6 className="font-semibold border-l-4 border-primary pl-3">
+                        Способности
+                      </h6>
+                      <ol
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        className={`list-none overflow-y-auto space-y-2 pr-2 transition-all duration-300 ${
+                          isHovered ? "h-[14rem]" : "h-[10rem]"
+                        }`}
+                      >
+                        {fullCareerDetails.translated.abilities.map(
+                          (item: any, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
+                            >
+                              <i className="inline-block mr-3 ti ti-user-star text-primary"></i>
+                              {item.translated_name}
+                            </li>
+                          )
+                        )}
+                      </ol>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h6 className="font-semibold text-md border-l-4 border-primary pl-3">
+                        Умения
+                      </h6>
+                      <ol
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        className={`list-none overflow-y-auto space-y-2 pr-2 transition-all duration-300 ${
+                          isHovered ? "h-[15rem]" : "h-[10rem]"
+                        }`}
+                      >
+                        {fullCareerDetails.translated.skills.map(
+                          (item: any, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
+                            >
+                              <i className="inline-block mr-3 ti ti-book text-primary"></i>
+                              {item.translated_name}
+                            </li>
+                          )
+                        )}
+                      </ol>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h6 className="font-semibold text-md border-l-4 border-primary pl-3">
+                        Знания
+                      </h6>
+                      <ol
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        className={`list-none overflow-y-auto space-y-2 pr-2 transition-all duration-300 ${
+                          isHovered ? "h-[15rem]" : "h-[10rem]"
+                        }`}
+                      >
+                        {fullCareerDetails.translated.knowledge.map(
+                          (item: any, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
+                            >
+                              <i className="inline-block mr-3 ti ti-brain text-primary"></i>
+                              {item.translated_name}
+                            </li>
+                          )
+                        )}
+                      </ol>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="box custom-box  !bg-primary/10 !border-0 !shadow-none">
@@ -755,66 +817,29 @@ const JobDetails: FC<JobDetailsProps> = () => {
             </div>
             <div className="box custom-box border dark:border-defaultborder/10">
               <div className="box-header">
-                <div className="box-title">Featured Companies</div>
+                <div className="box-title">Сходни професии</div>
               </div>
               <div className="box-body !p-0">
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item !border-t-0 !border-s-0 !border-e-0 mb-2">
-                    <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border dark:border-defaultborder/10"></span>
-                      <div className="ms-2 flex-grow">
-                        <p className="font-semibold text-[.875rem] mb-1">
-                          <Link to="#">Infratech PVT LTD</Link>
+                <ul className="list-group  list-group-flush">
+                  {fullCareerDetails.translated.related_occupations.map(
+                    (item: any, index: number) => (
+                      <li
+                        key={index}
+                        className="list-group-item d-flex align-items-center !border-0 hover:bg-primary/70 hover:text-white transition group"
+                      >
+                        <p className="mb-0 me-4 d-flex align-items-center">
+                          <i className="bi bi-briefcase text-primary transition-colors group-hover:text-secondary me-2"></i>
+                          {item.translated_name} (
+                          {
+                            fullCareerDetails.related_occupations.occupation[
+                              index
+                            ].code
+                          }
+                          )
                         </p>
-                        <p className="mb-0 me-4">
-                          <i className="bi bi-briefcase text-muted"></i> React
-                          Lead Developer{" "}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="list-group-item !border-s-0 !border-e-0  mb-2">
-                    <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
-                      <div className="ms-2 flex-grow">
-                        <p className="font-semibold text-[.875rem] mb-1">
-                          <Link to="#">Spruko Technologies PVT LTD</Link>
-                        </p>
-                        <p className="mb-0 me-4">
-                          <i className="bi bi-briefcase text-muted"></i> HTML
-                          Developer - Fresher
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="list-group-item !border-s-0 !border-e-0  mb-2">
-                    <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
-                      <div className="ms-2 flex-grow">
-                        <p className="font-semibold text-[.875rem] mb-1">
-                          <Link to="#">Hardware Private Solutions </Link>
-                        </p>
-                        <p className="mb-0 me-4">
-                          <i className="bi bi-briefcase text-muted"></i>{" "}
-                          Wordpress Developer
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="list-group-item !border-b-0 !border-s-0 !border-e-0  mb-0">
-                    <div className="flex">
-                      <span className="avatar avatar-md !rounded-full bg-gray-200 border"></span>
-                      <div className="ms-2 flex-grow">
-                        <p className="font-semibold text-[.875rem] mb-1">
-                          <Link to="#"> G Technical Solutions</Link>
-                        </p>
-                        <p className="mb-0 me-4">
-                          <i className="bi bi-briefcase text-muted"></i> Vuejs
-                          Frontend Developer
-                        </p>
-                      </div>
-                    </div>
-                  </li>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
               <div className="box-footer">
