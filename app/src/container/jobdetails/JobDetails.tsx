@@ -13,14 +13,16 @@ interface JobDetailsProps {}
 const JobDetails: FC<JobDetailsProps> = () => {
   const location = useLocation();
   const { fullCareerDetails } = location.state || {};
+
+  console.log("fullCareerDetails: ", fullCareerDetails)
   return (
     <Fragment>
       <Pageheader
-        currentpage="Job Details"
-        activepage="Jobs"
-        mainpage="Job Details"
+        currentpage={"Детайли за " + fullCareerDetails.translated.title}
+        activepage="Кариери"
+        mainpage={fullCareerDetails.translated.title}
       />
-      <div className="container">
+      <div className="px-10">
         <div className="box custom-box">
           <div className="box-body">
             <div className="sm:flex align-top justify-between">
