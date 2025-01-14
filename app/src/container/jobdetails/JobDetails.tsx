@@ -710,18 +710,17 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     (item: any, index: number) => (
                       <li
                         key={index}
-                        className="list-group-item !border-t-0 !border-s-0 !border-e-0 mb-2 hover:bg-primary/70 !hover:text-white transition group"
+                        className={`list-group-item ${
+                          index === 0 ? `!border-t-0` : `!border-b-0`
+                        } !border-s-0 !border-e-0 hover:bg-primary/70 !hover:text-white transition group`}
                       >
                         <div className="sm:flex items-center">
-                          <span className="avatar avatar-md !rounded-full bg-primary/10 !text-primary border dark:border-defaultborder/10 flex items-center justify-center">
-                            <i
-                              className="ti ti-clipboard-text"
-                              style={{ fontSize: "1.5rem" }}
-                            ></i>
+                          <span className="avatar avatar-md !rounded-full bg-primary/10 border dark:border-defaultborder/10 flex items-center justify-center">
+                            <i className="ti ti-clipboard-text text-primary group-hover:text-secondary text-[1.5rem]"></i>
                           </span>
 
                           <div className="ms-2 flex-grow max-w-[85%] relative">
-                            <p className="font-semibold text-[.875rem] whitespace-normal p-1 overflow-ellipsis overflow-hidden transition-all duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
+                            <p className="font-semibold text-[.875rem] whitespace-normal p-1 overflow-hidden transition-[max-height] duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
                               {item.translated_name}
                             </p>
                           </div>
@@ -730,15 +729,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     )
                   )}
                 </ul>
-              </div>
-
-              <div className="box-footer">
-                <Link
-                  to="#"
-                  className="text-primary font-semibold text-[.875rem] mt-2"
-                >
-                  View All <i className="fe fe-arrow-right"></i>
-                </Link>
               </div>
             </div>
             <div className="box custom-box border dark:border-defaultborder/10">
@@ -767,14 +757,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     )
                   )}
                 </ul>
-              </div>
-              <div className="box-footer">
-                <Link
-                  to="#"
-                  className="text-primary font-semibold text-[.875rem] mt-2"
-                >
-                  View All <i className="fe fe-arrow-right"></i>
-                </Link>
               </div>
             </div>
             <div className="box custom-box">
