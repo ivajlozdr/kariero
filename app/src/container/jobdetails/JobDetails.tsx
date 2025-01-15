@@ -1,12 +1,8 @@
 import { FC, Fragment, useState, useEffect } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
 import { Link, useLocation } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
 
 // import required modules
-import { Autoplay, Navigation } from "swiper/modules";
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
 import { FullCareerDetails } from "../quiz/quiz-types";
@@ -17,7 +13,6 @@ interface JobDetailsProps {}
 
 const JobDetails: FC<JobDetailsProps> = () => {
   const location = useLocation();
-  const [isHovered, setIsHovered] = useState(false);
   const [fullCareerDetails, setFullCareerDetails] = useState<FullCareerDetails>(
     () => {
       const savedDetails = localStorage.getItem("fullCareerDetails");

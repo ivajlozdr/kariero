@@ -1,6 +1,4 @@
 import { useState } from "react";
-import "swiper/css";
-import "swiper/css/navigation";
 import { FullCareerDetails } from "../../quiz/quiz-types";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
