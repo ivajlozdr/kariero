@@ -148,43 +148,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
         <div className="grid grid-cols-12 gap-6">
           <div className="xxl:col-span-8 col-span-12">
             <div className="box custom-box">
-              <div className="box-header">
-                <div className="box-title">Job Highlights</div>
-              </div>
-              <div className="box-body">
-                <div className="grid grid-cols-12 gap-6">
-                  <div className="sm:col-span-4 col-span-12">
-                    <p className="text-[.875rem] mb-2">
-                      <span className="avatar !rounded-full me-2 bg-light !text-defaulttextcolor">
-                        <i className="ri-time-line text-[0.9375rem]"></i>
-                      </span>
-                      09:30 AM - 06:00 PM
-                    </p>
-                    <p className="text-[.875rem] mb-2">
-                      <span className="avatar !rounded-full me-2 bg-light !text-defaulttextcolor">
-                        <i className="bi bi-mortarboard text-[0.9375rem]"></i>
-                      </span>
-                      Graduate and Above
-                    </p>
-                  </div>
-                  <div className="sm:col-span-4 col-span-12">
-                    <p className="text-[.875rem] mb-2">
-                      <span className="avatar !rounded-full me-2 bg-light !text-defaulttextcolor">
-                        <i className="bi bi-calendar text-[0.9375rem]"></i>
-                      </span>
-                      5 Working Days
-                    </p>
-                    <p className="text-[.875rem] mb-2">
-                      <span className="avatar !rounded-full me-2 bg-light !text-defaulttextcolor">
-                        <i className="bi bi-person-check text-[0.9375rem]"></i>
-                      </span>
-                      Bachelors Preferred
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="box custom-box">
               <div className="box-body space-y-8">
                 <div>
                   <h5 className="font-semibold text-lg text-primary mb-4">
