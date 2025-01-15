@@ -1,9 +1,9 @@
 import { FC, Fragment, useState, useEffect } from "react";
-import TableComponent from "./components/TableComponent";
-import TopRecommendationsChartComponent from "./components/TopRecommendationsChartComponent";
-import CountryBarChartComponent from "./components/CountryBarChartComponent";
-import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
-import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
+// import TableComponent from "./components/TableComponent";
+// import TopRecommendationsChartComponent from "./components/TopRecommendationsChartComponent";
+// import CountryBarChartComponent from "./components/CountryBarChartComponent";
+// import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
+// import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import RedirectCard from "./components/RedirectCard";
 import { useNavigate } from "react-router-dom";
 import { DataType, UserData } from "./home-types";
