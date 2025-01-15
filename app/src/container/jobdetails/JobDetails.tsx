@@ -8,18 +8,22 @@ import "swiper/css/navigation";
 // import required modules
 import { Autoplay, Navigation } from "swiper/modules";
 import PaginatedTasks from "./components/Tasks";
+import RelatedOccupations from "./components/RelatedOccupations";
+import { FullCareerDetails } from "../quiz/quiz-types";
 
 interface JobDetailsProps {}
 
 const JobDetails: FC<JobDetailsProps> = () => {
   const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
-  const [fullCareerDetails, setFullCareerDetails] = useState(() => {
-    const savedDetails = localStorage.getItem("fullCareerDetails");
-    return savedDetails
-      ? JSON.parse(savedDetails)
-      : location.state?.fullCareerDetails;
-  });
+  const [fullCareerDetails, setFullCareerDetails] = useState<FullCareerDetails>(
+    () => {
+      const savedDetails = localStorage.getItem("fullCareerDetails");
+      return savedDetails
+        ? JSON.parse(savedDetails)
+        : location.state?.fullCareerDetails;
+    }
+  );
 
   useEffect(() => {
     if (fullCareerDetails) {
@@ -698,34 +702,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
           </div>
           <div className="xxl:col-span-4 col-span-12">
             <PaginatedTasks tasks={fullCareerDetails.translated.tasks} />
-            <div className="box custom-box border dark:border-defaultborder/10">
-              <div className="box-header">
-                <div className="box-title">Сходни професии</div>
-              </div>
-              <div className="box-body !p-0">
-                <ul className="list-group  list-group-flush">
-                  {fullCareerDetails.translated.related_occupations.map(
-                    (item: any, index: number) => (
-                      <li
-                        key={index}
-                        className="list-group-item d-flex align-items-center !border-0 hover:bg-primary/70 hover:text-white transition group"
-                      >
-                        <p className="mb-0 me-4 d-flex align-items-center">
-                          <i className="bi bi-briefcase text-primary transition-colors group-hover:text-secondary me-2"></i>
-                          {item.translated_name} (
-                          {
-                            fullCareerDetails.related_occupations.occupation[
-                              index
-                            ].code
-                          }
-                          )
-                        </p>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            </div>
+            <RelatedOccupations fullCareerDetails={fullCareerDetails} />
           </div>
         </div>
       </div>
