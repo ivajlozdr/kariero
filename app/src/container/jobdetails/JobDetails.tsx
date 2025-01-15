@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Autoplay, Navigation } from "swiper/modules";
+import PaginatedTasks from "./components/Tasks";
 
 interface JobDetailsProps {}
 
@@ -43,7 +44,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
             <div className="sm:flex align-top justify-between">
               <div>
                 <div className="sm:flex flex-wrap gap-2">
-                  <span className="avatar avatar-rounded avatar-lg"> </span>
                   <div>
                     <div className="mb-4">
                       <h4 className="font-bold mb-0 flex items-center relative leading-tight">
@@ -69,7 +69,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                         </span>
                       )}
                     </h4>
-                    <div className="sm:flex text-[.875rem] mt-4">
+                    {/* <div className="sm:flex text-[.875rem] mt-4">
                       <div className="mb-2 sm:mb-0">
                         <p className="mb-1">
                           <i className="bi bi-geo-alt me-1"></i>Banglore,
@@ -104,7 +104,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                       >
                         <i className="bi bi-briefcase me-1"></i>13 Openings
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -279,7 +279,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                 <div className="grid grid-cols-12 items-center">
                   <div className="lg:col-span-6 col-span-12">
                     <h5 className="font-semibold mb-0">
-                      🖐 Was this job fit for someone?
+                      🖐 Искате да споделите тази кариера с някого?
                     </h5>
                   </div>
                   <div className="lg:col-span-6 col-span-12 text-end">
@@ -287,7 +287,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                       to="#"
                       className="ti-btn ti-btn-success-full ti-btn-lg dark:!border-defaultborder/10"
                     >
-                      <i className="ri-share-line me-2"></i>Share Now
+                      <i className="ri-share-line me-2"></i>Споделете
                     </Link>
                   </div>
                 </div>
@@ -295,11 +295,10 @@ const JobDetails: FC<JobDetailsProps> = () => {
             </div>
             <div>
               <h4 className="font-semibold mb-0 !text-defaulttextcolor">
-                Related Jobs
+                Обяви за {fullCareerDetails.translated.title}
               </h4>
               <p className="!text-defaulttextcolor text-defaultsize mb-4">
-                Sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua
+                Разгледайте различни обяви.
               </p>
               <Swiper
                 spaceBetween={30}
@@ -698,39 +697,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
             </div>
           </div>
           <div className="xxl:col-span-4 col-span-12">
-            <div className="box custom-box border dark:border-defaultborder/10">
-              <div className="box-header">
-                <div className="box-title">
-                  Често давани задания за професията
-                </div>
-              </div>
-              <div className="box-body !p-0">
-                <ul className="list-group list-group-flush">
-                  {fullCareerDetails.translated.tasks.map(
-                    (item: any, index: number) => (
-                      <li
-                        key={index}
-                        className={`list-group-item ${
-                          index === 0 ? `!border-t-0` : `!border-b-0`
-                        } !border-s-0 !border-e-0 hover:bg-primary/70 !hover:text-white transition group`}
-                      >
-                        <div className="sm:flex items-center">
-                          <span className="avatar avatar-md !rounded-full bg-primary/10 border dark:border-defaultborder/10 flex items-center justify-center">
-                            <i className="ti ti-clipboard-text text-primary group-hover:text-secondary text-[1.5rem]"></i>
-                          </span>
-
-                          <div className="ms-2 flex-grow max-w-[85%] relative">
-                            <p className="font-semibold text-[.875rem] whitespace-normal p-1 overflow-hidden transition-[max-height] duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
-                              {item.translated_name}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            </div>
+            <PaginatedTasks tasks={fullCareerDetails.translated.tasks} />
             <div className="box custom-box border dark:border-defaultborder/10">
               <div className="box-header">
                 <div className="box-title">Сходни професии</div>
@@ -757,42 +724,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     )
                   )}
                 </ul>
-              </div>
-            </div>
-            <div className="box custom-box">
-              <div className="box-body">
-                <div className="">
-                  <h5 className="font-semibold mb-3">Get Latest Job Alerts</h5>
-                  <p className="mb-4">
-                    Latest jobs updates on the go to recieved direct to your
-                    email. Stay updated with your latest new jobs.
-                  </p>
-                  <div className="input-group mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Email Here"
-                      aria-label="blog-email"
-                      aria-describedby="blog-subscribe"
-                    />
-                    <button
-                      className="ti-btn ti-btn-primary-full !mb-0"
-                      type="button"
-                      id="blog-subscribe"
-                    >
-                      Subscribe
-                    </button>
-                  </div>
-                  <label
-                    className="form-check-label inline"
-                    htmlFor="invalidCheck"
-                  >
-                    By Subscribing you accept to{" "}
-                    <Link to="#" className="text-success mx-1">
-                      <u>privacy policy</u>
-                    </Link>
-                  </label>
-                </div>
               </div>
             </div>
           </div>
