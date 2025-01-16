@@ -45,6 +45,47 @@ const getUserData = (userId, callback) => {
   db.query(query, [userId], callback);
 };
 
+const getFavouriteOccupation = async (translatedData, userId, callback) => {
+  try {
+    const extractedData = {
+      code: translatedData?.code ?? null,
+      title_bg: translatedData?.translated?.title ?? null,
+      title_en: translatedData?.occupation?.title ?? null
+    };
+
+    if (
+      !extractedData.code ||
+      !extractedData.title_bg ||
+      !extractedData.title_en
+    ) {
+      return callback(new Error("Invalid data format."));
+    }
+
+    const checkQuery = `
+      SELECT * FROM favourite_occupations
+      WHERE code = ? AND user_id = ? AND title_bg = ? AND title_en = ?
+    `;
+
+    db.query(
+      checkQuery,
+      [
+        extractedData.code,
+        userId,
+        extractedData.title_bg,
+        extractedData.title_en
+      ],
+      (err, results) => {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, results);
+      }
+    );
+  } catch (error) {
+    callback(error);
+  }
+};
+
 const saveUserResponses = (userId, userResponses, date, callback) => {
   // Generate column names dynamically for the SQL query
   const columns =
@@ -584,6 +625,57 @@ const saveOffers = (offers, occupation_code, callback) => {
   });
 };
 
+const deleteFavouriteOccupation = async (translatedData, userId, callback) => {
+  try {
+    const extractedData = {
+      code: translatedData?.code ?? null,
+      title_bg: translatedData?.translated?.title ?? null,
+      title_en: translatedData?.occupation?.title ?? null
+    };
+
+    db.beginTransaction((err) => {
+      if (err) {
+        return callback(err);
+      }
+
+      const occupationQuery = `
+        DELETE FROM favourite_occupations
+        WHERE code = ? AND user_id = ? AND title_bg = ? AND title_en = ?
+      `;
+
+      db.query(
+        occupationQuery,
+        [
+          extractedData.code,
+          userId,
+          extractedData.title_bg,
+          extractedData.title_en
+        ],
+        (err, results) => {
+          if (err) {
+            return db.rollback(() => callback(err));
+          }
+
+          if (results.affectedRows === 0) {
+            return db.rollback(() =>
+              callback(new Error("No matching record found to delete."))
+            );
+          }
+
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() => callback(err));
+            }
+            callback(null);
+          });
+        }
+      );
+    });
+  } catch (error) {
+    callback(error); // Handle any translation errors or unexpected issues
+  }
+};
+
 const getUsersCount = (callback) => {
   const query = `
     SELECT COUNT(*) AS user_count
@@ -684,6 +776,7 @@ module.exports = {
   updateUserPassword,
   getUserById,
   getUserData,
+  getFavouriteOccupation,
   saveUserResponses,
   saveFinalScores,
   saveOccupation,
@@ -691,6 +784,7 @@ module.exports = {
   saveCategoryData,
   saveAIAnalysis,
   saveOffers,
+  deleteFavouriteOccupation,
   getUsersCount,
   getDistinctOccupations,
   getTopRecommendedOccupations,

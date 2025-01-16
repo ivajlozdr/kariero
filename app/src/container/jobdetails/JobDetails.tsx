@@ -7,7 +7,6 @@ import { FullCareerDetails } from "../quiz/quiz-types";
 import JobListings from "./components/JobListings";
 import OccupationDescription from "./components/OccupationDescription";
 import { handleToggleFavouriteOccupation } from "./helper-functions";
-import { date, token } from "../data_common";
 
 interface JobDetailsProps {}
 
@@ -21,6 +20,9 @@ const JobDetails: FC<JobDetailsProps> = () => {
         : location.state?.fullCareerDetails;
     }
   );
+  const token =
+    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+  const date = new Date().toISOString();
 
   useEffect(() => {
     if (fullCareerDetails) {

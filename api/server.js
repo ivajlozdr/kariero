@@ -502,7 +502,7 @@ app.post("/save-responses-scores", (req, res) => {
   });
 });
 
-app.post("/save-favourite-occupation", (req, res) => {
+app.post("/favourite-occupation", (req, res) => {
   const { token, data, date } = req.body;
 
   let userId;
@@ -514,22 +514,45 @@ app.post("/save-favourite-occupation", (req, res) => {
     return res.status(401).send("Invalid token.");
   }
 
-  // Validate request body
   if (!data || !userId || !date) {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  db.saveFavouriteOccupation(data, userId, date, (err) => {
+  db.getFavouriteOccupation(data, userId, (err, results) => {
     if (err) {
-      console.error("Error saving favourite occupation:", err);
-      return res
-        .status(500)
-        .json({ error: "Failed to save favourite occupation." });
+      console.error("Error checking favourite occupation:", err);
+      return res.status(500).json({ error: "Database error." });
     }
 
-    res
-      .status(200)
-      .json({ message: "Favourite occupation saved successfully." });
+    if (results.length > 0) {
+      db.deleteFavouriteOccupation(data, userId, (err) => {
+        if (err) {
+          console.error("Error deleting favourite occupation:", err);
+          return res
+            .status(500)
+            .json({ error: "Failed to remove favourite occupation." });
+        }
+
+        res
+          .status(200)
+          .json({
+            message: "Occupation removed from favourites successfully."
+          });
+      });
+    } else {
+      db.saveFavouriteOccupation(data, userId, date, (err) => {
+        if (err) {
+          console.error("Error saving favourite occupation:", err);
+          return res
+            .status(500)
+            .json({ error: "Failed to add favourite occupation." });
+        }
+
+        res
+          .status(200)
+          .json({ message: "Occupation added to favourites successfully." });
+      });
+    }
   });
 });
 

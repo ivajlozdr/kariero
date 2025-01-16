@@ -42,7 +42,7 @@ export const ToggleFavouriteOccupation = async (
 ): Promise<string> => {
   try {
     const occupationResponse = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/save-favourite-occupation`,
+      `${import.meta.env.VITE_API_BASE_URL}/favourite-occupation`,
       {
         method: "POST",
         headers: {
