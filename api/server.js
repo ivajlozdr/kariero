@@ -502,6 +502,37 @@ app.post("/save-responses-scores", (req, res) => {
   });
 });
 
+app.post("/save-favourite-occupation", (req, res) => {
+  const { token, data, date } = req.body;
+
+  let userId;
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return res.status(401).send("Invalid token.");
+  }
+
+  // Validate request body
+  if (!data || !userId || !date) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
+
+  saveFavouriteOccupation(data, userId, date, (err) => {
+    if (err) {
+      console.error("Error saving favourite occupation:", err);
+      return res
+        .status(500)
+        .json({ error: "Failed to save favourite occupation." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Favourite occupation saved successfully." });
+  });
+});
+
 app.post("/save-occupation", (req, res) => {
   const { token, keyword, date, reason } = req.body;
 
@@ -556,7 +587,6 @@ app.post("/save-occupation", (req, res) => {
         .send("An error occurred while processing the occupation data.");
     });
 });
-
 app.post("/save-ai-analysis", (req, res) => {
   const { token, recommendations } = req.body;
 

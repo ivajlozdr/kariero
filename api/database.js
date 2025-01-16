@@ -422,6 +422,57 @@ const saveCategoryData = (translatedData, callback) => {
   });
 };
 
+const saveFavouriteOccupation = async (
+  translatedData,
+  userId,
+  date,
+  callback
+) => {
+  try {
+    const extractedData = {
+      code: translatedData?.code ?? null,
+      title_bg: translatedData?.translated?.title ?? null,
+      title_en: translatedData?.occupation?.title ?? null
+    };
+
+    db.beginTransaction((err) => {
+      if (err) {
+        return callback(err);
+      }
+
+      const occupationQuery = `
+        INSERT INTO favourite_occupations (code, user_id, title_bg, title_en, date)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        occupationQuery,
+        [
+          extractedData.code,
+          userId,
+          extractedData.title_bg,
+          extractedData.title_en,
+          date
+        ],
+        (err) => {
+          if (err) {
+            return db.rollback(() => callback(err));
+          }
+
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() => callback(err));
+            }
+            callback(null);
+          });
+        }
+      );
+    });
+  } catch (error) {
+    callback(error); // Handle any translation errors or unexpected issues
+  }
+};
+
 const saveAIAnalysis = (userId, analysisData, callback) => {
   const {
     Abilities,
@@ -636,6 +687,7 @@ module.exports = {
   saveUserResponses,
   saveFinalScores,
   saveOccupation,
+  saveFavouriteOccupation,
   saveCategoryData,
   saveAIAnalysis,
   saveOffers,
