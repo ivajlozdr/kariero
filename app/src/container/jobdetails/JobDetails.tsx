@@ -1,13 +1,13 @@
 import { FC, Fragment, useState, useEffect } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
 import { Link, useLocation } from "react-router-dom";
-
-// import required modules
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
 import { FullCareerDetails } from "../quiz/quiz-types";
 import JobListings from "./components/JobListings";
 import OccupationDescription from "./components/OccupationDescription";
+import { handleToggleFavouriteOccupation } from "./helper-functions";
+import { date, token } from "../data_common";
 
 interface JobDetailsProps {}
 
@@ -111,13 +111,17 @@ const JobDetails: FC<JobDetailsProps> = () => {
               </div>
               <div>
                 <div className="btn-list sm:flex items-center mb-2">
-                  <Link
+                  <div
                     aria-label="anchor"
-                    to="#"
+                    onClick={handleToggleFavouriteOccupation(
+                      fullCareerDetails,
+                      token,
+                      date
+                    )}
                     className="ti-btn ti-btn-icon ti-btn-primary me-[0.375rem]"
                   >
                     <i className="ri-heart-line"></i>
-                  </Link>
+                  </div>
                   <Link
                     aria-label="anchor"
                     to="#"

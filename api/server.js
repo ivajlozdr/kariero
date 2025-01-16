@@ -519,7 +519,7 @@ app.post("/save-favourite-occupation", (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  saveFavouriteOccupation(data, userId, date, (err) => {
+  db.saveFavouriteOccupation(data, userId, date, (err) => {
     if (err) {
       console.error("Error saving favourite occupation:", err);
       return res
