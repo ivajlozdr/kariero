@@ -49,7 +49,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     <div className="mb-4">
                       <h4 className="font-bold mb-0 flex items-center relative leading-tight">
                         {fullCareerDetails.translated.title}
-                        {fullCareerDetails.occupation.tags.bright_outlook && (
+                        {fullCareerDetails.occupation.tags.green && (
                           <span className="relative group ml-2">
                             <i className="ti ti-seedling text-primary"></i>
                             <span className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-3 py-2 text-xs font-medium text-white bg-primary rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
@@ -112,13 +112,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
               <div>
                 <div className="btn-list sm:flex items-center mb-2">
                   <Link
-                    to="#"
-                    className="ti-btn ti-btn-primary-full m-0 !me-[0.375rem]"
-                  >
-                    {" "}
-                    Apply Now
-                  </Link>
-                  <Link
                     aria-label="anchor"
                     to="#"
                     className="ti-btn ti-btn-icon ti-btn-primary me-[0.375rem]"
@@ -133,10 +126,6 @@ const JobDetails: FC<JobDetailsProps> = () => {
                     <i className="ri-share-line"></i>
                   </Link>
                 </div>
-                <p className="mb-0">
-                  <i className="bi bi-info-circle text-danger"></i>{" "}
-                  <b>45 days left </b> to apply this job
-                </p>
               </div>
             </div>
           </div>
