@@ -1,4 +1,4 @@
-import { FC, Fragment, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import Pageheader from "../../components/common/pageheader/pageheader";
 import { useLocation } from "react-router-dom";
 import PaginatedTasks from "./components/Tasks";
@@ -10,19 +10,22 @@ import Share from "./components/Share";
 import OccupationTitleCard from "./components/OccupationTitleCard";
 import Education from "./components/Education";
 import Technologies from "./components/Technologies";
+import Loader from "../../pages/Loader";
 
 interface JobDetailsProps {}
 
 const JobDetails: FC<JobDetailsProps> = () => {
   const location = useLocation();
-  const [fullCareerDetails, setFullCareerDetails] = useState<FullCareerDetails>(
-    () => {
+
+  const [fullCareerDetails, setFullCareerDetails] =
+    useState<FullCareerDetails | null>(() => {
+      if (location.state?.fullCareerDetails) {
+        return location.state.fullCareerDetails;
+      }
+
       const savedDetails = localStorage.getItem("fullCareerDetails");
-      return savedDetails
-        ? JSON.parse(savedDetails)
-        : location.state?.fullCareerDetails;
-    }
-  );
+      return savedDetails ? JSON.parse(savedDetails) : null;
+    });
 
   useEffect(() => {
     if (fullCareerDetails) {
@@ -33,13 +36,20 @@ const JobDetails: FC<JobDetailsProps> = () => {
     }
   }, [fullCareerDetails]);
 
-  console.log("fullCareerDetails: ", fullCareerDetails);
+  if (!fullCareerDetails) {
+    return (
+      <Loader description="Зареждаме информация за избраната професия, моля изчакайте" />
+    );
+  }
+
+  const { translated } = fullCareerDetails;
+
   return (
-    <Fragment>
+    <>
       <Pageheader
-        currentpage={"Детайли за " + fullCareerDetails.translated.title}
+        currentpage={`Детайли за ${translated.title}`}
         activepage="Кариери"
-        mainpage={fullCareerDetails.translated.title}
+        mainpage={translated.title}
       />
       <div className="px-10">
         <OccupationTitleCard fullCareerDetails={fullCareerDetails} />
@@ -51,7 +61,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
             <Share />
             <div>
               <h4 className="font-semibold mb-0 !text-defaulttextcolor">
-                Обяви за {fullCareerDetails.translated.title}
+                Обяви за {translated.title}
               </h4>
               <p className="!text-defaulttextcolor text-defaultsize mb-4">
                 Разгледайте различни обяви.
@@ -60,12 +70,12 @@ const JobDetails: FC<JobDetailsProps> = () => {
             </div>
           </div>
           <div className="xxl:col-span-4 col-span-12">
-            <PaginatedTasks tasks={fullCareerDetails.translated.tasks} />
+            <PaginatedTasks tasks={translated.tasks} />
             <RelatedOccupations fullCareerDetails={fullCareerDetails} />
           </div>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 
