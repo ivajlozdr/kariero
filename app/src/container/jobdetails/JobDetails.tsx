@@ -8,6 +8,7 @@ import JobListings from "./components/JobListings";
 import OccupationDescription from "./components/OccupationDescription";
 import Share from "./components/Share";
 import OccupationTitleCard from "./components/OccupationTitleCard";
+import Education from "./components/Education";
 
 interface JobDetailsProps {}
 
@@ -44,6 +45,7 @@ const JobDetails: FC<JobDetailsProps> = () => {
         <div className="grid grid-cols-12 gap-6">
           <div className="xxl:col-span-8 col-span-12">
             <OccupationDescription fullCareerDetails={fullCareerDetails} />
+            <Education fullCareerDetails={fullCareerDetails} />
             <Share />
             <div>
               <h4 className="font-semibold mb-0 !text-defaulttextcolor">

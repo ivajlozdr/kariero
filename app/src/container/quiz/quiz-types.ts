@@ -299,16 +299,17 @@ export interface FluffyExample {
 }
 
 export interface Translated {
-  title:                    string;
-  description:              string;
-  skills:                   Element[];
-  interests:                Element[];
-  abilities:                Element[];
-  knowledge:                Element[];
+  title: string;
+  description: string;
+  education: string;
+  skills: Element[];
+  interests: Element[];
+  abilities: Element[];
+  knowledge: Element[];
   detailed_work_activities: Element[];
-  technology_skills:        Element[];
-  tasks:                    Element[];
-  related_occupations:      Element[];
+  technology_skills: Element[];
+  tasks: Element[];
+  related_occupations: Element[];
 }
 
 export interface UserResponses {

@@ -14,6 +14,7 @@ import {
   MostNeededQuality
 } from "../home-types";
 import { Link } from "react-router-dom";
+import { updatePrimaryColor } from "../../functions_common";
 
 export class MostRecommendedOccupationsChart extends Component<
   { seriesData: OccupationSeriesType; category: string },
@@ -240,29 +241,6 @@ export function generateData(count: any, yrange: any) {
   }
   return series;
 }
-
-// Преобразува RGB цвят в HEX формат
-const rgbToHex = (rgb: string): string => {
-  // Уверява се, че входният цвят е във формат "rgb(r, g, b)"
-  const result = rgb.match(/\d+/g);
-  if (!result || result.length !== 3) {
-    throw new Error("Невалиден RGB формат на цвета");
-  }
-
-  return `#${result
-    .map((x) => parseInt(x).toString(16).padStart(2, "0")) // Преобразува всяка стойност на RGB в HEX
-    .join("")}`;
-};
-
-// Обновява основния цвят на базата на CSS променливи
-const updatePrimaryColor = () => {
-  const rootStyles = getComputedStyle(document.documentElement);
-  const primary = rootStyles.getPropertyValue("--primary").trim();
-  const primaryWithCommas = primary.split(" ").join(",");
-  const primaryHex = rgbToHex(primaryWithCommas);
-
-  return primaryHex;
-};
 
 interface GenrePopularityOverTimeProps {
   seriesData: any[]; // Масив от динамични данни за heatmap диаграмата
