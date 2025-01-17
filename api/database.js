@@ -200,18 +200,8 @@ const saveOccupation = async (
   callback
 ) => {
   try {
-    const educationLevels =
-      translatedData?.education?.level_required?.category ?? [];
-
-    // Translate each education level name
-    const educationTranslations = await Promise.all(
-      educationLevels.map(async (level) => {
-        const translatedName = await hf.translate(level.name); // Translate the education level name
-        return `${translatedName}: ${level.score?.value}%`;
-      })
-    );
     const translatedReason = await hf.translate(reason);
-
+    const translatedEducation = translatedData?.translated?.education;
     const extractedData = {
       code: translatedData?.code ?? null,
       title_bg: translatedData?.translated?.title ?? null,
@@ -221,10 +211,7 @@ const saveOccupation = async (
       bright_outlook: JSON.stringify(
         translatedData?.occupation?.bright_outlook?.category ?? null
       ),
-      education:
-        educationTranslations.length > 0
-          ? educationTranslations.join(", ")
-          : null
+      education: translatedEducation
     };
 
     db.beginTransaction((err) => {

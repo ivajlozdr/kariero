@@ -148,7 +148,14 @@ async function fetchAndTranslateDetails(code) {
     }
     return [];
   };
-
+  const educationLevels =
+    detailsData?.education?.level_required?.category ?? [];
+  const educationTranslations = await Promise.all(
+    educationLevels.map(async (level) => {
+      const translatedName = await translate(level.name); // Translate the education level name
+      return `${translatedName}: ${level.score?.value}%`;
+    })
+  );
   // Extract and translate tasks
   const tasks = detailsData.tasks?.task?.map((t) => t.statement) || [];
   const translatedTasks = await translateList(tasks);
@@ -193,7 +200,8 @@ async function fetchAndTranslateDetails(code) {
       detailed_work_activities: translatedWorkActivities,
       technology_skills: translatedTechSkills,
       tasks: translatedTasks,
-      related_occupations: translatedRelatedOccupations
+      related_occupations: translatedRelatedOccupations,
+      education: educationTranslations.join(", ")
     }
   };
 }
