@@ -366,7 +366,7 @@ app.post("/translate/career-paths", async (req, res) => {
   }
 });
 
-app.post("/run-python-script", async (req, res) => {
+app.post("/job-offers", async (req, res) => {
   try {
     const { keyword, occupation_code } = req.body;
 
@@ -449,7 +449,7 @@ app.post("/run-python-script", async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Error in /run-python-script endpoint:", error);
+    console.error("Error in /job-offers endpoint:", error);
     res
       .status(500)
       .json({ error: "An error occurred while processing the request." });
@@ -533,11 +533,9 @@ app.post("/favourite-occupation", (req, res) => {
             .json({ error: "Failed to remove favourite occupation." });
         }
 
-        res
-          .status(200)
-          .json({
-            message: "Occupation removed from favourites successfully."
-          });
+        res.status(200).json({
+          message: "Occupation removed from favourites successfully."
+        });
       });
     } else {
       db.saveFavouriteOccupation(data, userId, date, (err) => {

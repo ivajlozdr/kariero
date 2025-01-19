@@ -11,7 +11,7 @@ const Education = ({
       <div className="box-body space-y-8">
         <div>
           <h5 className="font-semibold text-lg text-primary mb-4">
-            Ниво на образование на работниците в професията
+            Ниво на образование на работещите в професията
           </h5>
           <EducationChart fullCareerDetails={fullCareerDetails} />
         </div>

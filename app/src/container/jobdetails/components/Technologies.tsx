@@ -12,7 +12,7 @@ const Technologies = ({
     <div className="box custom-box bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-800">
       <div className="box-body space-y-8 p-6">
         <h5 className="font-semibold text-lg text-primary">
-          Технологии, срещани в тази кариера
+          Технологии, използвани в тази кариера
         </h5>
 
         <div className="flex flex-wrap gap-4 mt-4">

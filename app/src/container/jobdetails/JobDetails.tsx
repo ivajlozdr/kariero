@@ -4,13 +4,14 @@ import { useLocation } from "react-router-dom";
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
 import { FullCareerDetails } from "../quiz/quiz-types";
-import JobListings from "./components/JobListings";
+import JobOffers from "./components/JobOffers";
 import OccupationDescription from "./components/OccupationDescription";
 import Share from "./components/Share";
 import OccupationTitleCard from "./components/OccupationTitleCard";
 import Education from "./components/Education";
 import Technologies from "./components/Technologies";
 import Loader from "../../pages/Loader";
+import { Offers } from "./jobs-data";
 
 interface JobDetailsProps {}
 
@@ -27,6 +28,45 @@ const JobDetails: FC<JobDetailsProps> = () => {
       return savedDetails ? JSON.parse(savedDetails) : null;
     });
 
+  const [jobOffers, setJobOffers] = useState<Offers>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchJobOffers = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/job-offers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            keyword: fullCareerDetails?.translated.title || "",
+            occupation_code: fullCareerDetails?.occupation.code
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch job offers");
+      }
+
+      const data = await response.json();
+      setJobOffers(data);
+      console.log("data: ", data);
+    } catch (error) {
+      console.error("Error fetching job Offers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (fullCareerDetails) {
+      fetchJobOffers();
+    }
+  }, [fullCareerDetails]);
+
   useEffect(() => {
     if (fullCareerDetails) {
       localStorage.setItem(
@@ -36,6 +76,12 @@ const JobDetails: FC<JobDetailsProps> = () => {
     }
   }, [fullCareerDetails]);
 
+  if (loading) {
+    return (
+      <Loader description="Зареждаме информация за обяви, моля изчакайте" />
+    );
+  }
+  console.log("jobOffers: ", jobOffers);
   if (!fullCareerDetails) {
     return (
       <Loader description="Зареждаме информация за избраната професия, моля изчакайте" />
@@ -66,7 +112,15 @@ const JobDetails: FC<JobDetailsProps> = () => {
               <p className="!text-defaulttextcolor text-defaultsize mb-4">
                 Разгледайте различни обяви.
               </p>
-              <JobListings fullCareerDetails={fullCareerDetails} />
+              {jobOffers?.job_offers ? (
+                <JobOffers jobOffers={jobOffers} />
+              ) : (
+                <div className="flex flex-col items-center justify-center py-6 text-center">
+                  <p className="text-lg font-semibold">
+                    Няма намерени обяви :(
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           <div className="xxl:col-span-4 col-span-12">

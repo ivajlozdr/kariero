@@ -26,20 +26,20 @@ def scrape_jobs():
 
         # Add cookies to the page
         cookies = [
-            {"name": "JOBSSESSID", "value": "1lk230c3lcv70iabcd6j96b9k8", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS017554c9", "value": "01855380b0b9adeb2f16d5128474c7816ff36a9d236b8d0c5cd424e0cd5b38c8c1aebe96a8fac0758a97f02d1e533fe6b15ad1198c", "domain": ".jobs.bg", "path": "/"},
-            {"name": "FAV", "value": "5484740df2df99935b919f91e87bfdbde612107815f43b502175595ffb48aa29", "domain": ".jobs.bg", "path": "/"},
+            {"name": "JOBSSESSID", "value": "qdjiusseun7lsg7lrrueppmtki", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS017554c9", "value": "01855380b027e175b4fa4a8eeaa6f69d33df214c818ce16c900f040dd8a31832d7b17936264365be92a121ccac403268bdc5a671c0", "domain": ".jobs.bg", "path": "/"},
+            {"name": "FAV", "value": "a493f1597146b41a3dee5d10cbae48fb70fb123fc5e693b5c5cf7de89b6c9985", "domain": ".jobs.bg", "path": "/"},
             {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-            {"name": "__cf_bm", "value": "D.IKfdd7Z.VbZrx7kCAn5wg28.esU7eF5q7sO3UmrBw-1735033089-1.0.1.1-7QdMNG0uKk6y9Y8O_42ZgMbVe1SMXJjKFwIQFjGJJpV60gRaH.5zaOq0zCMIDJHwqxoYehWB.hMShqeNipIT0A", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS01caf967", "value": "01855380b0bd4dc85cfa7171b1fb2d137034aca7785e2098254b008c731a52f65fa82e8ec14febad74b4e3df5c308da9e4d2ddcba8", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "899kHdIYYCw_2v9uwTT89gr7pZ~ue87LzhPJiV_8T_PdoAMzA8vxB127YqMjGecgoLDl1O~45sugc12W3oj21l3hjWOxWvKWsY9Az_Jumx3QXnZB~LcZWE2Clv9xu22V", "domain": ".jobs.bg", "path": "/"}
+            {"name": "__cf_bm", "value": "ZxcHGB2vRxqZYKEPxqLlSgNzbslE3kVEyUrZ65.L9fc-1737276478-1.0.1.1-9qU1YYxEyp1Vacj798ORE7.Clhe27C6rEQUrVBKw.ZVLy.pq5CiJOU3MNgEXH4xGWBQLiFN3zeU1U3Pt3ZHvJg", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS01caf967", "value": "01855380b027e175b4fa4a8eeaa6f69d33df214c818ce16c900f040dd8a31832d7b17936264365be92a121ccac403268bdc5a671c0", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "2qTDwM0FPkhimjMycq5hzlNOb0WR8H5qyEeqYDzU2BNulw0fqw7iuEZFxw9OqNluVMmyICmQ3hsZWxp39QW1jIAR8LAWFavdPwulKcRwnDMaZyZR5auZjTdyk3Rz8PUQ", "domain": ".jobs.bg", "path": "/"}
         ]
         page.context.add_cookies(cookies)
 
         # Open the target URL
         page.goto(URL)
 
-        # Wait for the job listings to load (adjust selector if necessary)
+        # Wait for the job Offers to load (adjust selector if necessary)
         page.wait_for_selector("ul.page-1 > li")
 
         # Fetch the page content after rendering
