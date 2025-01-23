@@ -1,6 +1,7 @@
 import React from "react";
 import { FullCareerDetails } from "../../quiz/quiz-types";
 import { filterHotTechnology } from "../helper-functions";
+import Tooltip from "../../../components/common/tooltip/Tooltip";
 
 interface Props {
   fullCareerDetails: FullCareerDetails;
@@ -27,10 +28,8 @@ const Technologies: React.FC<Props> = ({ fullCareerDetails }) => {
             <div className="flex items-center">
               <span className="w-3 h-3 mr-1 rounded-full inline-block bg-secondary"></span>
               <span>"Hot" Технология</span>
-              <div
-                className="ml-2"
-                title="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии."
-              >
+              <div className="ml-2 relative group transition-all duration-300 ease-in-out">
+                <Tooltip message="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии." />
                 <i className="ti ti-info-circle text-[1rem] text-secondary"></i>
               </div>
             </div>
@@ -55,16 +54,7 @@ const Technologies: React.FC<Props> = ({ fullCareerDetails }) => {
                   <i className="ti ti-code text-lg"></i>
                   <span className="font-semibold">{tech.name}</span>
                 </div>
-                <div
-                  className="absolute bg-white dark:bg-[#313335] bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-3 py-1 text-defaulttextcolor text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out pointer-events-none shadow-lg"
-                  role="tooltip"
-                >
-                  <span className="block text-center">{tech.category}</span>
-                  <div
-                    className="absolute bg-white dark:bg-[#313335] top-full left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45"
-                    aria-hidden="true"
-                  ></div>
-                </div>
+                <Tooltip message={tech.category} />
               </div>
             ))
           ) : (
