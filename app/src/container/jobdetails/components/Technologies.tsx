@@ -27,9 +27,9 @@ const Technologies: React.FC<Props> = ({ fullCareerDetails }) => {
             </div>
             <div className="flex items-center">
               <span className="w-3 h-3 mr-1 rounded-full inline-block bg-secondary"></span>
-              <span>"Hot" Технология</span>
+              <span>Гореща технология</span>
               <div className="ml-2 relative group transition-all duration-300 ease-in-out">
-                <Tooltip message="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии." />
+                <Tooltip message="„Горещи технологии“ са софтуерни и технологични изисквания, които най-често се включват в обявите за работа от работодатели." />
                 <i className="ti ti-info-circle text-[1rem] text-secondary"></i>
               </div>
             </div>
