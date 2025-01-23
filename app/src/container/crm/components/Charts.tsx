@@ -1,20 +1,17 @@
 import { Component, useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import chroma from "chroma-js";
-
 import {
-  ActorData,
   BrightOutlook,
   CountryData,
-  DirectorData,
   MovieProsperityData,
   OccupationSeriesType,
   TopRecommendedOccupation,
-  WriterData,
   MostNeededQuality
 } from "../home-types";
 import { Link } from "react-router-dom";
 import { updatePrimaryColor } from "../../functions_common";
+import Tooltip from "../../../components/common/tooltip/Tooltip";
 
 export class MostRecommendedOccupationsChart extends Component<
   { seriesData: OccupationSeriesType; category: string },
@@ -199,10 +196,8 @@ export class MostRecommendedOccupationsChart extends Component<
                 style={{ backgroundColor: brightOutlook }}
               ></span>
               <span>Професия с ярко бъдеще</span>
-              <div
-                className="ml-2"
-                title="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии."
-              >
+              <div className="ml-2 relative group transition-all duration-300 ease-in-out">
+                <Tooltip message="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии." />
                 <i className="ti ti-info-circle text-[1rem] text-secondary"></i>
               </div>
             </div>
