@@ -26,13 +26,13 @@ def scrape_jobs():
 
         # Add cookies to the page
         cookies = [
-            {"name": "JOBSSESSID", "value": "qdjiusseun7lsg7lrrueppmtki", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS017554c9", "value": "01855380b027e175b4fa4a8eeaa6f69d33df214c818ce16c900f040dd8a31832d7b17936264365be92a121ccac403268bdc5a671c0", "domain": ".jobs.bg", "path": "/"},
+            {"name": "JOBSSESSID", "value": "lok7qvcvh9o65ueoctjs9a0glc", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS017554c9", "value": "01855380b00d748ced037945d6d5938a6c2c0ca430223b9b2f26a6d0c1a3fb1d2678f403826348bcba398a1e4672475ecb970be986", "domain": ".jobs.bg", "path": "/"},
             {"name": "FAV", "value": "a493f1597146b41a3dee5d10cbae48fb70fb123fc5e693b5c5cf7de89b6c9985", "domain": ".jobs.bg", "path": "/"},
             {"name": "RELOC", "value": "1", "domain": ".jobs.bg", "path": "/"},
-            {"name": "__cf_bm", "value": "ZxcHGB2vRxqZYKEPxqLlSgNzbslE3kVEyUrZ65.L9fc-1737276478-1.0.1.1-9qU1YYxEyp1Vacj798ORE7.Clhe27C6rEQUrVBKw.ZVLy.pq5CiJOU3MNgEXH4xGWBQLiFN3zeU1U3Pt3ZHvJg", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS01caf967", "value": "01855380b027e175b4fa4a8eeaa6f69d33df214c818ce16c900f040dd8a31832d7b17936264365be92a121ccac403268bdc5a671c0", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "2qTDwM0FPkhimjMycq5hzlNOb0WR8H5qyEeqYDzU2BNulw0fqw7iuEZFxw9OqNluVMmyICmQ3hsZWxp39QW1jIAR8LAWFavdPwulKcRwnDMaZyZR5auZjTdyk3Rz8PUQ", "domain": ".jobs.bg", "path": "/"}
+            {"name": "__cf_bm", "value": "yRJWjyI0hApSxuBmIU.00mLOSuyLYdKUiztcBV5khO0-1737638672-1.0.1.1-X6GnfAIdnImK.xPVg597V8gqUHEb02e7NVlimxro0GsdsxKODVgKl4WLnkB57v7f85y8DkeXjEyB92obNDA1Tg", "domain": ".jobs.bg", "path": "/"},
+            {"name": "TS01caf967", "value": "01855380b00d748ced037945d6d5938a6c2c0ca430223b9b2f26a6d0c1a3fb1d2678f403826348bcba398a1e4672475ecb970be986", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "mQceNYNN2X6WR2xMXfbS15ndPXuh0xgFsgp~VN3z4Z5IavYCg1_ezjubWkcN9CgMESuIiVQhRaS6PZXQ~nO1Rmmpu4SOv9jRqmMsqWhz4TqLPzI1bL~FtZHTkcR0pj6I", "domain": ".jobs.bg", "path": "/"}
         ]
         page.context.add_cookies(cookies)
 

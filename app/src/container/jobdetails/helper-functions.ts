@@ -152,16 +152,32 @@ export const generateColorScale = (
  * @param {FullCareerDetails} data - Данни за технологиите, съдържащи категории и примери.
  * @returns {any[]} Масив от технологии, които са маркирани като 'hot_technology'.
  */
-export const filterHotTechnology = (data: FullCareerDetails): any[] => {
-  return data.tools_technology.technology.category
-    .map((categoryItem: any) => {
-      // Намери първия пример, който съдържа 'hot_technology'
-      const hotTechExample = categoryItem.example.find(
-        (exampleItem: any) => exampleItem.hot_technology
-      );
+export const filterHotTechnology = (
+  data: FullCareerDetails
+): {
+  hotTechnologies: { name: string; category: string }[];
+  regularTechnologies: { name: string; category: string }[];
+} => {
+  const hotTechnologies: { name: string; category: string }[] = [];
+  const regularTechnologies: { name: string; category: string }[] = [];
 
-      // Връща 'hot_technology' или null ако не е намерен
-      return hotTechExample ? hotTechExample.hot_technology : null;
-    })
-    .filter((item: any) => item !== null); // Филтрира null стойности
+  data.tools_technology.technology.category.forEach(
+    (categoryItem: any, i: number) => {
+      categoryItem.example.forEach((exampleItem: any) => {
+        if (exampleItem.hot_technology) {
+          hotTechnologies.push({
+            name: exampleItem.hot_technology,
+            category: data.translated.technology_skills[i].translated_name
+          });
+        } else if (exampleItem.name) {
+          regularTechnologies.push({
+            name: exampleItem.name,
+            category: data.translated.technology_skills[i].translated_name
+          });
+        }
+      });
+    }
+  );
+
+  return { hotTechnologies, regularTechnologies };
 };
