@@ -5,7 +5,8 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Autoplay, Navigation } from "swiper/modules";
-import { Offers } from "../jobs-data";
+import { Offers } from "../../jobs-types";
+import OfferName from "./OfferName";
 
 const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
   return (
@@ -59,7 +60,7 @@ const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
                   </button>
                 </div>
               </div>
-              <div className="sm:flex mb-4">
+              <div className="sm:flex mb-4 items-start">
                 <span className="avatar avatar-lg !rounded-full !bg-primary/10 !fill-primary border dark:border-defaultborder/10">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -72,11 +73,11 @@ const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
                     ></path>
                   </svg>
                 </span>
-                <div className="ms-2">
-                  <h5 className="font-semibold mb-0 flex items-center">
-                    {job.title}
-                  </h5>
-                  {job.company}
+                <div className="ms-2 flex flex-col">
+                  <OfferName name={job.title} />
+                  <div className="text-sm text-gray-500 mt-1">
+                    {job.company}
+                  </div>
                 </div>
               </div>
               <div className="popular-tags mb-4 space-x-2 rtl:space-x-reverse">

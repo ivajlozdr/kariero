@@ -4,14 +4,14 @@ import { useLocation } from "react-router-dom";
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
 import { FullCareerDetails } from "../quiz/quiz-types";
-import JobOffers from "./components/JobOffers";
+import JobOffers from "./components/offers/JobOffers";
 import OccupationDescription from "./components/OccupationDescription";
 import Share from "./components/Share";
 import OccupationTitleCard from "./components/OccupationTitleCard";
 import Education from "./components/Education";
 import Technologies from "./components/Technologies";
 import Loader from "../../pages/Loader";
-import { Offers } from "./jobs-data";
+import { Offers } from "./jobs-types";
 
 interface JobDetailsProps {}
 
