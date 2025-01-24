@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { handleToggleFavouriteOccupation } from "../helper-functions";
-import { FullCareerDetails } from "../../quiz/quiz-types";
-
+import { FullCareerDetails } from "../../types_common";
 const OccupationTitleCard = ({
   fullCareerDetails
 }: {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-import { FullCareerDetails } from "../../quiz/quiz-types";
+import { FullCareerDetails } from "../../types_common";
 import { updatePrimaryColor } from "../../functions_common";
 import {
   extractLevelsAndPercentages,

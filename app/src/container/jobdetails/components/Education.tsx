@@ -1,4 +1,4 @@
-import { FullCareerDetails } from "../../quiz/quiz-types";
+import { FullCareerDetails } from "../../types_common";
 import { EducationChart } from "./EducationChart";
 
 const Education = ({

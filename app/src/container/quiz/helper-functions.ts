@@ -1,7 +1,6 @@
 import { likertScale } from "./quiz-data";
 import {
   CareerRecommendation,
-  FullCareerDetails,
   FullRecommendationsObject,
   PreferenceKeys,
   QuestionMapping,
@@ -10,7 +9,7 @@ import {
   UserProfileData,
   UserResponses
 } from "./quiz-types";
-
+import { FullCareerDetails } from "../types_common";
 /**
  * Актуализира RIASEC резултатите чрез промяна на стойността за определена категория.
  *

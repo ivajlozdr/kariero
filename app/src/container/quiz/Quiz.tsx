@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { FullCareerDetails } from "../types_common";
 import {
   Scores,
-  FullCareerDetails,
   CareerRecommendation,
   UserResponses,
   QuizNotificationType

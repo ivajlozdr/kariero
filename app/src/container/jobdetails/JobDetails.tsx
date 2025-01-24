@@ -3,7 +3,7 @@ import Pageheader from "../../components/common/pageheader/pageheader";
 import { useLocation } from "react-router-dom";
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
-import { FullCareerDetails } from "../quiz/quiz-types";
+import { FullCareerDetails } from "../types_common";
 import JobOffers from "./components/offers/JobOffers";
 import OccupationDescription from "./components/OccupationDescription";
 import Share from "./components/Share";

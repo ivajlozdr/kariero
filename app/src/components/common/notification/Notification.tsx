@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-export type NotificationType = "success" | "error" | "warning";
-
-export interface NotificationState {
-  message: string;
-  type: NotificationType;
-}
-
 interface NotificationProps {
   message: string;
   type: "success" | "error" | "warning";

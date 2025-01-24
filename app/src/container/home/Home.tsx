@@ -12,9 +12,8 @@ import {
   fetchData,
   showNotification
 } from "./helper_functions";
-import Notification, {
-  NotificationState
-} from "../../components/common/notification/Notification";
+import Notification from "../../components/common/notification/Notification";
+import { NotificationState } from "../types_common";
 import WidgetCardsComponent from "./components/WidgetCards";
 import MostNeededCards from "./components/MostNeededCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";

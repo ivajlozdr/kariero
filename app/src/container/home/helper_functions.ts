@@ -1,10 +1,7 @@
 // ==============================
 // Импортиране на типове и интерфейси
 // ==============================
-import {
-  NotificationState,
-  NotificationType
-} from "../../components/common/notification/Notification";
+import { NotificationState, NotificationType } from "../types_common";
 import {
   FilteredTableData,
   DirectorData,
@@ -14,7 +11,6 @@ import {
   HeatmapData,
   MovieProsperityData,
   MovieData,
-  Category,
   DataType,
   Option,
   TopRecommendedOccupation,

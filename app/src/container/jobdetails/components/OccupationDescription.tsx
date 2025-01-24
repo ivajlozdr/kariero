@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FullCareerDetails } from "../../quiz/quiz-types";
+import { FullCareerDetails } from "../../types_common";
 
 const OccupationDescription = ({
   fullCareerDetails

@@ -1,5 +1,5 @@
 import React from "react";
-import { FullCareerDetails } from "../../quiz/quiz-types";
+import { FullCareerDetails } from "../../types_common";
 import { filterHotTechnology } from "../helper-functions";
 import Tooltip from "../../../components/common/tooltip/Tooltip";
 
