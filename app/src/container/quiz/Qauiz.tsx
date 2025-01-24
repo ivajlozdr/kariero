@@ -8,7 +8,7 @@ import {
 } from "./quiz-types";
 import { initialScores } from "./quiz-data";
 import { CSSTransition } from "react-transition-group";
-import Careers from "./components/careers";
+import Careers from "./components/Caareers";
 import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 import Loader from "../../pages/Loader";
