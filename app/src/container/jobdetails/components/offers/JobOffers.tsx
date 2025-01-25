@@ -9,6 +9,7 @@ import { Offers } from "../../jobs-types";
 import OfferName from "./OfferName";
 
 const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
+  console.log("jobOffers: ", jobOffers);
   return (
     <Swiper
       spaceBetween={30}
