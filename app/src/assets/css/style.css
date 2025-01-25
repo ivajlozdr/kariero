@@ -555,10 +555,6 @@ Background Image
   padding: 3rem 2rem;
   box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.1);
   border-top: 4px solid "bg-primary";
-  border-radius: 2rem;
-  margin-left: 4.5rem;
-  margin-right: 4.5rem;
-  margin-bottom: 1rem;
 }
 
 .footer .container {
@@ -627,8 +623,6 @@ Background Image
 @media screen and (max-width: 430px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
   }
 
   .footer-content {
@@ -660,8 +654,6 @@ Background Image
 @media screen and (min-width: 431px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
   }
 
   .footer-content {
@@ -672,8 +664,6 @@ Background Image
 @media screen and (min-width: 431px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
   }
 
   .footer-content {
@@ -684,8 +674,6 @@ Background Image
 @media screen and (min-width: 992px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 3.5rem;
-    margin-right: 3.5rem;
   }
 
   .footer-content {
@@ -696,8 +684,6 @@ Background Image
 @media screen and (min-width: 1517px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 4rem;
-    margin-right: 4rem;
   }
 
   .footer-content {
@@ -708,13 +694,15 @@ Background Image
 @media screen and (min-width: 1817px) {
   .footer {
     padding: 2rem 1rem;
-    margin-left: 4.5rem;
-    margin-right: 4.5rem;
   }
 
   .footer-content {
     grid-template-columns: 1fr;
   }
+}
+
+footer svg {
+  fill: #ff0000; /* Red */
 }
 
 .box.crm-highlight-card {
