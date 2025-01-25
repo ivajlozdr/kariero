@@ -10,11 +10,11 @@ import { Provider } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   checkTokenValidity,
-  showNotification
-} from "../container/home/helper_functions";
+  showNotification,
+  handleNotificationClose
+} from "../container/functions_common";
 import { NotificationState } from "../container/types_common";
 import Notification from "../components/common/notification/Notification";
-import { handleNotificationClose } from "../container/functions_common";
 
 function App() {
   const [verticalMenuClass, setVerticalMenuClass] = useState("");
@@ -43,7 +43,6 @@ function App() {
 
   useEffect(() => {
     const validateToken = async () => {
-      // Function to check the validity of the user's token
       const redirectUrl = await checkTokenValidity();
       if (redirectUrl) {
         showNotification(
@@ -54,7 +53,7 @@ function App() {
       }
     };
 
-    validateToken(); // Trigger token validation on every location change
+    validateToken();
   }, [location]);
   return (
     <Fragment>
