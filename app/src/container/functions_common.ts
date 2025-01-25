@@ -125,3 +125,25 @@ export const handleNotificationClose = (
   }
   setNotification(null);
 };
+
+/**
+ * Обработва събитието при кликване върху вертикалното меню.
+ * Проверява дали 'karieroverticalstyles' в local storage е зададено на 'icontext'.
+ * Също така премахва атрибута за overlay ако ширината на екрана е по-голяма от 992px.
+ *
+ * @param {React.Dispatch<React.SetStateAction<string>>} setVerticalMenuClass Функцията за задаване на състоянието на класа.
+ */
+export const handleVerticalMenuClick = (
+  setVerticalMenuClass: React.Dispatch<React.SetStateAction<string>>
+) => {
+  if (localStorage.getItem("karieroverticalstyles") === "icontext") {
+    setVerticalMenuClass("");
+  }
+
+  if (window.innerWidth > 992) {
+    const htmlElement = document.documentElement;
+    if (htmlElement.getAttribute("icon-overlay") === "open") {
+      htmlElement.setAttribute("icon-overlay", "");
+    }
+  }
+};

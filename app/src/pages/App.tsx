@@ -11,7 +11,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   checkTokenValidity,
   showNotification,
-  handleNotificationClose
+  handleNotificationClose,
+  handleVerticalMenuClick
 } from "../container/functions_common";
 import { NotificationState } from "../container/types_common";
 import Notification from "../components/common/notification/Notification";
@@ -30,24 +31,6 @@ function App() {
 
   // Хук за управление на навигацията
   const navigate = useNavigate();
-
-  /**
-   * Обработва събитието при кликване върху вертикалното меню.
-   * Проверява дали 'karieroverticalstyles' в local storage е зададено на 'icontext'.
-   * Също така премахва атрибута за overlay ако ширината на екрана е по-голяма от 992px.
-   */
-  const handleVerticalMenuClick = () => {
-    if (localStorage.getItem("karieroverticalstyles") === "icontext") {
-      setVerticalMenuClass("");
-    }
-
-    if (window.innerWidth > 992) {
-      const htmlElement = document.documentElement;
-      if (htmlElement.getAttribute("icon-overlay") === "open") {
-        htmlElement.setAttribute("icon-overlay", "");
-      }
-    }
-  };
 
   // Зарежда preline
   useEffect(() => {
@@ -93,7 +76,10 @@ function App() {
             <Header />
             <Sidebar />
             <div className="content main-index">
-              <div className="main-content" onClick={handleVerticalMenuClick}>
+              <div
+                className="main-content"
+                onClick={() => handleVerticalMenuClick(setVerticalMenuClass)}
+              >
                 {notification && (
                   <Notification
                     message={notification.message}
