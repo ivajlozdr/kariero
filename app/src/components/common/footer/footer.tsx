@@ -44,24 +44,24 @@ const Footer: FC = () => (
                 <span>Python</span>
               </div>
               <div className="flex items-center space-x-2">
-                <i className="ti ti-brand-javascript text-lg"></i>
-                <span>Express JS</span>
+                <i className="ti ti-brand-nodejs text-lg"></i>
+                <span>NodeJS</span>
               </div>
               <div className="flex items-center space-x-2">
                 <i className="ti ti-brand-vite text-lg"></i>
                 <span>Vite</span>
               </div>
               <div className="flex items-center space-x-2">
-                <i className="ti ti-brand-nodejs text-lg"></i>
-                <span>NodeJS</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="ti ti-brand-openai text-lg"></i>
-                <span>OpenAI API</span>
+                <i className="ti ti-brand-javascript text-lg"></i>
+                <span>Express JS</span>
               </div>
               <div className="flex items-center space-x-2">
                 <i className="ti ti-database text-lg"></i>
                 <span>MySQL</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <i className="ti ti-brand-openai text-lg"></i>
+                <span>OpenAI API</span>
               </div>
               <div className="flex items-center space-x-2">
                 <i className="ti ti-api text-lg"></i>
@@ -77,7 +77,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/home`}
-                  className="hover:underline transition-all duration-300"
+                  className="hover:underline"
                 >
                   Начало
                 </a>
@@ -85,7 +85,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/quiz`}
-                  className="hover:underline transition-all duration-300"
+                  className="hover:underline"
                 >
                   За Нас
                 </a>
@@ -93,7 +93,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/contact`}
-                  className="hover:underline transition-all duration-300"
+                  className="hover:underline"
                 >
                   Контакт
                 </a>
