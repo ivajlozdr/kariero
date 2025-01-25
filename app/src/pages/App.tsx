@@ -17,13 +17,25 @@ import { NotificationState } from "../container/types_common";
 import Notification from "../components/common/notification/Notification";
 
 function App() {
+  // Състояние за управление на класа на вертикалното меню
   const [verticalMenuClass, setVerticalMenuClass] = useState("");
+
+  // Състояние за управление на известията
   const [notification, setNotification] = useState<NotificationState | null>(
     null
   );
+
+  // Хук за получаване на текущото местоположение (път на URL-то)
   const location = useLocation();
+
+  // Хук за управление на навигацията
   const navigate = useNavigate();
 
+  /**
+   * Обработва събитието при кликване върху вертикалното меню.
+   * Проверява дали 'karieroverticalstyles' в local storage е зададено на 'icontext'.
+   * Също така премахва атрибута за overlay ако ширината на екрана е по-голяма от 992px.
+   */
   const handleVerticalMenuClick = () => {
     if (localStorage.getItem("karieroverticalstyles") === "icontext") {
       setVerticalMenuClass("");
@@ -37,10 +49,12 @@ function App() {
     }
   };
 
+  // Зарежда preline
   useEffect(() => {
     import("preline");
   }, []);
 
+  // Проверява валидността на токена
   useEffect(() => {
     const validateToken = async () => {
       const redirectUrl = await checkTokenValidity();
@@ -55,6 +69,7 @@ function App() {
 
     validateToken();
   }, [location]);
+
   return (
     <Fragment>
       <Loader />
@@ -62,15 +77,15 @@ function App() {
         <HelmetProvider>
           <Helmet
             htmlAttributes={{
-              lang: "en",
-              dir: "ltr",
-              "data-menu-styles": "dark",
-              class: "light",
-              "data-nav-layout": "vertical",
-              "data-header-styles": "light",
-              "data-vertical-style": "overlay",
-              loader: "disable",
-              "data-icon-text": verticalMenuClass
+              lang: "en", // Език на приложението
+              dir: "ltr", // Посока на текста
+              "data-menu-styles": "dark", // Стил на менюто
+              class: "light", // Стил на страницата
+              "data-nav-layout": "vertical", // Вертикално разположение на навигацията
+              "data-header-styles": "light", // Светъл стил за хедъра
+              "data-vertical-style": "overlay", // Стил за вертикалното меню
+              loader: "disable", // Оключване на лоудъра
+              "data-icon-text": verticalMenuClass // Клас за иконите в менюто
             }}
           />
           <Switcher />
