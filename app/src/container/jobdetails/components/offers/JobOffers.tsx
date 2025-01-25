@@ -23,7 +23,7 @@ const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
       className="mySwiper swiper-related-jobs"
       watchSlidesProgress={true}
     >
-      {jobOffers.job_offers.map((job, index) => (
+      {jobOffers.job_offers.map((job) => (
         <SwiperSlide className="rtl:dir-rtl">
           <div className="box custom-box featured-jobs">
             <div className="box-body">
