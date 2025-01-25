@@ -5,15 +5,8 @@ import { FC, Fragment, useState, useEffect } from "react";
 // import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
 // import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import RedirectCard from "./components/RedirectCard";
-import { useNavigate } from "react-router-dom";
 import { DataType, UserData } from "./home-types";
-import {
-  checkTokenValidity,
-  fetchData,
-  showNotification
-} from "./helper_functions";
-import Notification from "../../components/common/notification/Notification";
-import { NotificationState } from "../types_common";
+import { fetchData } from "./helper_functions";
 import WidgetCardsComponent from "./components/WidgetCards";
 import MostNeededCards from "./components/MostNeededCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
@@ -24,8 +17,7 @@ import TopNeededQualitiesTreemap from "./components/TopNeededQualitiesTreemap";
 interface CrmProps {}
 
 const Crm: FC<CrmProps> = () => {
-  const navigate = useNavigate();
-
+  // State за данни от backend-a
   const [data, setData] = useState<DataType>({
     usersCount: [], // Броя на потребителите
     distinctOccupations: { count: 0, data: [] }, // Уникални професии с техния брой
@@ -48,42 +40,13 @@ const Crm: FC<CrmProps> = () => {
     mostPreferredWorkStyleWorkEnvironment: [] // Най-предпочитана работна среда
   });
 
-  // Състояние за потребителски данни
+  // State за потребителски данни
   const [userData, setUserData] = useState<UserData>({
     id: 0, // ID на потребителя
     first_name: "", // Име на потребителя
     last_name: "", // Фамилия на потребителя
     email: "" // Имейл на потребителя
   });
-  const [notification, setNotification] = useState<NotificationState | null>(
-    null
-  );
-
-  const handleNotificationClose = () => {
-    // Функция за затваряне на известията
-    if (notification?.type === "error") {
-      // Ако известието е от тип "грешка", пренасочване към страницата за вход
-      navigate("/signin");
-    }
-    setNotification(null); // Зануляване на известието
-  };
-
-  useEffect(() => {
-    const validateToken = async () => {
-      // Функция за проверка валидността на потребителския токен
-      const redirectUrl = await checkTokenValidity(); // Извикване на помощна функция за валидиране на токена
-      if (redirectUrl) {
-        // Ако токенът е невалиден, показване на известие
-        showNotification(
-          setNotification, // Функция за задаване на известие
-          "Вашата сесия е изтекла. Моля, влезте в профила Ви отново.", // Съобщение за известието
-          "error" // Типът на известието (грешка)
-        );
-      }
-    };
-
-    validateToken(); // Стартиране на проверката на токена при първоначално зареждане на компонента
-  }, []);
 
   useEffect(() => {
     const token =
@@ -97,13 +60,6 @@ const Crm: FC<CrmProps> = () => {
   console.log("data: ", data);
   return (
     <Fragment>
-      {notification && (
-        <Notification
-          message={notification.message}
-          type={notification.type}
-          onClose={handleNotificationClose}
-        />
-      )}
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div>
           <p className="font-semibold text-[1.125rem] text-defaulttextcolor dark:text-defaulttextcolor/70 !mb-0 ">
