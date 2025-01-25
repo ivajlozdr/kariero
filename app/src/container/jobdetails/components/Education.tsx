@@ -1,11 +1,12 @@
+import { FC } from "react";
 import { FullCareerDetails } from "../../types_common";
 import { EducationChart } from "./EducationChart";
 
-const Education = ({
-  fullCareerDetails
-}: {
+interface Props {
   fullCareerDetails: FullCareerDetails;
-}) => {
+}
+
+const Education: FC<Props> = ({ fullCareerDetails }) => {
   return (
     <div className="box custom-box">
       <div className="box-body space-y-8">

@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { FullCareerDetails } from "../../types_common";
 import { filterHotTechnology } from "../helper-functions";
 import Tooltip from "../../../components/common/tooltip/Tooltip";
@@ -7,7 +7,7 @@ interface Props {
   fullCareerDetails: FullCareerDetails;
 }
 
-const Technologies: React.FC<Props> = ({ fullCareerDetails }) => {
+const Technologies: FC<Props> = ({ fullCareerDetails }) => {
   const { hotTechnologies, regularTechnologies } =
     filterHotTechnology(fullCareerDetails);
 

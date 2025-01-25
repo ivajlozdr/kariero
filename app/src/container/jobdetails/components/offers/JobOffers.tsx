@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,7 +9,11 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Offers } from "../../jobs-types";
 import OfferName from "./OfferName";
 
-const JobOffers = ({ jobOffers }: { jobOffers: Offers }) => {
+interface Props {
+  jobOffers: Offers;
+}
+
+const JobOffers: FC<Props> = ({ jobOffers }) => {
   console.log("jobOffers: ", jobOffers);
   return (
     <Swiper

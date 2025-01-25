@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
-const PaginatedTasks = ({ tasks }: { tasks: any[] }) => {
+interface Props {
+  tasks: any[];
+}
+
+const PaginatedTasks: FC<Props> = ({ tasks }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 

@@ -1,5 +1,7 @@
+import { FC } from "react";
 import { Link } from "react-router-dom";
-const Share = ({}: {}) => {
+
+const Share: FC = () => {
   return (
     <div className="box custom-box  !bg-primary/10 !border-0 !shadow-none">
       <div className="box-body">

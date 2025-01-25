@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FullCareerDetails } from "../../types_common";
 import { updatePrimaryColor } from "../../functions_common";
 import {
@@ -6,13 +6,11 @@ import {
   generateColorScale
 } from "../helper-functions";
 
-interface EducationProps {
+interface Props {
   fullCareerDetails: FullCareerDetails;
 }
 
-export const EducationChart: React.FC<EducationProps> = ({
-  fullCareerDetails
-}) => {
+export const EducationChart: FC<Props> = ({ fullCareerDetails }) => {
   const [primaryColor, setPrimaryColor] = useState<string>("#ffffff");
   const education = extractLevelsAndPercentages(
     fullCareerDetails.translated.education

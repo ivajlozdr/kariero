@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { FullCareerDetails } from "../../types_common";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
-const RelatedOccupations = ({
-  fullCareerDetails
-}: {
+interface Props {
   fullCareerDetails: FullCareerDetails;
-}) => {
+}
+
+const RelatedOccupations: FC<Props> = ({ fullCareerDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 

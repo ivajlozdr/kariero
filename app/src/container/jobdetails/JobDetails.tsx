@@ -13,9 +13,7 @@ import Technologies from "./components/Technologies";
 import Loader from "../../pages/Loader";
 import { Offers } from "./jobs-types";
 
-interface JobDetailsProps {}
-
-const JobDetails: FC<JobDetailsProps> = () => {
+const JobDetails: FC = () => {
   const location = useLocation();
 
   const [fullCareerDetails, setFullCareerDetails] =
