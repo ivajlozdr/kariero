@@ -1,13 +1,9 @@
 import { FC } from "react";
-import { FullCareerDetails } from "../../types_common";
+import { CommonCareerProps } from "../../types_common";
 import { filterHotTechnology } from "../helper-functions";
 import Tooltip from "../../../components/common/tooltip/Tooltip";
 
-interface Props {
-  fullCareerDetails: FullCareerDetails;
-}
-
-const Technologies: FC<Props> = ({ fullCareerDetails }) => {
+const Technologies: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
   const { hotTechnologies, regularTechnologies } =
     filterHotTechnology(fullCareerDetails);
 

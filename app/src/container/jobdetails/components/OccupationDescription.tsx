@@ -1,11 +1,9 @@
 import { FC, useState } from "react";
-import { FullCareerDetails } from "../../types_common";
+import { CommonCareerProps } from "../../types_common";
 
-interface Props {
-  fullCareerDetails: FullCareerDetails;
-}
-
-const OccupationDescription: FC<Props> = ({ fullCareerDetails }) => {
+const OccupationDescription: FC<CommonCareerProps> = ({
+  fullCareerDetails
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   console.log("fullCareerDetails: ", fullCareerDetails);

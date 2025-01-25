@@ -1,3 +1,7 @@
+export interface CommonCareerProps {
+  fullCareerDetails: FullCareerDetails;
+}
+
 export type NotificationType = "success" | "error" | "warning";
 
 export interface NotificationState {

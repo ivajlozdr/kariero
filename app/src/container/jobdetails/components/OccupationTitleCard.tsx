@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import { handleToggleFavouriteOccupation } from "../helper-functions";
-import { FullCareerDetails } from "../../types_common";
+import { CommonCareerProps } from "../../types_common";
 import { FC } from "react";
 
-interface Props {
-  fullCareerDetails: FullCareerDetails;
-}
-
-const OccupationTitleCard: FC<Props> = ({ fullCareerDetails }) => {
+const OccupationTitleCard: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const date = new Date().toISOString();
