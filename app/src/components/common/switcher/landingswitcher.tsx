@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import store from "../../../redux/store";
 import { ThemeChanger } from "../../../redux/action";
-import Themeprimarycolor, * as switcherdata from "./switcherdata/switcherdata";
+import * as switcherdata from "./switcherdata/switcherdata";
 import { Link } from "react-router-dom";
 
 const Landingswitcher = ({ local_varaiable, ThemeChanger }: any) => {
@@ -23,7 +23,7 @@ const Landingswitcher = ({ local_varaiable, ThemeChanger }: any) => {
         ...theme,
         dataNavStyle: "",
         dataNavLayout: `${
-          localStorage.ynexlayout == "horizontal" ? "horizontal" : "vertical"
+          localStorage.karierolayout == "horizontal" ? "horizontal" : "vertical"
         }`
       });
     };
@@ -107,125 +107,6 @@ const Landingswitcher = ({ local_varaiable, ThemeChanger }: any) => {
                 >
                   Dark
                 </label>
-              </div>
-            </div>
-            <p className="switcher-style-head">Directions:</p>
-            <div className="grid grid-cols-3 gap-6 switcher-style">
-              <div className="flex">
-                <input
-                  type="radio"
-                  name="direction"
-                  className="ti-form-radio"
-                  id="switcher-ltr"
-                  checked={local_varaiable.dir == "ltr"}
-                  onChange={(_e) => {}}
-                  onClick={() => switcherdata.Ltr(ThemeChanger)}
-                />
-                <label
-                  htmlFor="switcher-ltr"
-                  className="text-xs text-gray-500 ms-2 dark:text-white/70"
-                >
-                  LTR
-                </label>
-              </div>
-              <div className="flex">
-                <input
-                  type="radio"
-                  name="direction"
-                  className="ti-form-radio"
-                  id="switcher-rtl"
-                  checked={local_varaiable.dir == "rtl"}
-                  onChange={(_e) => {}}
-                  onClick={() => switcherdata.Rtl(ThemeChanger)}
-                />
-                <label
-                  htmlFor="switcher-rtl"
-                  className="text-xs text-gray-500 ms-2 dark:text-white/70"
-                >
-                  RTL
-                </label>
-              </div>
-            </div>
-            <div className="theme-colors">
-              <p className="switcher-style-head">Theme Primary:</p>
-              <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                <div className="ti-form-radio switch-select">
-                  <input
-                    className="ti-form-radio color-input color-primary-1"
-                    type="radio"
-                    name="theme-primary"
-                    checked={local_varaiable.colorPrimaryRgb == "58, 88, 146"}
-                    onChange={(_e) => {}}
-                    id="switcher-primary"
-                    onClick={() => switcherdata.primaryColor1(ThemeChanger)}
-                  />
-                </div>
-                <div className="ti-form-radio switch-select">
-                  <input
-                    className="ti-form-radio color-input color-primary-2"
-                    type="radio"
-                    name="theme-primary"
-                    checked={local_varaiable.colorPrimaryRgb == "92, 144 ,163"}
-                    onChange={(_e) => {}}
-                    id="switcher-primary1"
-                    onClick={() => switcherdata.primaryColor2(ThemeChanger)}
-                  />
-                </div>
-                <div className="ti-form-radio switch-select">
-                  <input
-                    className="ti-form-radio color-input color-primary-3"
-                    type="radio"
-                    name="theme-primary"
-                    checked={local_varaiable.colorPrimaryRgb == "161, 90 ,223"}
-                    onChange={(_e) => {}}
-                    id="switcher-primary2"
-                    onClick={() => switcherdata.primaryColor3(ThemeChanger)}
-                  />
-                </div>
-                <div className="ti-form-radio switch-select">
-                  <input
-                    className="ti-form-radio color-input color-primary-4"
-                    type="radio"
-                    name="theme-primary"
-                    checked={local_varaiable.colorPrimaryRgb == "78, 172, 76"}
-                    onChange={(_e) => {}}
-                    id="switcher-primary3"
-                    onClick={() => switcherdata.primaryColor4(ThemeChanger)}
-                  />
-                </div>
-                <div className="ti-form-radio switch-select">
-                  <input
-                    className="ti-form-radio color-input color-primary-5"
-                    type="radio"
-                    name="theme-primary"
-                    checked={local_varaiable.colorPrimaryRgb == "223, 90, 90"}
-                    onChange={(_e) => {}}
-                    id="switcher-primary4"
-                    onClick={() => switcherdata.primaryColor5(ThemeChanger)}
-                  />
-                </div>
-                <div className="ti-form-radio switch-select ltr:pl-0 rtl:pr-0 mt-1 color-primary-light">
-                  <div className="theme-container-primary">
-                    <button className="">nano</button>
-                  </div>
-                  <div className="pickr-container-primary">
-                    <div className="pickr">
-                      <button
-                        className="pcr-button"
-                        onClick={(ele: any) => {
-                          if (ele.target.querySelector("input")) {
-                            ele.target.querySelector("input").click();
-                          }
-                        }}
-                      >
-                        <Themeprimarycolor
-                          theme={local_varaiable}
-                          actionfunction={ThemeChanger}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
