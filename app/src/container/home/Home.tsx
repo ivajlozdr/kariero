@@ -73,20 +73,6 @@ const Crm: FC<CrmProps> = () => {
             Track your sales activity, leads and deals here.
           </p>
         </div>
-        <div className="btn-list md:mt-0 mt-2">
-          <button
-            type="button"
-            className="ti-btn bg-primary text-white btn-wave !font-medium !me-[0.375rem] !ms-0 !text-[0.85rem] !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0"
-          >
-            <i className="ri-filter-3-fill  inline-block"></i>Filters
-          </button>
-          <button
-            type="button"
-            className="ti-btn ti-btn-outline-primary btn-wave !font-medium  !me-[0.375rem]  !ms-0 !text-[0.85rem] !rounded-[0.35rem] !py-[0.51rem] !px-[0.86rem] shadow-none mb-0"
-          >
-            <i className="ri-upload-cloud-line  inline-block"></i>Export
-          </button>
-        </div>
       </div>
       <WidgetCardsComponent data={data} />
       <div
