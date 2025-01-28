@@ -263,6 +263,9 @@ Background Image
 .main-header-container .notifications-dropdown .main-header-dropdown {
   @apply w-[22rem];
 }
+.main-header-logout {
+  @apply w-full !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex text-defaulttextcolor/70 py-2 px-[0.9375rem] font-medium block hover:text-primary focus:ring-0 focus:ring-primary;
+}
 
 @keyframes slideIn {
   0% {
@@ -16656,7 +16659,7 @@ select {
 }
 
 .ti-dropdown-item {
-  @apply py-2 px-[0.9375rem] text-[0.8125rem] font-medium block   text-gray-800 hover:bg-primary/[0.05] hover:text-primary focus:ring-0 focus:ring-primary dark:text-white/70 dark:hover:bg-primary/5 dark:hover:text-primary;
+  @apply py-2 px-[0.9375rem] text-[0.8125rem] font-medium block text-gray-800 hover:bg-primary/[0.05] hover:text-primary focus:ring-0 focus:ring-primary dark:text-white/70 dark:hover:bg-primary/5;
 }
 .ti-dropdown-item.active {
   @apply bg-primary text-white !important;

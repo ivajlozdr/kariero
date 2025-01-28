@@ -46,17 +46,13 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear authentication tokens
     localStorage.removeItem("authToken");
     sessionStorage.removeItem("authToken");
 
-    // Redirect to sign-in page
     navigate(`${import.meta.env.BASE_URL}signin/`);
   };
 
   const [isLogoHovered, setIsLogoHovered] = useState(false);
-  const [isToggleHovered, setIsToggleHovered] = useState(false);
-  const [isLogOutHovered, setIsLogOutHovered] = useState(false);
 
   return (
     <Fragment>
@@ -90,19 +86,12 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
             </div>
             <div className="header-content-right">
               <div
-                className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2"
+                className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2 hover:scale-125 transition-all transition-300 ease-in-out"
                 onClick={() => ToggleDark()}
-                style={{
-                  transform: isToggleHovered ? "scale(1.1)" : "scale(0.9)", // Increase size on hover
-                  transformOrigin: "center",
-                  transition: "transform 0.3s ease" // Smooth transition
-                }}
-                onMouseEnter={() => setIsToggleHovered(true)}
-                onMouseLeave={() => setIsToggleHovered(false)}
               >
                 <Link
                   aria-label="anchor"
-                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium transition-all text-xs"
                   to="#"
                   data-hs-theme-click-value="dark"
                 >
@@ -110,7 +99,7 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
                 </Link>
                 <Link
                   aria-label="anchor"
-                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium text-defaulttextcolor transition-all text-xs dark:bg-bodybg dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 rounded-full font-medium transition-all text-xs"
                   to="#"
                   data-hs-theme-click-value="light"
                 >
@@ -118,21 +107,12 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
                 </Link>
               </div>
 
-              <div
-                className="header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left]"
-                style={{
-                  transform: isLogOutHovered ? "scale(1.1)" : "scale(0.9)", // Increase size on hover
-                  transformOrigin: "center",
-                  transition: "transform 0.3s ease" // Smooth transition
-                }}
-                onMouseEnter={() => setIsLogOutHovered(true)}
-                onMouseLeave={() => setIsLogOutHovered(false)}
-              >
+              <div className="header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] hover:scale-110 transition-all transition-300 ease-in-out">
                 <button
-                  className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
+                  className="main-header-logout rounded-xl hover:bg-primary/10"
                   onClick={handleLogout}
                 >
-                  <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
+                  <i className="ti ti-logout text-[1.125rem] me-2"></i>
                   Излизане
                 </button>
               </div>
