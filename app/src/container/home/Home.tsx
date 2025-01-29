@@ -115,12 +115,12 @@ const Crm: FC<CrmProps> = () => {
           description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/comingsoon`}
+          href={`${import.meta.env.BASE_URL}comingsoon`}
           title="Индивидуални Статистики"
           description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
         />
         <RedirectCard
-          href="../app/comingsoon"
+          href={`${import.meta.env.BASE_URL}comingsoon`}
           title="Очаквайте Скоро"
           description="Имаме планове да разширим платформата все повече и все повече! Очаквайте още повече страници."
         />
