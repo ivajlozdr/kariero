@@ -14,7 +14,7 @@ const Comingsoon: FC<ComingsoonProps> = () => {
     }
     return () => {
       if (rootDiv) {
-        rootDiv.className = ""; // Remove the className when component unmounts
+        rootDiv.className = "";
       }
     };
   }, []);

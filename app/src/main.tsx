@@ -17,6 +17,7 @@ import Contact from "./container/contact/Contact.tsx";
 import Landing from "./container/landing/landing.tsx";
 import LandingLayout from "./pages/LandingLayout.tsx";
 import JobDetails from "./container/jobdetails/JobDetails.tsx";
+import ComingSoon from "./container/authentication/comingsoon/comingsoon.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
@@ -48,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="signup" element={<Signupbasic />} />
             <Route path="signin" element={<Signinbasic />} />
             <Route path="twostepverification" element={<Twostepbasic />} />
+            <Route path="comingsoon" element={<ComingSoon />} />
           </Route>
         </Routes>
       </React.Suspense>
