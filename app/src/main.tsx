@@ -17,7 +17,7 @@ import Contact from "./container/contact/Contact.tsx";
 import Landing from "./container/landing/landing.tsx";
 import LandingLayout from "./pages/LandingLayout.tsx";
 import JobDetails from "./container/jobdetails/JobDetails.tsx";
-import ComingSoon from "./container/authentication/comingsoon/comingsoon.tsx";
+import ComingSoon from "./container/authentication/comingsoon/ComingSoon.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
