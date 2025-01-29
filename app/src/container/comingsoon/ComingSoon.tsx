@@ -1,8 +1,8 @@
 import { FC, Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
-import media87 from "../../../assets/images/media/media-87.svg";
-import togglelogo from "../../../assets/images/brand-logos/toggle-logo.png";
-import { DayCounter } from "../undermaintanace/counterdata";
+import media87 from "../../assets/images/media/media-87.svg";
+import togglelogo from "../../assets/images/brand-logos/toggle-logo.png";
+import { DayCounter } from "../authentication/undermaintanace/counterdata";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
 interface ComingsoonProps {}
