@@ -77,7 +77,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/home`}
-                  className="hover:underline"
+                  className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   Начало
                 </a>
@@ -85,7 +85,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/quiz`}
-                  className="hover:underline"
+                  className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   За Нас
                 </a>
@@ -93,7 +93,7 @@ const Footer: FC = () => (
               <li>
                 <a
                   href={`${import.meta.env.BASE_URL}app/contact`}
-                  className="hover:underline"
+                  className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   Контакт
                 </a>
@@ -128,8 +128,19 @@ const Footer: FC = () => (
 
         <div className="text-center text-xs">
           <span>
-            22-ра Национална Олимпиада по Информационни Технологии - 2025 г. -
-            Професионална Гимназия по Икономика - гр. Перник
+            <a
+              className="relative italic after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
+              href="https://edusoft.fmi.uni-sofia.bg/"
+            >
+              22-ра Национална Олимпиада по Информационни Технологии
+            </a>{" "}
+            - 2025 г. -
+            <a
+              className="relative italic after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
+              href="https://pgi-pernik.bg-schools.com/"
+            >
+              Професионална Гимназия по Икономика - гр. Перник
+            </a>
           </span>
         </div>
       </div>
