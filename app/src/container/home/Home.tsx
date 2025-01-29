@@ -105,17 +105,17 @@ const Crm: FC<CrmProps> = () => {
       </div>
       <div className="card-container">
         <RedirectCard
-          href="../app/quiz"
+          href={`${import.meta.env.BASE_URL}app/quiz`}
           title="Кариерни Насоки"
           description="Решете кратък, интерактивен въпросник и открийте вашите кариерни възможности!"
         />
         <RedirectCard
-          href="../app/contact"
+          href={`${import.meta.env.BASE_URL}app/contact`}
           title="За Контакт"
           description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
-          href="../app/comingsoon"
+          href={`${import.meta.env.BASE_URL}app/comingsoon`}
           title="Индивидуални Статистики"
           description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
         />
