@@ -1,6 +1,6 @@
 import { FC, Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import media87 from "../../assets/images/media/media-87.svg";
+import ComingSoonImage from "../../assets/images/media/ComingSoon.svg";
 import togglelogo from "../../assets/images/brand-logos/toggle-logo.png";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
@@ -81,7 +81,7 @@ const Comingsoon: FC<ComingsoonProps> = () => {
         </div>
         <div className="lg:col-span-5 col-span-12 hidden lg:block relative px-0">
           <div className="bg-light w-full h-full flex items-center justify-center under-maintenance-image-container">
-            <img src={media87} alt="" className="imig-fluid" />
+            <img src={ComingSoonImage} alt="" className="imig-fluid" />
           </div>
         </div>
       </div>
