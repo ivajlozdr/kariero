@@ -218,37 +218,16 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                 <div className="xxl:col-span-8 xl:col-span-8 lg:col-span-8 col-span-12">
                   <div className="">
                     <h5 className="landing-banner-heading mb-3 !text-[2.4rem]">
-                      <span className="text-secondary font-bold">6000+ </span>
-                      Jobs, Find your dream job
+                      <span className="text-primary dark:text-secondary font-bold italic">
+                        Кариеро
+                      </span>
+                      , правилният избор.
                     </h5>
                     <p className="text-[1.125rem] mb-[3rem] opacity-[0.8] font-normal text-white">
-                      Register &amp; get free access to latest openings
-                      worldwide. Create &amp; submit your resume with few easy
-                      steps.
+                      Присъединете се към нашата платформа и открийте
+                      най-подходящата професия за вас! Време е да разкриете своя
+                      потенциал 🚀
                     </p>
-                    <div className="mb-4 custom-form-group ">
-                      <input
-                        type="text"
-                        className="form-control !py-4 !px-6 w-full  !rounded-md form-control-lg shadow-sm"
-                        placeholder="Job title, Keywords or Company.."
-                        aria-label="Recipient's username"
-                      />
-                      <div className="custom-form-btn">
-                        <Link
-                          aria-label="anchor"
-                          to="#"
-                          className="gps-location"
-                        >
-                          <i className="ti ti-current-location"></i>
-                        </Link>
-                        <button
-                          className="ti-btn bg-primary text-white   !font-medium !border dark:border-defaultborder/10-0"
-                          type="button"
-                        >
-                          <i className="bi bi-search me-2"></i> Search
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <div className="xxl:col-span-2 xl:col-span-2 lg:col-span-2 col-span-12"></div>
