@@ -33,7 +33,6 @@ import togglelogo from "../../assets/images/brand-logos/toggle-logo.png";
 import toggledark from "../../assets/images/brand-logos/toggle-dark.png";
 import desktoplogo from "../../assets/images/brand-logos/desktop-logo.png";
 import desktopwhitelogo from "../../assets/images/brand-logos/desktop-white.png";
-import Navbar2 from "./SideMenu";
 import { connect } from "react-redux";
 
 interface JobslandingProps {}
@@ -74,12 +73,6 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  function toggleNavigation() {
-    if (window.innerWidth <= 992) {
-      const theme = store.getState();
-      ThemeChanger({ ...theme, toggled: "open", dataNavLayout: "horizontal" });
-    }
-  }
   function handleClick() {
     const theme = store.getState();
     ThemeChanger({ ...theme, toggled: "close", dataNavLayout: "horizontal" });
@@ -126,6 +119,7 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
           <body className="landing-body jobs-landing"></body>
         </Helmet>
       </HelmetProvider>
+      {/* MOBILE HEADER! */}
       <header className="app-header">
         <div className="main-header-container container-fluid">
           <div className="header-content-left">
@@ -139,18 +133,6 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                   <img src={toggledark} alt="logo" className="toggle-dark" />
                 </a>
               </div>
-            </div>
-
-            <div className="header-element" onClick={() => toggleNavigation()}>
-              <Link
-                aria-label="anchor"
-                to="#"
-                className="sidemenu-toggle header-link"
-              >
-                <span className="open-toggle">
-                  <i className="ri-menu-3-line text-xl"></i>
-                </span>
-              </Link>
             </div>
           </div>
 
@@ -166,10 +148,10 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                 <a
                   aria-label="anchor"
                   href="#"
-                  className="ti-btn m-1 p-2 px-3 ti-btn-success"
+                  className="ti-btn ti-btn-success !m-1"
                   data-hs-overlay="#hs-overlay-switcher"
                 >
-                  <i className="ri-settings-3-line animate-spin-slow"></i>
+                  <i className="!m-0 ti ti-settings animate-spin-slow py-[0.20rem]"></i>
                 </a>
               </div>
             </div>
@@ -177,6 +159,7 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
         </div>
       </header>
       <div id="responsive-overlay" onClick={() => menuClose()}></div>
+      {/* REGULAR HEADER! */}
       <aside className="app-sidebar sticky !topacity-0" id="sidebar">
         <div className="container-xl xl:!p-0">
           <div className="main-sidebar mx-0">
@@ -203,31 +186,6 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                   </Link>
                 </div>
               </div>
-              <div className="slide-left hidden" id="slide-left">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  {" "}
-                  <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>{" "}
-                </svg>
-              </div>
-              <Navbar2 />
-              <div className="slide-right hidden" id="slide-right">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  {" "}
-                  <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>{" "}
-                </svg>
-              </div>
               <div className="lg:flex hidden space-x-2 rtl:space-x-reverse">
                 <Link
                   to={`${import.meta.env.BASE_URL}signin`}
@@ -236,18 +194,12 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                   Влезте в профила си
                 </Link>
                 <Link
-                  className="ti-btn  bg-secondary text-white !font-medium me-[0.365rem] whitespace-nowrap"
-                  to={`${import.meta.env.BASE_URL}apps/jobs/jobpost/`}
-                >
-                  Job Post
-                </Link>
-                <Link
                   aria-label="anchor"
                   to="#"
                   className="ti-btn m-0 p-2 px-3 ti-btn-light !font-medium"
                   data-hs-overlay="#hs-overlay-switcher"
                 >
-                  <i className="ri-settings-3-line animate-spin-slow"></i>
+                  <i className="ti ti-settings animate-spin-slow"></i>
                 </Link>
               </div>
             </nav>
