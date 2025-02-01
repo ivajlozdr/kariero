@@ -14,9 +14,7 @@ import MostSelectedCards from "./components/MostSelectedPreferences";
 import TopRecommendedOccupationsAndRelated from "./components/TopRecommendedOccupationsAndRelated";
 import TopNeededQualitiesTreemap from "./components/TopNeededQualitiesTreemap";
 
-interface CrmProps {}
-
-const Crm: FC<CrmProps> = () => {
+const Home: FC = () => {
   // State за данни от backend-a
   const [data, setData] = useState<DataType>({
     usersCount: [], // Броя на потребителите
@@ -145,4 +143,4 @@ const Crm: FC<CrmProps> = () => {
   );
 };
 
-export default Crm;
+export default Home;
