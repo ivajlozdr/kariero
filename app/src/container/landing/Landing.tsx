@@ -33,7 +33,7 @@ import togglelogo from "../../assets/images/brand-logos/toggle-logo.png";
 import toggledark from "../../assets/images/brand-logos/toggle-dark.png";
 import desktoplogo from "../../assets/images/brand-logos/desktop-logo.png";
 import desktopwhitelogo from "../../assets/images/brand-logos/desktop-white.png";
-import Navbar2 from "./sidemenu";
+import Navbar2 from "./SideMenu";
 import { connect } from "react-redux";
 
 interface JobslandingProps {}

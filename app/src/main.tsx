@@ -14,7 +14,7 @@ import "./index.scss";
 import ProtectedRoute from "./pages/ProtectedRoute.tsx";
 import ResetRequest from "./container/authentication/resetpassword/resetrequest.tsx";
 import Contact from "./container/contact/Contact.tsx";
-import Landing from "./container/landing/landing.tsx";
+import Landing from "./container/landing/Landing.tsx";
 import LandingLayout from "./pages/LandingLayout.tsx";
 import JobDetails from "./container/jobdetails/JobDetails.tsx";
 import ComingSoon from "./container/comingsoon/ComingSoon.tsx";
