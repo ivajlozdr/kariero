@@ -8,7 +8,7 @@ import Authenticationlayout from "./pages/authenticationlayout.tsx";
 import Resetbasic from "./container/authentication/resetpassword/resetbasic/resetbasic.tsx";
 import Signupbasic from "./container/authentication/signup/signupbasic/signupbasic.tsx";
 import Twostepbasic from "./container/authentication/twostepverification/twostepbasic/twostepbasic.tsx";
-import Crm from "./container/home/Home.tsx";
+import Home from "./container/home/Home.tsx";
 import Quiz from "./container/quiz/Quiz.tsx";
 import "./index.scss";
 import ProtectedRoute from "./pages/ProtectedRoute.tsx";
@@ -37,7 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               </ProtectedRoute>
             }
           >
-            <Route index path="home" element={<Crm />} />
+            <Route index path="home" element={<Home />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />

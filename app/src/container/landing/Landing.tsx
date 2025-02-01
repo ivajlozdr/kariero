@@ -132,7 +132,7 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
             <div className="header-element">
               <div className="horizontal-logo">
                 <a
-                  href={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                  href={`${import.meta.env.BASE_URL}app/home`}
                   className="header-logo"
                 >
                   <img src={togglelogo} alt="logo" className="toggle-logo" />
@@ -185,14 +185,14 @@ const Jobslanding: FC<JobslandingProps> = ({ ThemeChanger }: any) => {
                 <div className="responsive-logo">
                   <Link
                     className="responsive-logo-light"
-                    to={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                    to={`${import.meta.env.BASE_URL}app/home`}
                     aria-label="Brand"
                   >
                     <img src={desktoplogo} alt="logo" className="mx-auto" />
                   </Link>
                   <Link
                     className="responsive-logo-dark"
-                    to={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                    to={`${import.meta.env.BASE_URL}app/home`}
                     aria-label="Brand"
                   >
                     <img
