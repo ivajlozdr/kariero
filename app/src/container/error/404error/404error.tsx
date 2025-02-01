@@ -7,7 +7,7 @@ const Error404: FC<Error404Props> = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1); // Go back to the previous page in history
+    navigate(`${import.meta.env.BASE_URL}app/home`);
   };
   return (
     <Fragment>
@@ -36,7 +36,7 @@ const Error404: FC<Error404Props> = () => {
                     className="ti-btn bg-primary text-white font-semibold"
                   >
                     <i className="ri-arrow-left-line align-middle inline-block"></i>
-                    Назад
+                    Към начало
                   </button>
                 </div>
                 <div className="xl:col-span-3"></div>

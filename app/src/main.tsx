@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "@tabler/icons-webfont/dist/tabler-icons.min.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./pages/App.tsx";
 import Signinbasic from "./container/authentication/signin/signinbasic/signinbasic.tsx";
 import Authenticationlayout from "./pages/authenticationlayout.tsx";
@@ -18,6 +18,7 @@ import Landing from "./container/landing/landing.tsx";
 import LandingLayout from "./pages/LandingLayout.tsx";
 import JobDetails from "./container/jobdetails/JobDetails.tsx";
 import ComingSoon from "./container/comingsoon/ComingSoon.tsx";
+import Error404 from "./container/error/404error/404error.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
@@ -25,8 +26,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <React.Suspense fallback={<div>Зареждане...</div>}>
         <Routes>
           <Route path="/" element={<LandingLayout />}>
-            <Route path={`/`} element={<Landing />} />
+            <Route index element={<Landing />} />
           </Route>
+          <Route path="*" element={<Navigate to="/error/404" />} />
           <Route
             path="/app"
             element={
@@ -50,6 +52,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="signin" element={<Signinbasic />} />
             <Route path="twostepverification" element={<Twostepbasic />} />
             <Route path="comingsoon" element={<ComingSoon />} />
+            <Route path="error/404" element={<Error404 />} />
           </Route>
         </Routes>
       </React.Suspense>
