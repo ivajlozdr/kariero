@@ -41,7 +41,7 @@ const CareerQuiz: React.FC<CareerQuizProps> = ({
             classNames="fade-no-transform"
             unmountOnExit
           >
-            <h2 className="text-lg font-medium text-gray-700 text-center mb-6">
+            <h2 className="text-lg font-medium text-defaulttextcolor/70 text-center mb-6">
               {currentQuestion.question}
             </h2>
           </CSSTransition>
