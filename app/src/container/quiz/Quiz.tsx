@@ -103,7 +103,7 @@ const QuizComponent: React.FC = () => {
           setNotification={setNotification}
         />
       </CSSTransition>
-      {/* <button
+      <button
         onClick={() => {
           console.log(scores);
         }}
@@ -125,7 +125,7 @@ const QuizComponent: React.FC = () => {
         }}
       >
         JUMP TO DETAILS
-      </button> */}
+      </button>
     </div>
   );
 };
