@@ -208,6 +208,7 @@ app.post("/password-reset-request", (req, res) => {
     });
 
     // Create a reset link with the token
+    // const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
     const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
 
     // Send email with reset link
@@ -1348,5 +1349,5 @@ app.get("/stats/platform/all-data", (req, res) => {
 
 // Start server
 app.listen(5001, () => {
-  console.log("Server started on http://localhost:5001");
+  console.log("Server started on port 5001");
 });
