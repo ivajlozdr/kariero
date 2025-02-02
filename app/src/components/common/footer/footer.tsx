@@ -1,9 +1,16 @@
 import { FC, Fragment } from "react";
 
-const Footer: FC = () => (
+interface FooterProps {
+  landing?: boolean;
+}
+
+const Footer: FC<FooterProps> = ({ landing }) => (
   <Fragment>
-    <footer className="footer mt-auto xl:ps-[15rem] font-inter bg-white dark:bg-bodybg text-defaultsize text-gray dark:text-defaulttextcolor/50 leading-normal shadow-[0_0_0.4rem_rgba(0,0,0,0.1)] py-10">
-      <div className="container mx-auto px-6 xl:ps-[15rem]">
+    <footer
+      className={`footer bg-white dark:bg-bodybg mt-auto font-inter text-defaultsize text-gray dark:text-defaulttextcolor/50 leading-normal shadow-[0_0_0.4rem_rgba(0,0,0,0.1)] py-10
+      ${!landing && "xl:ps-[15rem]"}`}
+    >
+      <div className={`container mx-auto px-6 ${!landing && "xl:ps-[15rem]"}`}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-3">
             <h2 className="text-defaulttextcolor font-semibold dark:text-defaulttextcolor text-lg">

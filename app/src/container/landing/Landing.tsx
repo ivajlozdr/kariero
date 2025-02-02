@@ -34,6 +34,7 @@ import toggledark from "../../assets/images/brand-logos/toggle-dark.png";
 import desktoplogo from "../../assets/images/brand-logos/desktop-logo.png";
 import desktopwhitelogo from "../../assets/images/brand-logos/desktop-white.png";
 import { connect } from "react-redux";
+import Footer from "../../components/common/footer/footer";
 
 const Landing: FC = ({ ThemeChanger }: any) => {
   useEffect(() => {
@@ -232,7 +233,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
             </div>
           </section>
         </div>
-        <section
+        {/* <section
           className="section section-bg dark:!bg-black/10 text-defaulttextcolor"
           id="jobs"
         >
@@ -440,7 +441,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
         <section
           className="section bg-light text-defaulttextcolor text-defaultsize"
           id="steps"
@@ -448,10 +449,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
           <div className="container text-center">
             <div className=" justify-center text-center mb-12">
               <div className="xl:col-span-6 col-span-12">
-                <p className="text-[0.75rem] font-semibold mb-1">
-                  <span className="landing-section-heading">Steps</span>
-                </p>
-                <h3 className="font-semibold mb-2">How it works ?</h3>
+                <h3 className="font-semibold mb-2">Как работи Кариеро?</h3>
                 <span className="text-[#8c9097] dark:text-white/50 text-[0.9375rem] font-normal block">
                   Открийте своя кариерен път в три лесни стъпки – регистрирайте
                   се, попълнете кратък въпросник и вижте вашите резултати!
@@ -526,54 +524,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
             </div>
           </div>
         </section>
-        <div className="landing-main-footer py-4 opacity-[0.87]">
-          <div className="container">
-            <div className="flex flex-wrap gap-2 items-center justify-between">
-              <div>
-                <span className="text-white opacity-[0.7] text-[0.875rem]">
-                  {" "}
-                  © Copyright <span id="year">2024</span>{" "}
-                  <Link
-                    to="#"
-                    className="text-primary text-[0.9375rem] font-semibold"
-                  >
-                    Ynex
-                  </Link>
-                  .
-                </span>
-              </div>
-              <div>
-                <ul className="list-none font-normal landing-footer-list mb-0 flex gap-4">
-                  <li className="!mb-0">
-                    <Link to="#" className="text-white opacity-[0.8]">
-                      Terms Of Service
-                    </Link>
-                  </li>
-                  <li className="!mb-0">
-                    <Link to="#" className="text-white opacity-[0.8]">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li className="!mb-0">
-                    <Link to="#" className="text-white opacity-[0.8]">
-                      Legal
-                    </Link>
-                  </li>
-                  <li className="!mb-0">
-                    <Link to="#" className="text-white opacity-[0.8]">
-                      Contact
-                    </Link>
-                  </li>
-                  <li className="!mb-0">
-                    <Link to="#" className="text-white opacity-[0.8]">
-                      Report Abuse
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Footer landing />
       </div>
     </Fragment>
   );
