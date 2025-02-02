@@ -2400,7 +2400,7 @@ footer svg {
   @apply bg-primary !important;
 }
 [data-nav-layout="horizontal"] .landing-body .landing-section-heading {
-  @apply relative text-[0.813rem] font-[600] before:absolute before:w-[60%] before:h-[0.25rem] before:bg-gradient-to-r before:from-success before:to-success/10 before:opacity-[0.5] before:-top-[0.625rem] before:rounded-[3.125rem] before:end-0;
+  @apply relative text-[0.813rem] font-[600];
 }
 [data-nav-layout="horizontal"] .landing-body .customize-image img {
   @apply w-[30.5rem] h-[20rem] mt-[20px] p-[15px] relative;
