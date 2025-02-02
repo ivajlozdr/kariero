@@ -112,7 +112,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
             <div className="header-element !items-center">
               <div className="lg:hidden block">
                 <a
-                  href={`${import.meta.env.BASE_URL}signin`}
+                  href={`${import.meta.env.BASE_URL}signup`}
                   className="ti-btn ti-btn-secondary !m-1"
                 >
                   Регистрация
@@ -166,7 +166,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
               </div>
               <div className="lg:flex hidden space-x-2 rtl:space-x-reverse">
                 <Link
-                  to={`${import.meta.env.BASE_URL}signin`}
+                  to={`${import.meta.env.BASE_URL}signup`}
                   className="ti-btn w-[10rem] ti-btn-secondary-full m-0 p-2"
                 >
                   Регистрация
