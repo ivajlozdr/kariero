@@ -1,31 +1,5 @@
 import { FC, Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-// import required modules
-import { Autoplay, Pagination } from "swiper/modules";
-import jobslanding1 from "../../assets/images/media/jobs-landing/1.jpg";
-import jobslanding2 from "../../assets/images/media/jobs-landing/2.jpg";
-import jobslanding3 from "../../assets/images/media/jobs-landing/3.jpg";
-import jobslanding4 from "../../assets/images/media/jobs-landing/4.jpg";
-import jobslanding5 from "../../assets/images/media/jobs-landing/5.jpg";
-import jobslanding6 from "../../assets/images/media/jobs-landing/6.jpg";
-import jobslanding8 from "../../assets/images/media/jobs-landing/8.png";
-import jobslanding7 from "../../assets/images/media/jobs-landing/7.png";
-import blog1 from "../../assets/images/media/jobs-landing/blog/1.jpg";
-import blog2 from "../../assets/images/media/jobs-landing/blog/2.jpg";
-import blog3 from "../../assets/images/media/jobs-landing/blog/3.jpg";
-import face3 from "../../assets/images/faces/3.jpg";
-import face4 from "../../assets/images/faces/4.jpg";
-import face5 from "../../assets/images/faces/5.jpg";
-import face2 from "../../assets/images/faces/2.jpg";
-import face7 from "../../assets/images/faces/7.jpg";
-import face10 from "../../assets/images/faces/10.jpg";
-import face16 from "../../assets/images/faces/16.jpg";
-import face12 from "../../assets/images/faces/12.jpg";
-import face15 from "../../assets/images/faces/15.jpg";
 import store from "../../redux/store";
 import { ThemeChanger } from "../../redux/action";
 import { Helmet, HelmetProvider } from "react-helmet-async";
@@ -66,7 +40,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
       }
     }
 
-    handleResize(); // Initial check
+    handleResize();
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -81,7 +55,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
     }
     return () => {
       if (rootDiv) {
-        rootDiv.className = ""; // Remove the className when component unmounts
+        rootDiv.className = "";
       }
     };
   }, []);
