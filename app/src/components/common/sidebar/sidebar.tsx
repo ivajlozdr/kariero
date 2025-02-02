@@ -13,9 +13,8 @@ import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
 
-interface SidebarProps {}
-
-const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
+// @ts-ignore
+const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
   const [menuitems, setMenuitems] = useState<any>(MENUITEMS);
 
   function closeMenuFn() {
@@ -465,7 +464,10 @@ const Sidebar: FC<SidebarProps> = ({ local_varaiable, ThemeChanger }: any) => {
             <img src={logo6} alt="logo" className="toggle-white" />
           </a>
         </div>
-        <SimpleBar className="main-sidebar bg-primary dark:bg-bodybg" id="sidebar-scroll">
+        <SimpleBar
+          className="main-sidebar bg-primary dark:bg-bodybg"
+          id="sidebar-scroll"
+        >
           <nav className="main-menu-container nav nav-pills flex-column sub-open">
             <ul className="main-menu" onClick={() => Sideclick()}>
               {MENUITEMS.map((levelone: any) => (

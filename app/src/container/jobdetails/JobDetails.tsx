@@ -16,6 +16,7 @@ import { Offers } from "./jobs-types";
 const JobDetails: FC = () => {
   const location = useLocation();
 
+  // @ts-ignore
   const [fullCareerDetails, setFullCareerDetails] =
     useState<FullCareerDetails | null>(() => {
       if (location.state?.fullCareerDetails) {
