@@ -68,7 +68,7 @@ const Home: FC = () => {
             !
           </p>
           <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
-            Track your sales activity, leads and deals here.
+            Направете първата стъпка към вашето бъдеще!
           </p>
         </div>
       </div>
