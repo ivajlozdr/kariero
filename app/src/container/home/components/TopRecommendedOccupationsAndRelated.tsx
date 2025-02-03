@@ -2,7 +2,6 @@ import { FC, Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MostRecommendedOccupationsChart } from "./Charts";
 import {
-  DataType,
   MostNeededQuality,
   OccupationSeriesType,
   TopRecommendedOccupation
@@ -15,14 +14,10 @@ import {
 } from "../helper_functions";
 import { useMediaQuery } from "react-responsive";
 import { occupationDisplayNames } from "../home-data";
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-interface TopRecommendedOccupationsAndRelatedProps {
-  data: DataType;
-}
-
-const TopRecommendedOccupationsAndRelated: FC<
-  TopRecommendedOccupationsAndRelatedProps
-> = ({ data }) => {
+const TopRecommendedOccupationsAndRelated: FC = () => {
+  const { data } = useGlobalState();
   const pageSize = 5; // Размер на страницата (брой елементи на страница)
   const [currentChartPage, setCurrentChartPage] = useState(1); // Текущата страница на графиката
   const [occupationSortCategory, setOccupationSortCategory] =

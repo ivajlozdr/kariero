@@ -1,12 +1,9 @@
 import { FC } from "react";
-import { DataType } from "../home-types";
 import { generateOptions } from "../helper_functions";
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-interface WidgetCardsComponentProps {
-  data: DataType;
-}
-
-const MostSelectedCards: FC<WidgetCardsComponentProps> = ({ data }) => {
+const MostSelectedCards: FC = () => {
+  const { data } = useGlobalState();
   const options = generateOptions("MostSelectedCards", data);
 
   return (

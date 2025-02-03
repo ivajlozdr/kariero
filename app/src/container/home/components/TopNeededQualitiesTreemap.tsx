@@ -1,12 +1,12 @@
 import { FC, Fragment, useState } from "react";
-import { DataType, QualitiesCategory } from "../home-types";
+import { QualitiesCategory } from "../home-types";
 import { handleTopStatsSortCategory } from "../helper_functions";
 import { Treemap } from "./Charts";
-interface TreemapComponentProps {
-  data: DataType;
-}
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-const TopNeededQualitiesTreemap: FC<TreemapComponentProps> = ({ data }) => {
+const TopNeededQualitiesTreemap: FC = () => {
+  const { data } = useGlobalState();
+
   const [topStatsSortCategory, setTopStatsSortCategory] =
     useState<QualitiesCategory>("Abilities");
 

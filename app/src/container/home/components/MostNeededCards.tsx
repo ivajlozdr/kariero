@@ -1,10 +1,6 @@
 import { FC } from "react";
-import { DataType } from "../home-types";
 import Widget from "./Widget";
-
-interface WidgetCardsComponentProps {
-  data: DataType;
-}
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
 type CategoryKey =
   | "mostNeededAbilities"
@@ -14,7 +10,8 @@ type CategoryKey =
   | "mostNeededTechnologySkills"
   | "mostNeededWorkActivities";
 
-const MostNeededCards: FC<WidgetCardsComponentProps> = ({ data }) => {
+const MostNeededCards: FC = () => {
+  const { data } = useGlobalState();
   const categories: { title: string; key: CategoryKey; icon: string }[] = [
     {
       title: "Най-често изисквана способност",

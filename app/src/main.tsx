@@ -19,6 +19,13 @@ import LandingLayout from "./pages/LandingLayout.tsx";
 import JobDetails from "./container/jobdetails/JobDetails.tsx";
 import ComingSoon from "./container/comingsoon/ComingSoon.tsx";
 import Error404 from "./container/error/404error/404error.tsx";
+import { GlobalStateProvider } from "./pages/GlobalStateProvider.tsx";
+import WidgetCardsComponent from "./container/home/components/WidgetCards.tsx";
+import MostNeededCards from "./container/home/components/MostNeededCards.tsx";
+import MostPreferredWorkstyleCards from "./container/home/components/MostPreferredWorkstyleCards.tsx";
+import MostSelectedCards from "./container/home/components/MostSelectedPreferences.tsx";
+import TopRecommendedOccupationsAndRelated from "./container/home/components/TopRecommendedOccupationsAndRelated.tsx";
+import TopNeededQualitiesTreemap from "./container/home/components/TopNeededQualitiesTreemap.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
@@ -33,7 +40,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             path="/app"
             element={
               <ProtectedRoute>
-                <App />
+                <GlobalStateProvider>
+                  <App />
+                </GlobalStateProvider>
               </ProtectedRoute>
             }
           >
@@ -41,6 +50,40 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />
+            <Route path="global-stats/" element={<JobDetails />} />
+            <Route path="global-stats/" element={<JobDetails />} />
+            <Route path="global-stats/" element={<JobDetails />} />
+            <Route path="global-stats/" element={<JobDetails />} />
+            <Route path="global-stats/" element={<JobDetails />} />
+            {/* <WidgetCardsComponent /> */}
+            {/* <div
+        className="grid grid-areas-layout gap-x-6 auto-rows-[min-content]"
+        style={{
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateAreas: `
+            "accordion preferred"
+            "accordion selected" 
+          `
+        }}
+      >
+        <div style={{ gridArea: "accordion" }}>
+          <MostNeededCards />
+        </div>
+        <div style={{ gridArea: "preferred" }}>
+          <MostPreferredWorkstyleCards />
+        </div>
+        <div style={{ gridArea: "selected" }}>
+          <MostSelectedCards />
+        </div>
+      </div>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="col-span-6">
+          <TopRecommendedOccupationsAndRelated />
+        </div>
+        <div className="col-span-6">
+          <TopNeededQualitiesTreemap />
+        </div>
+      </div> */}
           </Route>
           <Route path="/" element={<Authenticationlayout />}>
             <Route

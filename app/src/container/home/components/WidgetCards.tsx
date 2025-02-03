@@ -1,13 +1,10 @@
 import { FC } from "react";
-import { DataType } from "../home-types";
 import Widget from "./Widget";
 import { extractWidgetCardData, generateOptions } from "../helper_functions";
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-interface WidgetCardsComponentProps {
-  data: DataType;
-}
-
-const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ data }) => {
+const WidgetCardsComponent: FC = () => {
+  const { data } = useGlobalState();
   const widgetData = extractWidgetCardData(data);
   const options = generateOptions("WidgetCardsComponent", data);
   return (
