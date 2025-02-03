@@ -83,7 +83,7 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
 
   return (
     <Fragment>
-      <div className="xl:col-span-6 col-span-12">
+      <div className="xl:col-span-6 col-span-12 mt-6">
         <div className="box custom-box">
           <div className="custom-box-header justify-between">
             <div

@@ -7,7 +7,7 @@ const MostSelectedCards: FC = () => {
   const options = generateOptions("MostSelectedCards", data);
 
   return (
-    <div className="box custom-box">
+    <div className="box custom-box mt-6">
       <div className="box-body !p-0">
         <div className="box-header p-4">
           <h2 className="box-title">

@@ -41,7 +41,7 @@ const MostNeededCards: FC = () => {
   ];
 
   return (
-    <div className="accordion accordionicon-left accordions-items-separate">
+    <div className="accordion accordionicon-left accordions-items-separate mt-6">
       <div className="hs-accordion-group" data-hs-accordion-always-open="">
         <div className="hs-accordion accordion-item overflow-hidden active mb-6">
           <button

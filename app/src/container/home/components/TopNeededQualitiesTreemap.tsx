@@ -37,7 +37,7 @@ const TopNeededQualitiesTreemap: FC = () => {
 
   return (
     <Fragment>
-      <div className="xl:col-span-6 col-span-12">
+      <div className="xl:col-span-6 col-span-12 mt-6">
         <div className="box custom-box h-[30rem]">
           <div className="box-header justify-between">
             <div className="box-title">
