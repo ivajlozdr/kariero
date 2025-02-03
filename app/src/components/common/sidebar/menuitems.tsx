@@ -48,7 +48,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "2"
+        title: "Най-изисквани качества"
       },
       {
         path: `${import.meta.env.BASE_URL}app/global-stats/3`,
@@ -56,7 +56,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "3"
+        title: "Най-предпочитан работен стил"
       },
       {
         path: `${import.meta.env.BASE_URL}app/global-stats/4`,
@@ -64,7 +64,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "4"
+        title: "Най-често срещани характеристики"
       },
       {
         path: `${import.meta.env.BASE_URL}app/global-stats/5`,
@@ -72,7 +72,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "5"
+        title: "Топ препоръки"
       },
       {
         path: `${import.meta.env.BASE_URL}app/global-stats/6`,
@@ -80,7 +80,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "6"
+        title: "Топ изисквания"
       }
     ]
   },
