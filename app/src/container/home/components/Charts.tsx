@@ -2,15 +2,18 @@ import { Component, useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import chroma from "chroma-js";
 import {
-  BrightOutlook,
   CountryData,
   MovieProsperityData,
-  OccupationSeriesType,
+  OccupationSeriesType
+} from "../home-types";
+import {
+  BrightOutlook,
   TopRecommendedOccupation,
   MostNeededQuality
-} from "../home-types";
+} from "../../../types_common";
 import { Link } from "react-router-dom";
-import { updatePrimaryColor } from "../../functions_common";
+import { updatePrimaryColor } from "../../../functions_common";
+
 import Tooltip from "../../../components/common/tooltip/Tooltip";
 
 export class MostRecommendedOccupationsChart extends Component<

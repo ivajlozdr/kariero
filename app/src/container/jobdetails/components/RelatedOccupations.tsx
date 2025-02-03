@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { CommonCareerProps } from "../../types_common";
+import { CommonCareerProps } from "../../../types_common";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 

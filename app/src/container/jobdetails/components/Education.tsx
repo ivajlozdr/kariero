@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CommonCareerProps } from "../../types_common";
+import { CommonCareerProps } from "../../../types_common";
 import { EducationChart } from "./EducationChart";
 
 const Education: FC<CommonCareerProps> = ({ fullCareerDetails }) => {

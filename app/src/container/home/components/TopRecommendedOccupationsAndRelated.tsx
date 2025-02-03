@@ -1,11 +1,12 @@
 import { FC, Fragment, useMemo, useState } from "react";
+import { useGlobalState } from "../../../pages/GlobalStateProvider";
 import { Link } from "react-router-dom";
 import { MostRecommendedOccupationsChart } from "./Charts";
+import { OccupationSeriesType } from "../home-types";
 import {
   MostNeededQuality,
-  OccupationSeriesType,
   TopRecommendedOccupation
-} from "../home-types";
+} from "../../../types_common";
 import {
   paginateBarChartData,
   getTotalBarChartPages,
@@ -14,7 +15,6 @@ import {
 } from "../helper_functions";
 import { useMediaQuery } from "react-responsive";
 import { occupationDisplayNames } from "../home-data";
-import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
 const TopRecommendedOccupationsAndRelated: FC = () => {
   const { data } = useGlobalState();

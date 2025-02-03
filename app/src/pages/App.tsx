@@ -13,8 +13,8 @@ import {
   showNotification,
   handleNotificationClose,
   handleVerticalMenuClick
-} from "../container/functions_common";
-import { NotificationState } from "../container/types_common";
+} from "../functions_common";
+import { NotificationState } from "../types_common";
 import Notification from "../components/common/notification/Notification";
 
 function App() {

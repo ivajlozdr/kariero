@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { handleToggleFavouriteOccupation } from "../helper-functions";
-import { CommonCareerProps } from "../../types_common";
+import { CommonCareerProps } from "../../../types_common";
 import { FC } from "react";
 
 const OccupationTitleCard: FC<CommonCareerProps> = ({ fullCareerDetails }) => {

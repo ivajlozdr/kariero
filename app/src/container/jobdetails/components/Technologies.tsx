@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CommonCareerProps } from "../../types_common";
+import { CommonCareerProps } from "../../../types_common";
 import { filterHotTechnology } from "../helper-functions";
 import Tooltip from "../../../components/common/tooltip/Tooltip";
 

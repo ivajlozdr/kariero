@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { CommonCareerProps } from "../../types_common";
+import { CommonCareerProps } from "../../../types_common";
 
 const OccupationDescription: FC<CommonCareerProps> = ({
   fullCareerDetails

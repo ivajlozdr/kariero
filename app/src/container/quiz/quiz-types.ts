@@ -1,4 +1,4 @@
-import { FullCareerDetails } from "../types_common";
+import { FullCareerDetails } from "../../types_common";
 
 export type QuestionMapping = {
   id: number;

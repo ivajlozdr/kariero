@@ -9,7 +9,7 @@ import {
   UserProfileData,
   UserResponses
 } from "./quiz-types";
-import { FullCareerDetails } from "../types_common";
+import { FullCareerDetails } from "../../types_common";
 /**
  * Актуализира RIASEC резултатите чрез промяна на стойността за определена категория.
  *

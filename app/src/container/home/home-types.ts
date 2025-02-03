@@ -1,3 +1,8 @@
+import {
+  MostNeededQuality,
+  TopRecommendedOccupation
+} from "../../types_common";
+
 export interface RedirectCardProps {
   href: string;
   title: string;
@@ -24,65 +29,6 @@ export type QualitiesCategory =
   | "TechnologySkills"
   | "WorkActivities";
 
-// Обобщени данни за платформата
-export interface DataType {
-  usersCount: UsersCount[];
-  distinctOccupations: DistinctOccupations;
-  topRecommendedOccupations: TopRecommendedOccupation[];
-  topRecommendedRelatedOccupations: MostNeededQuality[];
-  mostNeededAbilities: MostNeededQuality[];
-  mostNeededKnowledge: MostNeededQuality[];
-  mostNeededSkills: MostNeededQuality[];
-  mostNeededTasks: MostNeededQuality[];
-  mostNeededTechnologySkills: MostNeededQuality[];
-  mostNeededWorkActivities: MostNeededQuality[];
-  mostSelectedPersonalityTypes: Most[];
-  mostSelectedWorkEnvironments: Most[];
-  mostSelectedJobPriorities: Most[];
-  mostSelectedEducationLevels: Most[];
-  mostSelectedCareerGoals: Most[];
-  mostSelectedJobSatisfactionLevels: Most[];
-  mostPreferredWorkStyleStructure: Most[];
-  mostPreferredWorkStyleCollaboration: Most[];
-  mostPreferredWorkStyleWorkEnvironment: Most[];
-}
-
-export interface DistinctOccupations {
-  count: number;
-  data: TopRecommendedOccupation[];
-}
-
-export interface TopRecommendedOccupation {
-  code: string;
-  title_bg: string;
-  title_en: string;
-  description: string;
-  bright_outlook: BrightOutlook;
-  education: null | string;
-  recommendation_count?: number;
-}
-
-export enum BrightOutlook {
-  GrowRapidly = '["Grow Rapidly"]',
-  Null = "null"
-}
-
-export interface MostNeededQuality {
-  onet_id: string | number;
-  name_en: string;
-  name_bg: string;
-  occurrence_count?: number;
-  recommendation_count?: number;
-}
-
-export interface Most {
-  preference: string;
-  occurrence_count: number;
-}
-
-export interface UsersCount {
-  user_count: number;
-}
 // ARTCOMPASS TEMP DATA BELOW
 
 // Общи данни за режисьори, актьори и писатели
@@ -132,13 +78,6 @@ export type FilteredTableData = (DirectorData | ActorData | WriterData)[];
 export type UsersCountData = {
   user_count: number; // Брой потребители
 };
-
-export interface UserData {
-  id: number; // Идентификатор на потребителя
-  first_name: string; // Първо име
-  last_name: string; // Фамилно име
-  email: string; // Имейл адрес
-}
 
 // Данни свързани с жанрове
 export interface GenrePopularityData {

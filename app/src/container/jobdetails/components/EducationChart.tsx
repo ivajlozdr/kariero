@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { CommonCareerProps } from "../../types_common";
-import { updatePrimaryColor } from "../../functions_common";
+import { CommonCareerProps } from "../../../types_common";
+import { updatePrimaryColor } from "../../../functions_common";
 import {
   extractLevelsAndPercentages,
   generateColorScale

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DataType, UserData } from "../container/home/home-types";
 import { fetchData } from "../container/home/helper_functions";
+import { DataType, UserData } from "../types_common";
 
 interface GlobalStateContextType {
   data: DataType;
