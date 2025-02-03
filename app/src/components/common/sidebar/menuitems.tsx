@@ -35,39 +35,31 @@ export const MENUITEMS = [
       "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/1`,
+        path: `${import.meta.env.BASE_URL}app/global-stats/qualities`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,
         selected: false,
-        title: "1"
+        title: "За качества"
       },
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/2`,
+        path: `${import.meta.env.BASE_URL}app/global-stats/work-style`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,
         selected: false,
-        title: "Най-изисквани качества"
+        title: "За работен стил"
       },
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/3`,
+        path: `${import.meta.env.BASE_URL}app/global-stats/traits`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,
         selected: false,
-        title: "Най-предпочитан работен стил"
+        title: "За характеристики"
       },
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/4`,
-        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
-        type: "link",
-        active: false,
-        selected: false,
-        title: "Най-често срещани характеристики"
-      },
-      {
-        path: `${import.meta.env.BASE_URL}app/global-stats/5`,
+        path: `${import.meta.env.BASE_URL}app/global-stats/recommendations`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,
@@ -75,7 +67,7 @@ export const MENUITEMS = [
         title: "Топ препоръки"
       },
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/6`,
+        path: `${import.meta.env.BASE_URL}app/global-stats/desired-qualities`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,

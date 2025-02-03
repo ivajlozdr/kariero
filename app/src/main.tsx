@@ -20,7 +20,6 @@ import JobDetails from "./container/jobdetails/JobDetails.tsx";
 import ComingSoon from "./container/comingsoon/ComingSoon.tsx";
 import Error404 from "./container/error/404error/404error.tsx";
 import { GlobalStateProvider } from "./pages/GlobalStateProvider.tsx";
-import WidgetCardsComponent from "./container/home/components/WidgetCards.tsx";
 import MostNeededCards from "./container/home/components/MostNeededCards.tsx";
 import MostPreferredWorkstyleCards from "./container/home/components/MostPreferredWorkstyleCards.tsx";
 import MostSelectedCards from "./container/home/components/MostSelectedPreferences.tsx";
@@ -50,19 +49,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />
-            <Route path="global-stats/1" element={<WidgetCardsComponent />} />
-            <Route path="global-stats/2" element={<MostNeededCards />} />
             <Route
-              path="global-stats/3"
+              path="global-stats/qualities"
+              element={<MostNeededCards />}
+            />
+            <Route
+              path="global-stats/work-style"
               element={<MostPreferredWorkstyleCards />}
             />
-            <Route path="global-stats/4" element={<MostSelectedCards />} />
+            <Route path="global-stats/traits" element={<MostSelectedCards />} />
             <Route
-              path="global-stats/5"
+              path="global-stats/recommendations"
               element={<TopRecommendedOccupationsAndRelated />}
             />
             <Route
-              path="global-stats/6"
+              path="global-stats/desired-qualities"
               element={<TopNeededQualitiesTreemap />}
             />
           </Route>
