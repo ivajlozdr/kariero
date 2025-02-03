@@ -50,40 +50,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />
-            <Route path="global-stats/" element={<JobDetails />} />
-            <Route path="global-stats/" element={<JobDetails />} />
-            <Route path="global-stats/" element={<JobDetails />} />
-            <Route path="global-stats/" element={<JobDetails />} />
-            <Route path="global-stats/" element={<JobDetails />} />
-            {/* <WidgetCardsComponent /> */}
-            {/* <div
-        className="grid grid-areas-layout gap-x-6 auto-rows-[min-content]"
-        style={{
-          gridTemplateColumns: "1fr 1fr",
-          gridTemplateAreas: `
-            "accordion preferred"
-            "accordion selected" 
-          `
-        }}
-      >
-        <div style={{ gridArea: "accordion" }}>
-          <MostNeededCards />
-        </div>
-        <div style={{ gridArea: "preferred" }}>
-          <MostPreferredWorkstyleCards />
-        </div>
-        <div style={{ gridArea: "selected" }}>
-          <MostSelectedCards />
-        </div>
-      </div>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="col-span-6">
-          <TopRecommendedOccupationsAndRelated />
-        </div>
-        <div className="col-span-6">
-          <TopNeededQualitiesTreemap />
-        </div>
-      </div> */}
+            <Route path="global-stats/1" element={<WidgetCardsComponent />} />
+            <Route path="global-stats/2" element={<MostNeededCards />} />
+            <Route
+              path="global-stats/3"
+              element={<MostPreferredWorkstyleCards />}
+            />
+            <Route path="global-stats/4" element={<MostSelectedCards />} />
+            <Route
+              path="global-stats/5"
+              element={<TopRecommendedOccupationsAndRelated />}
+            />
+            <Route
+              path="global-stats/6"
+              element={<TopNeededQualitiesTreemap />}
+            />
           </Route>
           <Route path="/" element={<Authenticationlayout />}>
             <Route
