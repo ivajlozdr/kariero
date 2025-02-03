@@ -6,6 +6,7 @@ import { FC, Fragment } from "react";
 // import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import RedirectCard from "./components/RedirectCard";
 import { useGlobalState } from "../../pages/GlobalStateProvider";
+import WidgetCardsComponent from "./components/WidgetCards";
 
 const Home: FC = () => {
   const { data, userData } = useGlobalState();
@@ -27,6 +28,7 @@ const Home: FC = () => {
           </p>
         </div>
       </div>
+      <WidgetCardsComponent />
       <div className="card-container">
         <RedirectCard
           href={`${import.meta.env.BASE_URL}app/quiz`}
