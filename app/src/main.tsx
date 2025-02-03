@@ -49,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route index path="home" element={<Home />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="test" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />
             <Route path="global-stats/1" element={<WidgetCardsComponent />} />
             <Route path="global-stats/2" element={<MostNeededCards />} />
