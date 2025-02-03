@@ -5,12 +5,6 @@ import { FC, Fragment } from "react";
 // import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
 // import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import RedirectCard from "./components/RedirectCard";
-import WidgetCardsComponent from "./components/WidgetCards";
-import MostNeededCards from "./components/MostNeededCards";
-import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
-import MostSelectedCards from "./components/MostSelectedPreferences";
-import TopRecommendedOccupationsAndRelated from "./components/TopRecommendedOccupationsAndRelated";
-import TopNeededQualitiesTreemap from "./components/TopNeededQualitiesTreemap";
 import { useGlobalState } from "../../pages/GlobalStateProvider";
 
 const Home: FC = () => {
@@ -31,35 +25,6 @@ const Home: FC = () => {
           <p className="font-normal text-[#8c9097] dark:text-white/50 text-[0.813rem]">
             Направете първата стъпка към вашето бъдеще!
           </p>
-        </div>
-      </div>
-      <WidgetCardsComponent />
-      <div
-        className="grid grid-areas-layout gap-x-6 auto-rows-[min-content]"
-        style={{
-          gridTemplateColumns: "1fr 1fr",
-          gridTemplateAreas: `
-            "accordion preferred"
-            "accordion selected" 
-          `
-        }}
-      >
-        <div style={{ gridArea: "accordion" }}>
-          <MostNeededCards />
-        </div>
-        <div style={{ gridArea: "preferred" }}>
-          <MostPreferredWorkstyleCards />
-        </div>
-        <div style={{ gridArea: "selected" }}>
-          <MostSelectedCards />
-        </div>
-      </div>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="col-span-6">
-          <TopRecommendedOccupationsAndRelated />
-        </div>
-        <div className="col-span-6">
-          <TopNeededQualitiesTreemap />
         </div>
       </div>
       <div className="card-container">
