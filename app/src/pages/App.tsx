@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState } from "react";
-import Loader from "../components/common/loader/loader";
 import Footer from "../components/common/footer/footer";
 import Sidebar from "../components/common/sidebar/sidebar";
 import Switcher from "../components/common/switcher/switcher";
@@ -16,6 +15,7 @@ import {
 } from "../functions_common";
 import { NotificationState } from "../types_common";
 import Notification from "../components/common/notification/Notification";
+import { GlobalFadeInWrapper } from "../components/common/loader/fadeinwrapper";
 
 function App() {
   // Състояние за управление на класа на вертикалното меню
@@ -55,7 +55,6 @@ function App() {
 
   return (
     <Fragment>
-      <Loader />
       <Provider store={store}>
         <HelmetProvider>
           <Helmet
@@ -93,7 +92,9 @@ function App() {
                     }
                   />
                 )}
-                <Outlet />
+                <GlobalFadeInWrapper>
+                  <Outlet />
+                </GlobalFadeInWrapper>
               </div>
             </div>
             <Footer />
