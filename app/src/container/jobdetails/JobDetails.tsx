@@ -6,7 +6,6 @@ import RelatedOccupations from "./components/RelatedOccupations";
 import { FullCareerDetails } from "../../types_common";
 import JobOffers from "./components/offers/JobOffers";
 import OccupationDescription from "./components/OccupationDescription";
-import Share from "./components/Share";
 import OccupationTitleCard from "./components/OccupationTitleCard";
 import Education from "./components/Education";
 import Technologies from "./components/Technologies";
@@ -103,7 +102,6 @@ const JobDetails: FC = () => {
             <OccupationDescription fullCareerDetails={fullCareerDetails} />
             <Education fullCareerDetails={fullCareerDetails} />
             <Technologies fullCareerDetails={fullCareerDetails} />
-            <Share />
             <div>
               <h4 className="font-semibold mb-0 !text-defaulttextcolor">
                 Обяви за {translated.title}
