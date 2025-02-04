@@ -15,14 +15,11 @@ import Technologies from "./components/Technologies";
 import Loader from "../../pages/Loader";
 import { Offers } from "./jobs-types";
 import FavouriteNotification from "../../components/common/notification/FavouriteNotification";
-import { getFavouriteNotificationState } from "../../functions_common";
 
 const JobDetails: FC = () => {
   const location = useLocation();
   const [favouriteNotification, setFavouriteNotification] =
-    useState<FavouriteNotificationState | null>(
-      getFavouriteNotificationState("add")
-    );
+    useState<FavouriteNotificationState | null>(null);
 
   // @ts-ignore
   const [fullCareerDetails, setFullCareerDetails] =
