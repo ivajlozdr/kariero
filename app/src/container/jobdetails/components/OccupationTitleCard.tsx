@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
 import { handleToggleFavouriteOccupation } from "../helper-functions";
-import { CommonCareerProps } from "../../../types_common";
 import { FC } from "react";
+import { OccupationTitleCardProps } from "../jobs-types";
 
-const OccupationTitleCard: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
+const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
+  fullCareerDetails,
+  favouriteNotification,
+  setFavouriteNotification
+}) => {
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const date = new Date().toISOString();
@@ -39,42 +42,18 @@ const OccupationTitleCard: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
                     </span>
                   )}
                 </h4>
-                {/* <div className="sm:flex text-[.875rem] mt-4">
-                      <div className="mb-2 sm:mb-0">
-                        <p className="mb-1">
-                          <i className="bi bi-geo-alt me-1"></i>Banglore,
-                          Karnataka
-                        </p>
-                        <p>
-                          <i className="ti ti-seedling me-1"></i>1 - 3+ years
-                          Experience
-                        </p>
-                      </div>
-                      <div className="sm:ms-6 mb-4">
-                        <p className="mb-1">
-                          <i className="bi bi-coin me-1"></i>
-                          <b>10,000 - 20,000</b> / per month (+incentives)
-                        </p>
-                        <p>
-                          <i className="bi bi-mortarboard  me-1"></i>Graduate
-                          and Above
-                        </p>
-                      </div>
-                    </div>
-                    <div className="popular-tags mb-2 sm:mb-0 space-x-2 rtl:space-x-reverse">
-                      <Link
-                        to="#"
-                        className="badge !rounded-full bg-info/10 text-info"
-                      >
-                        <i className="bi bi-clock me-1"></i>Full Time
-                      </Link>
-                      <Link
-                        to="#"
-                        className="badge !rounded-full bg-danger/10 text-danger"
-                      >
-                        <i className="bi bi-briefcase me-1"></i>13 Openings
-                      </Link>
-                    </div> */}
+                {/* 
+                <div className="sm:ms-6 mb-4">
+                  <p className="mb-1">
+                    <i className="bi bi-coin me-1"></i>
+                    <b>10,000 - 20,000</b> / per month (+incentives)
+                  </p>
+                  <p>
+                    <i className="bi bi-mortarboard  me-1"></i>Graduate
+                    and Above
+                  </p>
+                </div>
+                */}
               </div>
             </div>
           </div>
@@ -85,19 +64,15 @@ const OccupationTitleCard: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
                 onClick={handleToggleFavouriteOccupation(
                   fullCareerDetails,
                   token,
-                  date
+                  date,
+                  setFavouriteNotification
                 )}
-                className="ti-btn ti-btn-icon ti-btn-primary me-[0.375rem]"
+                className={`ti-btn ti-btn-icon ti-btn-primary me-[0.375rem] ${
+                  favouriteNotification ? "ti-btn-primary.ac" : ""
+                }`}
               >
                 <i className="ri-heart-line"></i>
               </div>
-              <Link
-                aria-label="anchor"
-                to="#"
-                className="ti-btn ti-btn-icon ti-btn-primary"
-              >
-                <i className="ri-share-line"></i>
-              </Link>
             </div>
           </div>
         </div>

@@ -1,5 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { NotificationState, NotificationType } from "./types_common";
+import {
+  FavouriteNotificationType,
+  FavouriteNotificationState,
+  NotificationState,
+  NotificationType
+} from "./types_common";
 
 /**
  * Обновява основния цвят в HEX формат.
@@ -146,4 +151,26 @@ export const handleVerticalMenuClick = (
       htmlElement.setAttribute("icon-overlay", "");
     }
   }
+};
+
+export const getFavouriteNotificationState = (
+  type: FavouriteNotificationType
+): FavouriteNotificationState => ({
+  type,
+  message:
+    type === "add"
+      ? "Успешно добавихте тази професия в списъка ви за любими кариери."
+      : "Успешно премахнахте тази професия от списъка ви за любими кариери.",
+  title:
+    type === "add"
+      ? "Кариера добавена в любими"
+      : "Кариера премахната от любими"
+});
+
+export const handleFavouriteNotificationClose = (
+  setFavouriteNotification: React.Dispatch<
+    React.SetStateAction<FavouriteNotificationState | null>
+  >
+) => {
+  setFavouriteNotification(null);
 };

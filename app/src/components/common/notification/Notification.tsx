@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { NotificationType } from "../../../types_common";
 
 interface NotificationProps {
   message: string;
-  type: "success" | "error" | "warning";
+  type: NotificationType;
   onClose: () => void;
 }
 

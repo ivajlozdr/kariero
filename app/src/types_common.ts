@@ -76,6 +76,14 @@ export interface NotificationState {
   type: NotificationType;
 }
 
+export type FavouriteNotificationType = "add" | "remove";
+
+export interface FavouriteNotificationState {
+  type: FavouriteNotificationType;
+  message: string;
+  title: string;
+}
+
 export interface FullCareerDetails {
   code: string;
   display: string;

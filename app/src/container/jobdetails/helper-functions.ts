@@ -1,4 +1,8 @@
-import { FullCareerDetails } from "../../types_common";
+import { getFavouriteNotificationState } from "../../functions_common";
+import {
+  FavouriteNotificationState,
+  FullCareerDetails
+} from "../../types_common";
 import chroma from "chroma-js";
 
 /**
@@ -14,11 +18,20 @@ import chroma from "chroma-js";
 export const handleToggleFavouriteOccupation = (
   career: FullCareerDetails,
   token: string | null,
-  date: string
+  date: string,
+  setFavouriteNotification: React.Dispatch<
+    React.SetStateAction<FavouriteNotificationState | null>
+  >
 ): (() => void) => {
   return async () => {
     try {
-      const message = await ToggleFavouriteOccupation(career, token, date);
+      const message = await toggleFavouriteOccupation(
+        career,
+        token,
+        date,
+        setFavouriteNotification
+      );
+
       console.log(message); // Optionally, replace with a notification system
     } catch (error) {
       console.error("Failed to toggle favourite occupation:", error);
@@ -36,10 +49,13 @@ export const handleToggleFavouriteOccupation = (
  * @param {string} date - Датата, на която е запазена любимата професия.
  * @returns {Promise<string>} - Съобщение, потвърждаващо успеха или неуспеха на операцията.
  */
-export const ToggleFavouriteOccupation = async (
+export const toggleFavouriteOccupation = async (
   career: FullCareerDetails,
   token: string | null,
-  date: string
+  date: string,
+  setFavouriteNotification: React.Dispatch<
+    React.SetStateAction<FavouriteNotificationState | null>
+  >
 ): Promise<string> => {
   try {
     const occupationResponse = await fetch(
@@ -64,6 +80,11 @@ export const ToggleFavouriteOccupation = async (
     }
 
     const responseData = await occupationResponse.json();
+    const type =
+      responseData.message === "Occupation added to favourites successfully."
+        ? "add"
+        : "remove";
+    setFavouriteNotification(getFavouriteNotificationState(type));
     return responseData.message || "Successfully favourited!";
   } catch (error) {
     console.error("Error processing data:", error);

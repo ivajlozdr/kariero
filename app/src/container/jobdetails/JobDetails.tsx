@@ -3,7 +3,10 @@ import Pageheader from "../../components/common/pageheader/pageheader";
 import { useLocation } from "react-router-dom";
 import PaginatedTasks from "./components/Tasks";
 import RelatedOccupations from "./components/RelatedOccupations";
-import { FullCareerDetails } from "../../types_common";
+import {
+  FavouriteNotificationState,
+  FullCareerDetails
+} from "../../types_common";
 import JobOffers from "./components/offers/JobOffers";
 import OccupationDescription from "./components/OccupationDescription";
 import OccupationTitleCard from "./components/OccupationTitleCard";
@@ -11,9 +14,15 @@ import Education from "./components/Education";
 import Technologies from "./components/Technologies";
 import Loader from "../../pages/Loader";
 import { Offers } from "./jobs-types";
+import FavouriteNotification from "../../components/common/notification/FavouriteNotification";
+import { getFavouriteNotificationState } from "../../functions_common";
 
 const JobDetails: FC = () => {
   const location = useLocation();
+  const [favouriteNotification, setFavouriteNotification] =
+    useState<FavouriteNotificationState | null>(
+      getFavouriteNotificationState("add")
+    );
 
   // @ts-ignore
   const [fullCareerDetails, setFullCareerDetails] =
@@ -90,13 +99,24 @@ const JobDetails: FC = () => {
 
   return (
     <>
+      {favouriteNotification && (
+        <FavouriteNotification
+          type={favouriteNotification.type}
+          favouriteNotification={favouriteNotification}
+          setFavouriteNotification={setFavouriteNotification}
+        />
+      )}
       <Pageheader
         currentpage={`Детайли за ${translated.title}`}
         activepage="Кариери"
         mainpage={translated.title}
       />
       <div className="px-10">
-        <OccupationTitleCard fullCareerDetails={fullCareerDetails} />
+        <OccupationTitleCard
+          fullCareerDetails={fullCareerDetails}
+          favouriteNotification={favouriteNotification}
+          setFavouriteNotification={setFavouriteNotification}
+        />
         <div className="grid grid-cols-12 gap-6">
           <div className="xxl:col-span-8 col-span-12">
             <OccupationDescription fullCareerDetails={fullCareerDetails} />
