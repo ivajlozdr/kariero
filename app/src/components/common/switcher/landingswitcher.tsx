@@ -129,7 +129,7 @@ const Landingswitcher = ({ local_varaiable, ThemeChanger }: any) => {
               className="w-full ti-btn ti-btn-danger-full m-1"
               onClick={() => switcherdata.Reset1(ThemeChanger)} // Извиква функция за ресет
             >
-              Reset
+              Връщане на начални настройки
             </Link>
           </div>
         </div>
