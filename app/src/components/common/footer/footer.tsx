@@ -18,7 +18,14 @@ const Footer: FC<FooterProps> = ({ landing }) => (
             </h2>
             <div className="space-y-1">
               <p className="text-sm">Проект №65</p>
-              <p className="text-sm">2025 НОИТ</p>
+              <p>
+                <a
+                  className="text-sm relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
+                  href="https://pgi-pernik.bg-schools.com/"
+                >
+                  2025 НОИТ
+                </a>
+              </p>
             </div>
             <h2 className="text-defaulttextcolor font-semibold dark:text-defaulttextcolor text-lg">
               Изработено от
