@@ -20,7 +20,7 @@ import JobDetails from "./container/jobdetails/JobDetails.tsx";
 import ComingSoon from "./container/comingsoon/ComingSoon.tsx";
 import Error404 from "./container/error/404error/404error.tsx";
 import { GlobalStateProvider } from "./pages/GlobalStateProvider.tsx";
-import MostNeededCards from "./container/home/components/MostNeededCards.tsx";
+import MostNeededQualitiesCards from "./container/home/components/MostNeededQualitiesCards.tsx";
 import MostPreferredWorkstyleCards from "./container/home/components/MostPreferredWorkstyleCards.tsx";
 import MostSelectedCards from "./container/home/components/MostSelectedPreferences.tsx";
 import TopRecommendedOccupationsAndRelated from "./container/home/components/TopRecommendedOccupationsAndRelated.tsx";
@@ -51,7 +51,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="job/details" element={<JobDetails />} />
             <Route
               path="global-stats/qualities"
-              element={<MostNeededCards />}
+              element={<MostNeededQualitiesCards />}
             />
             <Route
               path="global-stats/work-style"
