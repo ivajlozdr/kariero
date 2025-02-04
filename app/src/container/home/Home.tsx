@@ -1,9 +1,4 @@
 import { FC, Fragment } from "react";
-// import TableComponent from "./components/TableComponent";
-// import TopRecommendationsChartComponent from "./components/TopRecommendationsChartComponent";
-// import CountryBarChartComponent from "./components/CountryBarChartComponent";
-// import MoviesByProsperityBubbleChartComponent from "./components/MoviesByProsperityBubbleChartComponent";
-// import GenrePopularityOverTimeComponent from "./components/GenrePopularityOverTimeComponent";
 import RedirectCard from "./components/RedirectCard";
 import { useGlobalState } from "../../pages/GlobalStateProvider";
 import WidgetCardsComponent from "./components/WidgetCards";
@@ -51,22 +46,6 @@ const Home: FC = () => {
           description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
         />
       </div>
-      {/* <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-6 col-span-12">
-          <div className="xxl:col-span-6 col-span-12">
-            <MoviesByProsperityBubbleChartComponent data={hardcodedData} />
-            <GenrePopularityOverTimeComponent data={hardcodedData} />
-          </div>
-        </div>
-        <div className="xxl:col-span-6 col-span-12">
-          <TableComponent data={hardcodedData} />
-          <TopRecommendationsChartComponent
-            dataOld={hardcodedData}
-            data={data}
-          />
-          <CountryBarChartComponent data={hardcodedData} />
-        </div>
-      </div> */}
     </Fragment>
   );
 };
