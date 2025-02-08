@@ -1,25 +1,44 @@
+// const deepl = require('deepl');
+
 const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
 const CX = "160b0be643d1045a6";
 const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
+// const DEEPL_API_KEY = "waitinglol";
+// const translator = new deepl.Translator(authKey);
 
-// Helper functions
-async function translate(entry) {
+const translate = async (entry) => {
+  // Изграждане на URL за заявка към Google Translate API
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
     entry
   )}`;
 
   try {
+    // Изпращане на заявката към API-то
     const response = await fetch(url);
     const data = await response.json();
 
+    // Обединяване на преведените части в един низ
     const flattenedTranslation = data[0].map((item) => item[0]).join(" ");
+
+    // Премахване на излишните интервали
     const mergedTranslation = flattenedTranslation.replace(/\s+/g, " ").trim();
     return mergedTranslation;
   } catch (error) {
+    // Обработка на грешка при превод
     console.error(`Error translating entry: ${entry}`, error);
     return entry;
   }
-}
+};
+
+// export async function deepLTranslate(text) {
+//   try {
+//     const result = await translator.translateText(text, 'EN', 'BG');
+//     return result.text;
+//   } catch (error) {
+//     console.error('DeepL Translation Error:', error);
+//     return text; // Ако нещо се обърка, връщаме оригиналния текст
+//   }
+// }
 
 async function searchJobs(keyword) {
   const url = `https://customsearch.googleapis.com/customsearch/v1`;
