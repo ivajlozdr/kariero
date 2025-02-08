@@ -1,51 +1,8 @@
 // ==============================
 // Импортиране на типове и интерфейси
 // ==============================
-import {
-  FilteredTableData,
-  DirectorData,
-  ActorData,
-  WriterData,
-  GenrePopularityData,
-  HeatmapData,
-  MovieProsperityData,
-  MovieData,
-  DataType,
-  Option,
-  TopRecommendedOccupation,
-  QualitiesCategory
-} from "./home-types";
-
-// ==============================
-// Type Guards
-// ==============================
-
-/**
- * Проверява дали даден обект е от тип DirectorData.
- *
- * @param {any} item - Обектът за проверка.
- * @returns {boolean} - Вярно, ако обектът е DirectorData.
- */
-export const isDirector = (item: any): item is DirectorData =>
-  item && "director" in item;
-
-/**
- * Проверява дали даден обект е от тип ActorData.
- *
- * @param {any} item - Обектът за проверка.
- * @returns {boolean} - Вярно, ако обектът е ActorData.
- */
-export const isActor = (item: any): item is ActorData =>
-  item && "actor" in item;
-
-/**
- * Проверява дали даден обект е от тип WriterData.
- *
- * @param {any} item - Обектът за проверка.
- * @returns {boolean} - Вярно, ако обектът е WriterData.
- */
-export const isWriter = (item: any): item is WriterData =>
-  item && "writer" in item;
+import { DataType, TopRecommendedOccupation } from "../../types_common";
+import { Option, QualitiesCategory } from "./home-types";
 
 // ==============================
 // Функции за работа с данни
@@ -65,7 +22,6 @@ export const fetchData = async (
   setData: React.Dispatch<React.SetStateAction<any>>
 ): Promise<void> => {
   try {
-    // Fetch user data independently
     fetch(`${import.meta.env.VITE_API_BASE_URL}/user-data`, {
       method: "GET",
       headers: {
@@ -74,10 +30,9 @@ export const fetchData = async (
       }
     })
       .then((res) => res.json())
-      .then((userData) => setUserData(userData)) // Set userData independently here
+      .then((userData) => setUserData(userData))
       .catch((error) => console.error("Error fetching user data:", error));
 
-    // Fetch statistics data independently
     const endpoints = [
       { key: "usersCount", endpoint: "/stats/platform/users-count" },
       {
@@ -157,7 +112,6 @@ export const fetchData = async (
       }
     ];
 
-    // Loop over each endpoint, fetch data, and update state independently
     endpoints.forEach(({ key, endpoint }) => {
       fetch(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, {
         method: "GET",
@@ -348,59 +302,6 @@ export function isTopRecommendedOccupationArray(
     )
   );
 }
-/**
- * Филтрира данни за таблица според категорията и връща определена страница.
- *
- * @param {FilteredTableData} filteredTableData - Данни за филтриране.
- * @param {string} prosperitySortCategory - Категория за сортиране.
- * @param {number} currentTablePage - Номер на текущата страница.
- * @param {number} itemsPerTablePage - Брой елементи на страница.
- * @returns {FilteredTableData} - Филтрирани и странирани данни.
- */
-export const filterTableData = (
-  filteredTableData: FilteredTableData,
-  prosperitySortCategory: string,
-  currentTablePage: number,
-  itemsPerTablePage: number
-): FilteredTableData => {
-  let newItems: FilteredTableData = [];
-  switch (prosperitySortCategory) {
-    case "Directors":
-      newItems = filteredTableData.filter((item) => "director" in item);
-      break;
-    case "Actors":
-      newItems = filteredTableData.filter((item) => "actor" in item);
-      break;
-    case "Writers":
-      newItems = filteredTableData.filter((item) => "writer" in item);
-      break;
-    default:
-      newItems = [];
-  }
-  return newItems.slice(
-    (currentTablePage - 1) * itemsPerTablePage,
-    currentTablePage * itemsPerTablePage
-  );
-};
-
-/**
- * Пагинира данни за таблица.
- *
- * @param {FilteredTableData} filteredTableData - Филтрираните данни.
- * @param {number} currentTablePage - Текуща страница.
- * @param {number} itemsPerTablePage - Брой елементи на страница.
- * @returns {FilteredTableData} - Пагинирани данни.
- */
-export const paginateData = (
-  filteredTableData: FilteredTableData,
-  currentTablePage: number,
-  itemsPerTablePage: number
-): FilteredTableData => {
-  return filteredTableData.slice(
-    (currentTablePage - 1) * itemsPerTablePage,
-    currentTablePage * itemsPerTablePage
-  );
-};
 
 /**
  * Сортира данни за професии по зададена категория.
@@ -480,84 +381,7 @@ export const getTotalBarChartPages = (
 ): number => Math.ceil(totalItems / pageSize);
 
 /**
- * Генерира данни за heatmap.
- *
- * @param {GenrePopularityData} data - Данни за популярност на жанровете.
- * @returns {HeatmapData} - Данни за heatmap.
- */
-export const generateHeatmapSeriesData = (
-  data: GenrePopularityData
-): HeatmapData => {
-  const years = Object.keys(data);
-  const genreNames = new Set<string>();
-
-  years.forEach((year) => {
-    Object.keys(data[year]).forEach((genreKey) =>
-      genreNames.add(data[year][genreKey].genre_bg)
-    );
-  });
-
-  return [...genreNames].map((genreBg) => ({
-    name: genreBg,
-    data: years.map((year) => {
-      const genre = Object.values(data[year]).find(
-        (item) => item.genre_bg === genreBg
-      );
-      return { x: year, y: genre ? genre.genre_count : 0 };
-    })
-  }));
-};
-
-/**
- * Генерира данни за scatter plot.
- *
- * @param {MovieProsperityData[]} movies - Данни за просперитет на филми.
- * @returns {MovieData[]} - Данни за scatter plot.
- */
-export const generateScatterSeriesData = (
-  movies: MovieProsperityData[]
-): MovieData[] =>
-  movies.map((movie) => ({
-    title: movie.title_bg,
-    title_bg: movie.title_bg,
-    title_en: movie.title_en,
-    boxOffice: parseBoxOffice(movie.total_box_office),
-    imdbRating: parseFloat(movie.imdbRating),
-    metascore: parseFloat(movie.metascore),
-    rottenTomatoes: parseFloat(movie.rotten_tomatoes)
-  }));
-
-/**
- * Преобразува стойност на приходи в число.
- *
- * @param {string | number} value - Стойност на приходи.
- * @returns {number} - Числова стойност.
- */
-export function parseBoxOffice(value: string | number): number {
-  return typeof value === "string"
-    ? parseFloat(value.replace(/[\$,]/g, ""))
-    : value;
-}
-
-// ==============================
-// Handle функции
-// ==============================
-
-/**
- * Задава категория за сортиране на таблицата за просперитет.
- *
- * @param {string} category - Избраната категория.
- * @param {React.Dispatch<React.SetStateAction<string>>} setProsperitySortCategory - Функция за задаване на категорията.
- */
-export const handleProsperityTableClick = (
-  category: string,
-  setProsperitySortCategory: React.Dispatch<React.SetStateAction<string>>
-) => {
-  setProsperitySortCategory(category);
-};
-
-/**
- * Задава категория за сортиране на секция "Филми и сериали".
+ * Задава категория за сортиране на професии.
  *
  * @param {string} category - Избраната категория.
  * @param {React.Dispatch<React.SetStateAction<string>>} setOccupationSortCategory - Функция за задаване на категорията.
@@ -582,22 +406,4 @@ export const handleTopStatsSortCategory = (
   >
 ) => {
   setTopStatsSortCategory(category);
-};
-
-/**
- * Обработва избор от dropdown меню.
- *
- * @param {React.Dispatch<React.SetStateAction<string>>} setName - Функция за задаване на име.
- * @param {React.Dispatch<React.SetStateAction<number>>} setValue - Функция за задаване на стойност.
- * @param {string} name - Избраното име.
- * @param {number} value - Избраната стойност.
- */
-export const handleDropdownClick = (
-  setName: React.Dispatch<React.SetStateAction<string>>,
-  setValue: React.Dispatch<React.SetStateAction<number>>,
-  name: string,
-  value: number
-) => {
-  setName(name);
-  setValue(value);
 };
