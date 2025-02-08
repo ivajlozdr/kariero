@@ -14,7 +14,7 @@ if len(sys.argv) < 2:
 URL = sys.argv[1]
 
 # Path to your local chromedriver executable
-# chromedriver_path = "/home/noit1/kariero-api/scraping/chromedriver"
+# chromedriver_path = "/home/noit1/kariero-api/python/chromedriver"
 # chromedriver_path = "chromedriver.exe"
 
 # Function to handle scraping
@@ -181,7 +181,7 @@ def scrape_jobs():
         }
 
         # Save results to a JSON file
-        # output_file = "/home/noit1/kariero-api/scraping/job_offers.json"
+        # output_file = "/home/noit1/kariero-api/python/job_offers.json"
         output_file = "job_offers.json"
 
         try:
