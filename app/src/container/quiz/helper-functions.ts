@@ -10,6 +10,7 @@ import {
   UserResponses
 } from "./quiz-types";
 import { FullCareerDetails } from "../../types_common";
+
 /**
  * Актуализира RIASEC резултатите чрез промяна на стойността за определена категория.
  *
@@ -251,7 +252,6 @@ export const fetchOnetData = async (
   date: string
 ): Promise<FullCareerDetails[]> => {
   try {
-    // First, send the user responses and scores to the backend to be saved
     const response = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/save-responses-scores`,
       {
@@ -272,7 +272,6 @@ export const fetchOnetData = async (
       throw new Error(`Error saving responses and scores: ${response.status}`);
     }
 
-    // Now send the AI analysis data (Abilities, Skills, Knowledge, etc.)
     const aiAnalysisResponse = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/save-ai-analysis`,
       {
@@ -301,12 +300,10 @@ export const fetchOnetData = async (
       );
     }
 
-    // Now process each career in the careerNames array
     const promises = recommendations.CareerRecommendations.flatMap(
       (rec) => rec.listOfCareers
     ).map(async (career) => {
       try {
-        // Send the career data (occupation) to be saved
         const occupationResponse = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/save-occupation`,
           {
@@ -329,21 +326,19 @@ export const fetchOnetData = async (
           );
         }
 
-        // Parse and return the occupation details
         const occupationData = await occupationResponse.json();
-        return occupationData; // Return the occupation details as part of the result
+        return occupationData;
       } catch (error) {
         console.error(`Error processing career ${career.career}:`, error);
-        return null; // In case of error, return null for that career
+        return null;
       }
     });
 
-    // Wait for all occupation data to be processed and return the successful results
     const results = await Promise.all(promises);
-    return results.filter((data): data is FullCareerDetails => data !== null); // Filter out any null values (errors)
+    return results.filter((data): data is FullCareerDetails => data !== null);
   } catch (error) {
     console.error("Error processing data:", error);
-    return []; // Return an empty array if any error occurs
+    return [];
   }
 };
 
@@ -376,158 +371,7 @@ export const submitQuiz = async (
     console.log("Final Scores:", scores);
     console.log("User Responses:", userResponses);
 
-    // const recommendations = await fetchOpenAIResponse(scores);
-    const recommendations = {
-      Abilities: [
-        "Deductive Reasoning",
-        "Inductive Reasoning",
-        "Creative Thinking",
-        "Problem Sensitivity"
-      ],
-      Skills: [
-        "Critical Thinking",
-        "Complex Problem Solving",
-        "Active Learning",
-        "Systems Analysis"
-      ],
-      Knowledge: [
-        "Engineering and Technology",
-        "Design",
-        "Mathematics",
-        "Physics"
-      ],
-      Interests: ["Investigative", "Artistic", "Social", "Enterprising"],
-      WorkStyle: [
-        "Attention to Detail",
-        "Analytical Thinking",
-        "Achievement/Effort",
-        "Innovation"
-      ],
-      WorkValues: [
-        "Achievement",
-        "Independence",
-        "Recognition",
-        "Working Conditions"
-      ],
-      TechnologySkills: [
-        "Engineering Software",
-        "CAD Software",
-        "Analytical or scientific software",
-        "Development environment software"
-      ],
-      CareerRecommendations: [
-        {
-          careerPath: "Engineering and Design",
-          reason:
-            "This career path aligns well with your analytical thinking, problem-solving abilities, and creative approach towards innovation. Your educational background and interest in creating something new fit well with roles that involve engineering and design, where you can apply technical expertise and creativity.",
-          listOfCareers: [
-            {
-              career: "Mechanical Engineers",
-              reason:
-                "To engage in innovative design and problem-solving, fitting your analytical and creative mindset."
-            },
-            {
-              career: "Product Designers",
-              reason:
-                "To utilize creativity and engineering skills in developing new products, suited for a fast-paced environment."
-            },
-            {
-              career: "Civil Engineers",
-              reason:
-                "Combines structured work and technical problem-solving, fitting your preference for a dynamic yet organized environment."
-            }
-          ]
-        },
-        {
-          careerPath: "Research and Development",
-          reason:
-            "Your strong investigative and innovative traits steer you towards R&D careers. These roles allow you to engage with complex problems and apply your drive for new, creative solutions in technical areas.",
-          listOfCareers: [
-            {
-              career: "Physicists",
-              reason:
-                "Involves creative problem-solving and innovative research, aligning with your curiosity and technical expertise."
-            },
-            {
-              career: "Biochemists and Biophysicists",
-              reason:
-                "Allows application of deep scientific inquiry and innovation, suitable for your doctoral level knowledge."
-            },
-            {
-              career: "Materials Scientists",
-              reason:
-                "Provides opportunities to explore and innovate new material solutions using analytical skills."
-            }
-          ]
-        },
-        {
-          careerPath: "Technology Strategy and Consultancy",
-          reason:
-            "Your enterprising and social interests, combined with your educational background, make this a good fit. You can utilize your problem-solving skills and collaborative work style in a dynamic consulting environment.",
-          listOfCareers: [
-            {
-              career: "Management Analysts",
-              reason:
-                "Allows you to combine analytical thinking with innovative strategy and teamwork."
-            },
-            {
-              career: "Information Technology Project Managers",
-              reason:
-                "Involves leading teams towards tech solutions, strong fit for your teamwork and dynamic environment preference."
-            },
-            {
-              career: "Operations Research Analysts",
-              reason:
-                "Provides a platform for using your analytical and creative skills in improving organizational efficiency."
-            }
-          ]
-        },
-        {
-          careerPath: "Education and Training",
-          reason:
-            "Your social inclination and investigative skills suggest roles in educating others, where you can be an expert and share innovative knowledge.",
-          listOfCareers: [
-            {
-              career: "Postsecondary Teachers",
-              reason:
-                "To share and extend your deep knowledge and innovative teaching methods in a structured educational setting."
-            },
-            {
-              career: "Instructional Coordinators",
-              reason:
-                "Develops innovative curricula and educational standards, fitting your creative and analytical skills."
-            },
-            {
-              career: "Training and Development Managers",
-              reason:
-                "Leverages your skills to innovate education programs and lead training efforts, ideal for collaborative environments."
-            }
-          ]
-        },
-        {
-          careerPath: "Creative Media and Communications",
-          reason:
-            "Your strong creative and investigative skills, along with an appreciation for a dynamic work environment, align with careers involving creativity and communication.",
-          listOfCareers: [
-            {
-              career: "Technical Writers",
-              reason:
-                "Combine technical expertise with a creative approach in writing about complex subjects."
-            },
-            {
-              career: "Editors",
-              reason:
-                "Use your detail-oriented and analytical thinking to refine and organize content creatively."
-            },
-            {
-              career: "Art Directors",
-              reason:
-                "Oversee creative concepts and projects, fitting your preference for innovation and dynamic workspaces."
-            }
-          ]
-        }
-      ]
-    };
+    const recommendations = await fetchOpenAIResponse(scores);
 
     if (!recommendations) {
       throw new Error("Failed to fetch career recommendations from OpenAI.");
@@ -551,7 +395,6 @@ export const submitQuiz = async (
     if (response.ok) {
       const translatedData = await response.json();
       console.log(translatedData);
-      // Update the state with translated career recommendations
       setCareerRecommendations(translatedData);
     } else {
       console.error("Failed to translate career recommendations");
