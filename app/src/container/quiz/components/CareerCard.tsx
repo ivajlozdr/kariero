@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { CareerCardProps } from "../quiz-types";
 
-// Stylized CareerCard component with scrollable skills at the bottom
 const CareerCard: React.FC<CareerCardProps> = ({
   title,
   description,

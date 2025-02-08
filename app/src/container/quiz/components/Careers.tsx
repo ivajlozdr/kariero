@@ -15,19 +15,19 @@ const Careers: React.FC<CareersProps> = ({
   const [showCareerCards, setShowCareerCards] = useState(true);
   const navigate = useNavigate();
   const handlePathSelection = (path: CareerPath) => {
-    setShowCareerCards(false); // Start hiding CareerPathCards
+    setShowCareerCards(false);
     setTimeout(() => {
-      setSelectedPath(path); // Update the selected path after fade-out
-      setShowCareerCards(true); // Show CareerCards after a short delay
-    }, 300); // Matches the fade-out duration
+      setSelectedPath(path);
+      setShowCareerCards(true);
+    }, 300);
   };
 
   const handleBackToPaths = () => {
-    setShowCareerCards(false); // Start hiding CareerCards
+    setShowCareerCards(false);
     setTimeout(() => {
-      setSelectedPath(null); // Reset selected path after fade-out
-      setShowCareerCards(true); // Show CareerPathCards after a short delay
-    }, 300); // Matches the fade-out duration
+      setSelectedPath(null);
+      setShowCareerCards(true);
+    }, 300);
   };
 
   const getCareerDetailsByIndex = (index: number) => {
