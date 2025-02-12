@@ -1,28 +1,26 @@
 // const deepl = require('deepl');
-
+const { Translate } = require("@google-cloud/translate").v2;
 const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
 const CX = "160b0be643d1045a6";
 const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
 // const DEEPL_API_KEY = "waitinglol";
 // const translator = new deepl.Translator(authKey);
 
+const translateClient = new Translate();
+
 const translate = async (entry) => {
-  // Изграждане на URL за заявка към Google Translate API
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bg&dt=t&q=${encodeURIComponent(
-    entry
-  )}`;
-
   try {
-    // Изпращане на заявката към API-то
-    const response = await fetch(url);
-    const data = await response.json();
+    // Изпращане на заявката за превод
+    const [translation] = await translateClient.translate(entry, "bg");
+    console.log("translation", translation);
 
-    // Обединяване на преведените части в един низ
-    const flattenedTranslation = data[0].map((item) => item[0]).join(" ");
+    // Премахване на излишните интервали и капитализация на първата буква
+    const cleanedTranslation = translation.replace(/\s+/g, " ").trim();
+    const capitalizedTranslation =
+      cleanedTranslation.charAt(0).toUpperCase() + cleanedTranslation.slice(1);
 
-    // Премахване на излишните интервали
-    const mergedTranslation = flattenedTranslation.replace(/\s+/g, " ").trim();
-    return mergedTranslation;
+    console.log("Final translation:", capitalizedTranslation);
+    return capitalizedTranslation;
   } catch (error) {
     // Обработка на грешка при превод
     console.error(`Error translating entry: ${entry}`, error);

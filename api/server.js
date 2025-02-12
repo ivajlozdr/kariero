@@ -312,6 +312,33 @@ app.get("/user-data", (req, res) => {
   });
 });
 
+app.post("/translate/test", async (req, res) => {
+  try {
+    const { textToTranslate } = req.body;
+
+    // Helper function to translate individual pieces
+    const translateText = async (text) => {
+      try {
+        const translatedText = await hf.translate(text);
+        return translatedText;
+      } catch (error) {
+        console.error("Error translating text:", error);
+        return text;
+      }
+    };
+
+    const translatedText = await translateText(textToTranslate);
+    console.log("translatedText", translatedText);
+    // Return the translated career paths
+    res.json(translatedText);
+  } catch (error) {
+    console.error("Error!", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the request." });
+  }
+});
+
 app.post("/translate/career-paths", async (req, res) => {
   try {
     const { careerPaths } = req.body;
@@ -398,17 +425,17 @@ app.post("/job-offers", async (req, res) => {
     // Spawn the Python process
     // const pythonProcess = spawn("bash", [
     //   "-c",
-    //   "source /home/noit1/virtualenv/kariero-api/scraping/3.10/bin/activate && cd /home/noit1/kariero-api/scraping && python3 /home/noit1/kariero-api/scraping/scraper.py " +
+    //   "source /home/noit1/virtualenv/kariero-api/python/3.10/bin/activate && cd /home/noit1/kariero-api/python && python3 /home/noit1/kariero-api/python/scraper.py " +
     //     url
     // ]);
 
     // Script to test in CPanel Terminal
-    // source /home/noit1/virtualenv/kariero-api/scraping/3.10/bin/activate && cd /home/noit1/kariero-api/scraping && python3 /home/noit1/kariero-api/scraping/scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
+    // source /home/noit1/virtualenv/kariero-api/python/3.10/bin/activate && cd /home/noit1/kariero-api/python && python3 /home/noit1/kariero-api/python/scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
 
     // Script to test in Local Terminal
     // python scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
 
-    const pythonProcess = spawn("python", ["./scraping/scraper.py", url]);
+    const pythonProcess = spawn("python", ["./python/scraper.py", url]);
 
     let response = "";
 

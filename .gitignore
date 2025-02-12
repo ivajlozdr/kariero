@@ -62,6 +62,7 @@ build/Release/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
+__pycache__
 
 # Output of 'npm pack'
 *.tgz
@@ -118,3 +119,5 @@ out
 # Custom project-specific files
 job_offers.json
 cookies.json
+translation_usage.json
+credentials.json
