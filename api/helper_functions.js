@@ -1,3 +1,7 @@
+import * as deepl from 'deepl-node';
+
+const authKey = "f63c02c5-f056-..."; // Replace with your key
+const translator = new deepl.Translator(authKey);
 const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
 const CX = "160b0be643d1045a6";
 const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
@@ -22,6 +26,16 @@ const translate = async (entry) => {
     return entry;
   }
 };
+
+export async function deepLTranslate(text) {
+    try {
+      const result = await translator.translateText(text, 'EN', 'BG');
+      return result.text;
+    } catch (error) {
+      console.error('DeepL Translation Error:', error);
+      return text; // Ако нещо се обърка, връщаме оригиналния текст
+    }
+  }
 
 async function searchJobs(keyword) {
   const url = `https://customsearch.googleapis.com/customsearch/v1`;
