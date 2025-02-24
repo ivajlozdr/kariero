@@ -1,6 +1,5 @@
-import * as deepl from 'deepl-node';
-
-const authKey = "f63c02c5-f056-..."; // Replace with your key
+const deepl = require("deepl-node");
+const authKey = "f63c02c5-f056-...";
 const translator = new deepl.Translator(authKey);
 const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
 const CX = "160b0be643d1045a6";
@@ -27,15 +26,15 @@ const translate = async (entry) => {
   }
 };
 
-export async function deepLTranslate(text) {
-    try {
-      const result = await translator.translateText(text, 'EN', 'BG');
-      return result.text;
-    } catch (error) {
-      console.error('DeepL Translation Error:', error);
-      return text; // Ако нещо се обърка, връщаме оригиналния текст
-    }
+async function deepLTranslate(text) {
+  try {
+    const result = await translator.translateText(text, "EN", "BG");
+    return result.text;
+  } catch (error) {
+    console.error("DeepL Translation Error:", error);
+    return text; // Ако нещо се обърка, връщаме оригиналния текст
   }
+}
 
 async function searchJobs(keyword) {
   const url = `https://customsearch.googleapis.com/customsearch/v1`;
@@ -145,18 +144,21 @@ async function fetchAndTranslateDetails(code) {
 
   const detailsData = await detailsResponse.json();
 
-  const translatedTitle = await translate(detailsData.occupation.title);
-  const translatedDescription = await translate(
+  const translatedTitle = await deepLTranslate(detailsData.occupation.title);
+  const translatedDescription = await deepLTranslate(
     detailsData.occupation.description
   );
 
   // Helper function to translate array of strings
-  const translateList = async (list) => {
+  const translateList = async (list, type) => {
     if (list && list.length > 0) {
       // Translate each item in the list individually
       const translatedItems = await Promise.all(
         list.map(async (item) => {
-          const translatedItem = await translate(item);
+          const translatedItem =
+            type === "deepl"
+              ? await deepLTranslate(item)
+              : await translate(item);
           return { translated_name: translatedItem };
         })
       );
@@ -174,34 +176,40 @@ async function fetchAndTranslateDetails(code) {
   );
   // Extract and translate tasks
   const tasks = detailsData.tasks?.task?.map((t) => t.statement) || [];
-  const translatedTasks = await translateList(tasks);
+  const translatedTasks = await translateList(tasks, "regular");
 
   // Extract and translate technology skills
   const techSkills =
     detailsData.technology_skills?.category?.map((c) => c.title.name) || [];
-  const translatedTechSkills = await translateList(techSkills);
+  const translatedTechSkills = await translateList(techSkills, "regular");
 
   // Extract and translate work activities
   const workActivities =
     detailsData.detailed_work_activities?.activity?.map((a) => a.name) || [];
-  const translatedWorkActivities = await translateList(workActivities);
+  const translatedWorkActivities = await translateList(
+    workActivities,
+    "regular"
+  );
 
   // Extract and translate other elements
   const skills = detailsData.skills?.element?.map((s) => s.name) || [];
-  const translatedSkills = await translateList(skills);
+  const translatedSkills = await translateList(skills, "deepl");
 
   const interests = detailsData.interests?.element?.map((i) => i.name) || [];
-  const translatedInterests = await translateList(interests);
+  const translatedInterests = await translateList(interests, "regular");
 
   const abilities = detailsData.abilities?.element?.map((a) => a.name) || [];
-  const translatedAbilities = await translateList(abilities);
+  const translatedAbilities = await translateList(abilities, "deepl");
 
   const knowledge = detailsData.knowledge?.element?.map((k) => k.name) || [];
-  const translatedKnowledge = await translateList(knowledge);
+  const translatedKnowledge = await translateList(knowledge, "regular");
 
   const relatedOccupations =
     detailsData.related_occupations?.occupation?.map((r) => r.title) || [];
-  const translatedRelatedOccupations = await translateList(relatedOccupations);
+  const translatedRelatedOccupations = await translateList(
+    relatedOccupations,
+    "deepl"
+  );
 
   // Return all translated data
   return {
@@ -224,6 +232,7 @@ async function fetchAndTranslateDetails(code) {
 
 module.exports = {
   translate,
+  deepLTranslate,
   searchJobs,
   fetchCareerCode,
   fetchAndTranslateDetails
