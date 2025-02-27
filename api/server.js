@@ -8,6 +8,8 @@ const crypto = require("crypto");
 const db = require("./database");
 const hf = require("./helper_functions");
 const { spawn } = require("child_process");
+const pythonPath = require("./config.js").pythonPath;
+const pythonPathLocal = require("./config.js").pythonPathLocal;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -435,7 +437,10 @@ app.post("/job-offers", async (req, res) => {
     // Script to test in Local Terminal
     // python scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
 
-    const pythonProcess = spawn("python", ["./python/scraper.py", url]);
+    // HOSTING:
+    // const pythonProcess = spawn(pythonPath, ["./python/scraper.py", url]);
+    // LOCAL:
+    const pythonProcess = spawn(pythonPathLocal, ["./python/scraper.py", url]);
 
     let response = "";
 
@@ -482,6 +487,60 @@ app.post("/job-offers", async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while processing the request." });
   }
+});
+
+// Достъпване на конретен AI модел
+app.post("/get-model-response", (req, res) => {
+  const {
+    messages,
+    provider = "openai",
+    modelOpenAI = "gpt-4o",
+    api_key
+  } = req.body;
+
+  if (!messages || !Array.isArray(messages)) {
+    return res
+      .status(400)
+      .json({ error: "Invalid request. 'messages' must be an array." });
+  }
+
+  // Spawn the Python process
+  const pythonProcess = spawn(pythonPathLocal, [
+    "./python/fetch_ai_response.py"
+  ]);
+
+  let response = "";
+
+  // Send messages as JSON to Python via stdin
+  pythonProcess.stdin.write(
+    JSON.stringify({ provider, messages, modelOpenAI, api_key })
+  );
+  pythonProcess.stdin.end(); // Close the input stream
+
+  // Capture output from stdout
+  pythonProcess.stdout.on("data", (data) => {
+    response += data.toString();
+  });
+
+  // Capture error output from stderr (for debugging)
+  pythonProcess.stderr.on("data", (data) => {
+    console.error("Python script stderr:", data.toString());
+  });
+
+  // Handle the closing of the Python process
+  pythonProcess.on("close", (code) => {
+    if (code === 0) {
+      try {
+        const jsonResponse = JSON.parse(response.trim());
+        res.status(200).json(jsonResponse); // Return JSON to the client
+      } catch (e) {
+        console.error("Error parsing JSON response:", e);
+        res.status(500).send("Error parsing response from Python");
+      }
+    } else {
+      res.status(500).send("Error: Python script execution failed");
+    }
+  });
 });
 
 app.post("/save-responses-scores", (req, res) => {
