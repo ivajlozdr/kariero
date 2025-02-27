@@ -16,10 +16,14 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "node server"
+    "dev": "node server",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
