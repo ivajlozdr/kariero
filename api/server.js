@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const db = require("./database");
 const hf = require("./helper_functions");
 const { spawn } = require("child_process");
+const { Client } = require("ssh2");
 const pythonPath = require("./config.js").pythonPath;
 const pythonPathLocal = require("./config.js").pythonPathLocal;
 
@@ -400,77 +401,92 @@ app.post("/job-offers", async (req, res) => {
   try {
     const { keyword, occupation_code } = req.body;
 
-    // Translate the keyword
-    console.log("Translating keyword:", keyword);
-    const translatedKeyword = await hf.translate(keyword);
-    console.log("Translated keyword:", translatedKeyword);
+    // // Translate the keyword
+    // console.log("Translating keyword:", keyword);
+    // const translatedKeyword = await hf.translate(keyword);
+    // console.log("Translated keyword:", translatedKeyword);
 
-    // Perform the search using Google Custom Search API
-    const jobSearchUrls = await hf.searchJobs(translatedKeyword);
-    console.log("Job search URLs:", jobSearchUrls);
+    // // Perform the search using Google Custom Search API
+    // const jobSearchUrls = await hf.searchJobs(translatedKeyword);
+    // console.log("Job search URLs:", jobSearchUrls);
 
-    if (jobSearchUrls.length === 0) {
-      console.log("No valid URLs found");
-      return res.status(404).send("No valid front job search URLs found.");
-    }
+    // if (jobSearchUrls.length === 0) {
+    //   console.log("No valid URLs found");
+    //   return res.status(404).send("No valid front job search URLs found.");
+    // }
 
-    // Use the first valid URL to pass to the Python script
-    const url = jobSearchUrls[0];
-    // const url = "https://www.jobs.bg/front_job_search.php?subm=1&is_cyrillic=1";
-    console.log("Selected URL for Python scraper:", url);
+    // // Use the first valid URL to pass to the Python script
+    // const url = jobSearchUrls[0];
+    // console.log("Selected URL for Python scraper:", url);
 
-    if (!url) {
-      console.error("No URL found for Python scraper");
-      return res.status(400).json({ error: "URL is required" });
-    }
+    // if (!url) {
+    //   console.error("No URL found for Python scraper");
+    //   return res.status(400).json({ error: "URL is required" });
+    // }
 
-    // Spawn the Python process
-    // const pythonProcess = spawn("bash", [
-    //   "-c",
-    //   "source /home/noit1/virtualenv/kariero-api/python/3.10/bin/activate && cd /home/noit1/kariero-api/python && python3 /home/noit1/kariero-api/python/scraper.py " +
-    //     url
-    // ]);
+    // Set up SSH connection to VPS
+    const ssh = new Client();
+    ssh
+      .on("ready", () => {
+        console.log("SSH connection established.");
 
-    // Script to test in CPanel Terminal
-    // source /home/noit1/virtualenv/kariero-api/python/3.10/bin/activate && cd /home/noit1/kariero-api/python && python3 /home/noit1/kariero-api/python/scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
+        // Execute the Python script on the VPS
+        const command = `xvfb-run python3.8 scraper.py https://www.jobs.bg/front_job_search.php?s_c[1]=1168`; // Adjust path to your Python script
 
-    // Script to test in Local Terminal
-    // python scraper.py https://www.jobs.bg/front_job_search.php?s_c%5B%5D=525
+        ssh.exec(command, (err, stream) => {
+          if (err) {
+            console.error("Error executing Python script:", err);
+            return res
+              .status(500)
+              .json({ error: "Failed to execute Python script" });
+          }
 
-    // HOSTING:
-    // const pythonProcess = spawn(pythonPath, ["./python/scraper.py", url]);
-    // LOCAL:
-    const pythonProcess = spawn(pythonPathLocal, ["./python/scraper.py", url]);
+          let response = "";
 
-    let response = "";
+          // Capture stdout data
+          stream.on("data", (data) => {
+            console.log("Python script stdout:", data.toString());
+            response += data.toString();
+          });
 
-    // Capture data from the Python script
-    pythonProcess.stdout.on("data", (data) => {
-      console.log("Python script stdout:", data.toString());
-      response += data.toString();
-    });
+          // Capture stderr data
+          stream.on("stderr", (data) => {
+            console.error("Python script stderr:", data.toString());
+          });
 
-    pythonProcess.stderr.on("data", (data) => {
-      console.error("Python script stderr:", data.toString());
-    });
+          // On stream close, process the response
+          stream.on("close", (code) => {
+            console.log("Python process exited with code:", code);
+            ssh.end();
 
-    pythonProcess.on("close", (code) => {
-      console.log("Python process exited with code:", code);
-      if (code !== 0) {
-        console.error("Python scraper failed");
-        return res.status(500).json({ error: "Python scraper failed" });
-      }
+            if (code !== 0) {
+              console.error("Python scraper failed");
+              return res.status(500).json({ error: "Python scraper failed" });
+            }
 
-      try {
-        const parsedResponse = JSON.parse(response.trim());
-
-        // Save to the database
-        res.status(200).json(parsedResponse);
-      } catch (error) {
-        console.error("Error parsing Python script response:", error);
-        res.status(500).json({ error: "Failed to parse Python script output" });
-      }
-    });
+            try {
+              // Parse the response from Python script
+              const parsedResponse = JSON.parse(response.trim());
+              res.status(200).json(parsedResponse);
+            } catch (error) {
+              console.error("Error parsing Python script response:", error);
+              res
+                .status(500)
+                .json({ error: "Failed to parse Python script output" });
+            }
+          });
+        });
+      })
+      .on("error", (err) => {
+        console.error("SSH connection error:", err);
+        res.status(500).json({ error: "Failed to connect to the VPS" });
+      })
+      .connect({
+        host: "164.138.221.231",
+        port: 22, // Default SSH port
+        username: "root",
+        password: "y!+22vXkgSBR"
+      });
   } catch (error) {
     console.error("Error in /job-offers endpoint:", error);
     res

@@ -34,8 +34,6 @@ def scrape_jobs():
         # Open the target URL
         page.goto(URL)
 
-        print("Navigating to the URL...")
-
         # Fetch the page content after rendering
         page_source = page.content()
 
@@ -53,7 +51,8 @@ def scrape_jobs():
                 job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
 
                 # Extract company name
-                company_name = job.select_one("div.card-logo-info div.secondary-text").get_text(strip=True)
+                company_elem = job.select_one("div.card-logo-info div.secondary-text")
+                company_name = company_elem.get_text(strip=True) if company_elem else "N/A"
 
                 # Extract location (city)
                 city_element = job.select_one("span.location")
@@ -72,7 +71,8 @@ def scrape_jobs():
                     offer_details = "N/A"
 
                 # Extract offer URL
-                offer_url = job.select_one("a.black-link-b")["href"]
+                offer_elem = job.select_one("a.black-link-b")
+                offer_url = offer_elem["href"] if offer_elem else "N/A"
 
                 # Extract salary information
                 salary_match = re.search(
@@ -174,8 +174,6 @@ def scrape_jobs():
         # Save the data to a JSON file
         with open("job_offers.json", "w", encoding="utf-8") as json_file:
             json.dump(result, json_file, ensure_ascii=False, indent=4)
-
-        print("Job titles saved to 'job_offers.json'.")
 
         # Return the job offers as output
         print(json.dumps(result))  # Print job offers in JSON format

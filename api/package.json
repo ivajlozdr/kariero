@@ -10,7 +10,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.0",
     "nodemailer": "^6.9.14",
-    "python-shell": "^5.0.0"
+    "python-shell": "^5.0.0",
+    "ssh2": "^1.16.0"
   },
   "name": "api",
   "version": "1.0.0",
