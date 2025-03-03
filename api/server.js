@@ -431,7 +431,7 @@ app.post("/job-offers", async (req, res) => {
         console.log("SSH connection established.");
 
         // Execute the Python script on the VPS
-        const command = `xvfb-run python3.8 scraper.py ${url}`; // Adjust path to your Python script
+        const command = `xvfb-run python3.8 scraper.py ${url}`; // XServer command for VPS
 
         ssh.exec(command, (err, stream) => {
           if (err) {
