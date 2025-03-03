@@ -465,17 +465,7 @@ app.post("/job-offers", async (req, res) => {
         const parsedResponse = JSON.parse(response.trim());
 
         // Save to the database
-        db.saveOffers(parsedResponse, occupation_code, (err) => {
-          if (err) {
-            console.error("Error saving offers to database:", err);
-            return res
-              .status(500)
-              .json({ error: "Failed to save offers to database" });
-          }
-
-          // Send response to the client
-          res.status(200).json(parsedResponse);
-        });
+        res.status(200).json(parsedResponse);
       } catch (error) {
         console.error("Error parsing Python script response:", error);
         res.status(500).json({ error: "Failed to parse Python script output" });

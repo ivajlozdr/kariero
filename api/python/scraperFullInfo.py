@@ -172,13 +172,10 @@ def scrape_jobs():
         }
 
         # Save the data to a JSON file
-        with open("job_offers.json", "w", encoding="utf-8") as json_file:
+        with open("job_titles.json", "w", encoding="utf-8") as json_file:
             json.dump(result, json_file, ensure_ascii=False, indent=4)
 
-        print("Job titles saved to 'job_offers.json'.")
-
-        # Return the job offers as output
-        print(json.dumps(result))  # Print job offers in JSON format
+        print("Job titles saved to 'job_titles.json'.")
 
         # Close the browser
         browser.close()
