@@ -401,28 +401,28 @@ app.post("/job-offers", async (req, res) => {
   try {
     const { keyword, occupation_code } = req.body;
 
-    // // Translate the keyword
-    // console.log("Translating keyword:", keyword);
-    // const translatedKeyword = await hf.translate(keyword);
-    // console.log("Translated keyword:", translatedKeyword);
+    // Translate the keyword
+    console.log("Translating keyword:", keyword);
+    const translatedKeyword = await hf.translate(keyword);
+    console.log("Translated keyword:", translatedKeyword);
 
-    // // Perform the search using Google Custom Search API
-    // const jobSearchUrls = await hf.searchJobs(translatedKeyword);
-    // console.log("Job search URLs:", jobSearchUrls);
+    // Perform the search using Google Custom Search API
+    const jobSearchUrls = await hf.searchJobs(translatedKeyword);
+    console.log("Job search URLs:", jobSearchUrls);
 
-    // if (jobSearchUrls.length === 0) {
-    //   console.log("No valid URLs found");
-    //   return res.status(404).send("No valid front job search URLs found.");
-    // }
+    if (jobSearchUrls.length === 0) {
+      console.log("No valid URLs found");
+      return res.status(404).send("No valid front job search URLs found.");
+    }
 
-    // // Use the first valid URL to pass to the Python script
-    // const url = jobSearchUrls[0];
-    // console.log("Selected URL for Python scraper:", url);
+    // Use the first valid URL to pass to the Python script
+    const url = jobSearchUrls[0];
+    console.log("Selected URL for Python scraper:", url);
 
-    // if (!url) {
-    //   console.error("No URL found for Python scraper");
-    //   return res.status(400).json({ error: "URL is required" });
-    // }
+    if (!url) {
+      console.error("No URL found for Python scraper");
+      return res.status(400).json({ error: "URL is required" });
+    }
 
     // Set up SSH connection to VPS
     const ssh = new Client();
@@ -431,7 +431,7 @@ app.post("/job-offers", async (req, res) => {
         console.log("SSH connection established.");
 
         // Execute the Python script on the VPS
-        const command = `xvfb-run python3.8 scraper.py https://www.jobs.bg/front_job_search.php?s_c[1]=1168`; // Adjust path to your Python script
+        const command = `xvfb-run python3.8 scraper.py ${url}`; // Adjust path to your Python script
 
         ssh.exec(command, (err, stream) => {
           if (err) {

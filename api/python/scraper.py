@@ -50,6 +50,10 @@ def scrape_jobs():
                 job_title_element = job.select_one("div.card-title > span:not(:has(.material-icons)):not(:empty)")
                 job_title = job_title_element.get_text(strip=True) if job_title_element else "N/A"
 
+                # Skip if the job title is "N/A"
+                if job_title == "N/A":
+                    continue
+
                 # Extract company name
                 company_elem = job.select_one("div.card-logo-info div.secondary-text")
                 company_name = company_elem.get_text(strip=True) if company_elem else "N/A"
