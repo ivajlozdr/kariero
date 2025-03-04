@@ -120,4 +120,4 @@ out
 job_offers.json
 cookies.json
 translation_usage.json
-credentials.json
+credentials.*
