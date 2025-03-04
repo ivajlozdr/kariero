@@ -2,7 +2,6 @@
 import sys
 import json
 import re
-from datetime import datetime
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -23,10 +22,8 @@ def scrape_jobs():
 
         # Add cookies to the page
         cookies = [
-            {"name": "JOBSSESSID", "value": "81dqdlvqubia9s99otpskcqdb9", "domain": ".jobs.bg", "path": "/"},
-            {"name": "TS01caf967", "value": "01855380b026ca7d74891ed223b578cf5068d86b247051ae1d41039e6817c07ad8064b76aa00435d3baf07ddf79656d3c22538b7e1", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "Ci6JgkeaM3_leE9CalEzhVhe_M10U73yP6JZvYcqyhGQDhrAJuoHOYi0l8BnOPw2Lq47GY9i24UgN2tonHcsInohbpLQZby9bCQZrg5PGJO0EZ1oHTdtyLrYj_oDf9md", "domain": ".jobs.bg", "path": "/"},
-            {"name": "__cf_bm", "value": "CQ9sFn8KxOJ_kriWqmpum3OxoPoeE58zsy4GLak1aqU-1741026235-1.0.1.1-P8vgfvkzRoz6eXsV90y6D76te8PJiJpiHkjwqF3vRPBhpns6fHaYMRb8V7G5zMXbDD5p8pmZsgV_kJIiiMOncy8Am0c9e53Kf1TiPQ3jIY0", "domain": ".jobs.bg", "path": "/"}
+            {"name": "JOBSSESSID", "value": "nclapq4kbpcv7p51bdqq8im5q5", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "wKpErMEfRHKIw921sPbeXxcCFv6tqr9zXgzFwzUx2vQofZawXAYawWUweGIRzOAXoX6YTur2ekU3vmJDzk_gRt2D8kj6Mak8U9C3I49QNQNUZ2qOJ8SMSjUOvvnEQRy3", "domain": ".jobs.bg", "path": "/"}
         ]
         
         page.context.add_cookies(cookies)
