@@ -11,6 +11,9 @@ const { spawn } = require("child_process");
 const { Client } = require("ssh2");
 const pythonPath = require("./config.js").pythonPath;
 const pythonPathLocal = require("./config.js").pythonPathLocal;
+const SECRET_KEY = require("./credentials.js").SECRET_KEY;
+const EMAIL_USER = require("./credentials.js").EMAIL_USER;
+const EMAIL_PASS = require("./credentials.js").EMAIL_PASS;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,10 +39,6 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Handle preflight requests
 
 let verificationCodes = {};
-
-const SECRET_KEY = "1a2b3c4d5e6f7g8h9i0jklmnopqrstuvwxyz123456";
-const EMAIL_USER = "no-reply@kariero.noit.eu";
-const EMAIL_PASS = "Noit_2025";
 
 // Създаване на транспортерен обект с използване на SMTP транспорт
 const transporter = nodemailer.createTransport({
@@ -182,7 +181,7 @@ app.post("/signin", (req, res) => {
         .json({ error: "Въведената парола е грешна или непълна!" });
 
     const token = jwt.sign({ id: user.id }, SECRET_KEY, {
-      expiresIn: rememberMe ? "7d" : "1h"
+      expiresIn: rememberMe ? "7d" : "2h"
     });
     res.json({ message: "Успешно влизане", token });
   });
@@ -211,8 +210,8 @@ app.post("/password-reset-request", (req, res) => {
     });
 
     // Create a reset link with the token
-    // const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
-    const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
+    const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
+    // const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
 
     // Send email with reset link
     const mailOptions = {
@@ -322,7 +321,7 @@ app.post("/translate/test", async (req, res) => {
     // Helper function to translate individual pieces
     const translateText = async (text) => {
       try {
-        const translatedText = await hf.translate(text);
+        const translatedText = await hf.deepLTranslate(text);
         return translatedText;
       } catch (error) {
         console.error("Error translating text:", error);
@@ -346,54 +345,52 @@ app.post("/translate/career-paths", async (req, res) => {
   try {
     const { careerPaths } = req.body;
 
-    // Helper function to translate individual pieces
-    const translateText = async (text) => {
-      try {
-        const translatedText = await hf.translate(text);
-        return translatedText;
-      } catch (error) {
-        console.error("Error translating text:", error);
-        return text;
-      }
+    const translateCareerPath = async (careerPath) => {
+      const translatedCareerPathTitle = await hf.deepLTranslate(
+        careerPath.careerPath,
+        "This is the title of a career path.",
+        "8a590eb2-d291-45f3-af6c-c2fa0f6808fb"
+      );
+
+      const translatedCareerPathDescription = await hf.deepLTranslate(
+        careerPath.reason,
+        `This is the description of the career path: ${careerPath.careerPath}.`
+      );
+
+      const translatedCareers = await Promise.all(
+        careerPath.listOfCareers.map(async (career) => {
+          const translatedCareerName = await hf.deepLTranslate(
+            career.career,
+            "This is the title of a career."
+          );
+          const translatedCareerReason = await hf.deepLTranslate(
+            career.reason,
+            `This is the reason why a career is recommended to a user based on an analysis of their character and abiltiies.`
+          );
+          return {
+            career: translatedCareerName,
+            reason: translatedCareerReason
+          };
+        })
+      );
+
+      return {
+        careerPath: translatedCareerPathTitle,
+        reason: translatedCareerPathDescription,
+        listOfCareers: translatedCareers
+      };
     };
 
-    // Process all career paths
     const translatedCareerPaths = await Promise.all(
-      careerPaths.map(async (careerPath) => {
-        const translatedCareerPathTitle = await translateText(
-          careerPath.careerPath
-        );
-        const translatedCareerPathDescription = await translateText(
-          careerPath.reason
-        );
-
-        const translatedCareers = await Promise.all(
-          careerPath.listOfCareers.map(async (career) => {
-            const translatedCareerName = await translateText(career.career);
-            const translatedCareerReason = await translateText(career.reason);
-
-            return {
-              career: translatedCareerName,
-              reason: translatedCareerReason
-            };
-          })
-        );
-
-        return {
-          careerPath: translatedCareerPathTitle,
-          reason: translatedCareerPathDescription,
-          listOfCareers: translatedCareers
-        };
-      })
+      careerPaths.map(translateCareerPath)
     );
 
-    // Return the translated career paths
     res.json(translatedCareerPaths);
   } catch (error) {
     console.error("Error in translating career paths:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while processing the request." });
+    res.status(500).json({
+      error: "An error occurred while processing the request."
+    });
   }
 });
 

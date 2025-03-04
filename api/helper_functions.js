@@ -1,9 +1,9 @@
 const deepl = require("deepl-node");
-const authKey = "f63c02c5-f056-...";
-const translator = new deepl.Translator(authKey);
-const CUSTOM_SEARCH_API_KEY = "AIzaSyBkQKjvwEUYdDYHX7u0PNYa_9MWEIOHzfk"; // Store your Google Custom Search API key in your .env file
-const CX = "160b0be643d1045a6";
-const ONET_API_KEY = "cGdpOjk1Njlwdmg=";
+const DEEPL_API_KEY = require("./credentials").DEEPL_API_KEY;
+const translator = new deepl.Translator(DEEPL_API_KEY);
+const CUSTOM_SEARCH_API_KEY = require("./credentials").CUSTOM_SEARCH_API_KEY;
+const CX = require("./credentials").CX;
+const ONET_API_KEY = require("./credentials").ONET_API_KEY;
 
 const translate = async (entry) => {
   // Изграждане на URL за заявка към Google Translate API
@@ -26,13 +26,51 @@ const translate = async (entry) => {
   }
 };
 
-async function deepLTranslate(text) {
+async function deepLTranslate(text, context = "", glossaryId = null) {
   try {
-    const result = await translator.translateText(text, "EN", "BG");
+    const options = { context };
+    if (glossaryId) {
+      options.glossaryId = glossaryId;
+    }
+
+    const result = await translator.translateText(text, "EN", "BG", options);
     return result.text;
   } catch (error) {
     console.error("DeepL Translation Error:", error);
-    return text; // Ако нещо се обърка, връщаме оригиналния текст
+    return text;
+  }
+}
+
+async function deepLTranslateBatch(texts, context = "") {
+  try {
+    // Batch translate with context parameter
+    const results = await translator.translateText(texts, "EN", "BG", {
+      context
+    });
+    return Array.isArray(results) ? results.map((r) => r.text) : [results.text];
+  } catch (error) {
+    console.error("DeepL Translation Error:", error);
+    return texts; // Fallback: return original texts if translation fails
+  }
+}
+
+async function translateList(list, type, context = "") {
+  if (!list || list.length === 0) return [];
+
+  if (type === "deepl") {
+    // Batch translate the list using DeepL with context
+    const translatedResults = await deepLTranslateBatch(list, context);
+    return translatedResults.map((translated) => ({
+      translated_name: translated
+    }));
+  } else {
+    // Use regular translation API (which does not use context)
+    const translatedItems = [];
+    for (const item of list) {
+      const translatedItem = await translate(item);
+      translatedItems.push({ translated_name: translatedItem });
+    }
+    return translatedItems;
   }
 }
 
@@ -144,46 +182,32 @@ async function fetchAndTranslateDetails(code) {
 
   const detailsData = await detailsResponse.json();
 
-  const translatedTitle = await deepLTranslate(detailsData.occupation.title);
+  // Translate title and description with context
+  const translatedTitle = await deepLTranslate(
+    detailsData.occupation.title,
+    "This is the title of a career."
+  );
   const translatedDescription = await deepLTranslate(
-    detailsData.occupation.description
+    detailsData.occupation.description,
+    `This is the description of the following career: ${detailsData.occupation.title}.`
   );
 
-  // Helper function to translate array of strings
-  const translateList = async (list, type) => {
-    if (list && list.length > 0) {
-      // Translate each item in the list individually
-      const translatedItems = await Promise.all(
-        list.map(async (item) => {
-          const translatedItem =
-            type === "deepl"
-              ? await deepLTranslate(item)
-              : await translate(item);
-          return { translated_name: translatedItem };
-        })
-      );
-      return translatedItems;
-    }
-    return [];
-  };
   const educationLevels =
     detailsData?.education?.level_required?.category ?? [];
   const educationTranslations = await Promise.all(
     educationLevels.map(async (level) => {
-      const translatedName = await translate(level.name); // Translate the education level name
+      const translatedName = await translate(level.name);
       return `${translatedName}: ${level.score?.value}%`;
     })
   );
-  // Extract and translate tasks
+
   const tasks = detailsData.tasks?.task?.map((t) => t.statement) || [];
   const translatedTasks = await translateList(tasks, "regular");
 
-  // Extract and translate technology skills
   const techSkills =
     detailsData.technology_skills?.category?.map((c) => c.title.name) || [];
   const translatedTechSkills = await translateList(techSkills, "regular");
 
-  // Extract and translate work activities
   const workActivities =
     detailsData.detailed_work_activities?.activity?.map((a) => a.name) || [];
   const translatedWorkActivities = await translateList(
@@ -191,15 +215,22 @@ async function fetchAndTranslateDetails(code) {
     "regular"
   );
 
-  // Extract and translate other elements
   const skills = detailsData.skills?.element?.map((s) => s.name) || [];
-  const translatedSkills = await translateList(skills, "deepl");
+  const translatedSkills = await translateList(
+    skills,
+    "deepl",
+    `These are the skills required for the following career: ${detailsData.occupation.title}.`
+  );
 
   const interests = detailsData.interests?.element?.map((i) => i.name) || [];
   const translatedInterests = await translateList(interests, "regular");
 
   const abilities = detailsData.abilities?.element?.map((a) => a.name) || [];
-  const translatedAbilities = await translateList(abilities, "deepl");
+  const translatedAbilities = await translateList(
+    abilities,
+    "deepl",
+    `These are the abilities required for the following career: ${detailsData.occupation.title}.`
+  );
 
   const knowledge = detailsData.knowledge?.element?.map((k) => k.name) || [];
   const translatedKnowledge = await translateList(knowledge, "regular");
@@ -208,10 +239,10 @@ async function fetchAndTranslateDetails(code) {
     detailsData.related_occupations?.occupation?.map((r) => r.title) || [];
   const translatedRelatedOccupations = await translateList(
     relatedOccupations,
-    "deepl"
+    "deepl",
+    `These are the related occupations for the following career: ${detailsData.occupation.title}.`
   );
 
-  // Return all translated data
   return {
     ...detailsData,
     translated: {
@@ -233,6 +264,7 @@ async function fetchAndTranslateDetails(code) {
 module.exports = {
   translate,
   deepLTranslate,
+  deepLTranslateBatch,
   searchJobs,
   fetchCareerCode,
   fetchAndTranslateDetails
