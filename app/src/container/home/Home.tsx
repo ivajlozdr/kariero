@@ -36,14 +36,14 @@ const Home: FC = () => {
           description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/global-stats/qualities`}
-          title="Oбщи Статистики"
-          description="Вижте статистики за цялата платформа и потребителите ни!"
+          href={`${import.meta.env.BASE_URL}app/global-stats/recommendations`}
+          title="Най-препоръчвани Професии"
+          description="Открийте кои професии са най-препоръчвани към нашите потребители и кои имат най-голям потенциал за бъдещо развитие!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}comingsoon`}
-          title="Индивидуални Статистики"
-          description="Вижте статистики за САМО за ВАС! Разкрийте повече за себе си!"
+          href={`${import.meta.env.BASE_URL}app/global-stats/desired-qualities`}
+          title="Най-изисквани Качества"
+          description="Открийте кои качества са най-ценени и търсени от работодателите!"
         />
       </div>
     </Fragment>
