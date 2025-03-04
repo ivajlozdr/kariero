@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import store from "../../../redux/store";
 import { connect } from "react-redux";
 import { ThemeChanger } from "../../../redux/action";
-import logo from "../../../assets/images/brand-logos/logo-large.png";
-import logoPink from "../../../assets/images/brand-logos/logo-large-pink.png";
+import logoLight from "../../../assets/images/brand-logos/kariero-logo-light.svg";
+import logoDark from "../../../assets/images/brand-logos/kariero-logo.svg";
 
 interface HeaderProps {}
 
@@ -71,7 +71,9 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
                     onMouseLeave={() => setIsLogoHovered(false)}
                   >
                     <img
-                      src={local_varaiable.class == "dark" ? logo : logoPink}
+                      src={
+                        local_varaiable.class == "dark" ? logoLight : logoDark
+                      }
                       alt="logo"
                       className="logo"
                       style={{
