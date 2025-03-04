@@ -20,13 +20,34 @@ def scrape_jobs():
         browser = p.chromium.launch(headless=False)  # Set headless=True to run without a visible browser
         page = browser.new_page()
 
-        # Add cookies to the page
-        cookies = [
-            {"name": "JOBSSESSID", "value": "nclapq4kbpcv7p51bdqq8im5q5", "domain": ".jobs.bg", "path": "/"},
+        # Step 1: Navigate to the URL
+        page.goto(URL)
+
+        # Step 2: Set initial cookies
+        initial_cookies = [
             {"name": "datadome", "value": "wKpErMEfRHKIw921sPbeXxcCFv6tqr9zXgzFwzUx2vQofZawXAYawWUweGIRzOAXoX6YTur2ekU3vmJDzk_gRt2D8kj6Mak8U9C3I49QNQNUZ2qOJ8SMSjUOvvnEQRy3", "domain": ".jobs.bg", "path": "/"}
         ]
-        
-        page.context.add_cookies(cookies)
+
+        for cookie in initial_cookies:
+            page.context.add_cookies([cookie])
+
+        # Step 3: Refresh the page after adding the cookies
+        page.reload()
+
+        # Step 4: Get the new set of cookies
+        new_cookies = page.context.cookies()
+
+        filtered_cookies = [
+            {
+                "name": cookie["name"],
+                "value": cookie["value"],
+                "domain": cookie["domain"],
+                "path": cookie["path"]
+            }
+            for cookie in new_cookies if cookie["name"] in ["JOBSSESSID", "datadome"]
+        ]
+
+        page.context.add_cookies(filtered_cookies)
 
         # Open the target URL
         page.goto(URL)
