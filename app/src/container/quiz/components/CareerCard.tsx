@@ -12,7 +12,8 @@ const CareerCard: React.FC<CareerCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const hardcodedSalary = "60,000 - 90,000 лв.";
 
-  const handleReasonClick = () => {
+  const handleReasonClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
     setNotification({ message: reason, type: "reason" });
   };
 
