@@ -34,7 +34,6 @@ const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
     window.addEventListener("resize", menuResizeFn);
   }, []);
 
-  // const location = useLocation();
   const location = useLocation();
 
   function Onhover() {
@@ -189,8 +188,6 @@ const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
       setMenuAncestorsActive(parent);
     } else if (!hasParent) {
       if (theme.dataVerticalStyle == "doublemenu") {
-        // console.log("closee")
-        // html.setAttribute('data-toggled', 'double-menu-close');
         ThemeChanger({ ...theme, toggled: "double-menu-close" });
       }
     }

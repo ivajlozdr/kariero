@@ -841,12 +841,22 @@ export const LocalStorageBackup = (actionfunction: any) => {
   localStorage.karieromenufixed ? FixedMenu(actionfunction) : "";
   localStorage.karieromenuscrollable ? scrollMenu(actionfunction) : "";
   localStorage.karieroheaderfixed ? Headerpostionfixed(actionfunction) : "";
-  localStorage.karieroheaderscrollable ? Headerpostionscroll(actionfunction) : "";
+  localStorage.karieroheaderscrollable
+    ? Headerpostionscroll(actionfunction)
+    : "";
 
-  localStorage.karieronavstyles === "menu-click" ? Menuclick(actionfunction) : "";
-  localStorage.karieronavstyles === "menu-hover" ? MenuHover(actionfunction) : "";
-  localStorage.karieronavstyles === "icon-click" ? IconClick(actionfunction) : "";
-  localStorage.karieronavstyles === "icon-hover" ? IconHover(actionfunction) : "";
+  localStorage.karieronavstyles === "menu-click"
+    ? Menuclick(actionfunction)
+    : "";
+  localStorage.karieronavstyles === "menu-hover"
+    ? MenuHover(actionfunction)
+    : "";
+  localStorage.karieronavstyles === "icon-click"
+    ? IconClick(actionfunction)
+    : "";
+  localStorage.karieronavstyles === "icon-hover"
+    ? IconHover(actionfunction)
+    : "";
 
   localStorage.bgimage1 ? bgImage1(actionfunction) : "";
   localStorage.bgimage2 ? bgImage2(actionfunction) : "";
