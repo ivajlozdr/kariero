@@ -550,19 +550,14 @@ const saveOffers = (offers, occupation_code, callback) => {
 
   const offerQuery = `
     INSERT INTO offers (
-      occupation_code, title, company, city, details, salary, off_days, url, date
+      occupation_code, average_salary, title, company, city, details, salary, off_days, url, date
     ) VALUES ?;
   `;
 
-  const updateOccupationQuery = `
-    UPDATE occupations
-    SET date = (SELECT date FROM occupations WHERE code = "27-1024.00"), average_salary = ?
-    WHERE code = ?;
-  `;
-
-  // Prepare values for the offers table
+  // Prepare values for the offers table, including average_salary
   const offerValues = job_offers.map((offer) => [
     occupation_code, // Occupation code
+    average_salary, // Add average_salary to the offers table
     offer.title, // Job title
     offer.company, // Company name
     offer.city, // Job location
@@ -587,27 +582,15 @@ const saveOffers = (offers, occupation_code, callback) => {
         return db.rollback(() => callback(insertErr));
       }
 
-      // Update the average_salary in the occupations table
-      db.query(
-        updateOccupationQuery,
-        [average_salary, occupation_code],
-        (updateErr, updateResult) => {
-          if (updateErr) {
-            console.error("Error updating average_salary:", updateErr);
-            return db.rollback(() => callback(updateErr));
-          }
-
-          // Commit the transaction
-          db.commit((commitErr) => {
-            if (commitErr) {
-              console.error("Error committing transaction:", commitErr);
-              return db.rollback(() => callback(commitErr));
-            }
-            console.log("Transaction successfully committed.");
-            callback(null, { insertResult, updateResult });
-          });
+      // Commit the transaction
+      db.commit((commitErr) => {
+        if (commitErr) {
+          console.error("Error committing transaction:", commitErr);
+          return db.rollback(() => callback(commitErr));
         }
-      );
+        console.log("Data successfully saved.");
+        callback(null, { insertResult });
+      });
     });
   });
 };
