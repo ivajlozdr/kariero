@@ -1,4 +1,5 @@
 import { FC, Fragment } from "react";
+import { Link } from "react-router-dom";
 
 interface FooterProps {
   landing?: boolean;
@@ -19,12 +20,12 @@ const Footer: FC<FooterProps> = ({ landing }) => (
             <div className="space-y-1">
               <p className="text-sm">Проект №65</p>
               <p>
-                <a
+                <Link
                   className="text-sm relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
-                  href="https://pgi-pernik.bg-schools.com/"
+                  to="https://edusoft.fmi.uni-sofia.bg/"
                 >
                   2025 НОИТ
-                </a>
+                </Link>
               </p>
             </div>
             <h2 className="text-defaulttextcolor font-semibold dark:text-defaulttextcolor text-lg">
@@ -89,28 +90,28 @@ const Footer: FC<FooterProps> = ({ landing }) => (
             </h2>
             <ul className="space-y-1 text-sm">
               <li>
-                <a
-                  href={`${import.meta.env.BASE_URL}app/home`}
+                <Link
+                  to={`${import.meta.env.BASE_URL}app/home`}
                   className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   Начало
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href={`${import.meta.env.BASE_URL}app/quiz`}
+                <Link
+                  to={`${import.meta.env.BASE_URL}app/quiz`}
                   className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   Кариерно Насочване
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href={`${import.meta.env.BASE_URL}app/contact`}
+                <Link
+                  to={`${import.meta.env.BASE_URL}app/contact`}
                   className="relative after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   Контакт
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -142,19 +143,19 @@ const Footer: FC<FooterProps> = ({ landing }) => (
 
         <div className="text-center text-xs">
           <span>
-            <a
+            <Link
               className="relative italic after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
-              href="https://edusoft.fmi.uni-sofia.bg/"
+              to="https://edusoft.fmi.uni-sofia.bg/"
             >
               22-ра Национална Олимпиада по Информационни Технологии
-            </a>{" "}
+            </Link>{" "}
             - 2025 г. -
-            <a
+            <Link
               className="relative italic after:absolute after:left-0 after:bottom-0 after:w-full after:h-px after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
-              href="https://pgi-pernik.bg-schools.com/"
+              to="https://pgi-pernik.bg-schools.com/"
             >
               Професионална Гимназия по Икономика - гр. Перник
-            </a>
+            </Link>
           </span>
         </div>
       </div>
