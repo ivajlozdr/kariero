@@ -9,15 +9,14 @@ import { QuestionMapping, Scores } from "./quiz-types";
 export const questions: QuestionMapping[] = [
   {
     id: 1,
-    question: "Обичате ли да работите с ръцете си или да изграждате неща?",
+    question: "Обичам ръчно да изработвам неща.",
     category: "RIASEC",
     field: "HandsOn",
     answerType: "Likert"
   },
   {
     id: 2,
-    question:
-      "Обичате ли да решавате сложни проблеми или да анализирате данни?",
+    question: "Обичам да решавам сложни проблеми или да анализирам данни.",
     category: "RIASEC",
     field: "ProblemSolving",
     answerType: "Likert"
@@ -25,7 +24,7 @@ export const questions: QuestionMapping[] = [
   {
     id: 3,
     question:
-      "Често ли се чудите как работят нещата или защо се случват определени явления?",
+      "Често се чудя как работят неща или защо се случват определени явления.",
     category: "RIASEC",
     field: "Curiosity",
     answerType: "Likert"
@@ -33,15 +32,14 @@ export const questions: QuestionMapping[] = [
   {
     id: 4,
     question:
-      "Обичате ли да създавате неща, като например да пишете, рисувате или проектирате?",
+      "Обичам да създавам неща, като например да пиша, да рисувам или да проектирам.",
     category: "RIASEC",
     field: "Creative",
     answerType: "Likert"
   },
   {
     id: 5,
-    question:
-      "Чувствате ли се заредени с енергия, когато помагате на други хора или обучавате нови умения?",
+    question: "Чувствам се зареден с енергия, когато помагам на други хора.",
     category: "RIASEC",
     field: "Social",
     answerType: "Likert"
@@ -49,7 +47,7 @@ export const questions: QuestionMapping[] = [
   {
     id: 6,
     question:
-      "Бихте ли се наслаждавали на работа с хора за съвместно решаване на проблеми?",
+      "Наслаждавам се на работа с хора за съвместно решаване на проблеми.",
     category: "RIASEC",
     field: "Collaboration",
     answerType: "Likert"
@@ -57,7 +55,7 @@ export const questions: QuestionMapping[] = [
   {
     id: 7,
     question:
-      "Обичате ли да ръководите проекти или да убеждавате другите да възприемат вашите идеи?",
+      "Обичам да ръководя проекти или да убеждавам другите да възприемат моите идеи.",
     category: "RIASEC",
     field: "Enterprising",
     answerType: "Likert"
@@ -65,7 +63,7 @@ export const questions: QuestionMapping[] = [
   {
     id: 8,
     question:
-      "Бихте ли предпочели да вземате решения в лидерска роля вместо да следвате план?",
+      "Предпочитам да взимам решения като лидер вместо да следвам чужди инструкции.",
     category: "RIASEC",
     field: "Enterprising",
     answerType: "Likert"
@@ -73,14 +71,14 @@ export const questions: QuestionMapping[] = [
   {
     id: 9,
     question:
-      "Обичате ли да организирате данни, да създавате графици или да работите с детайлни системи?",
+      "Обичам да работя организирано по предварително създаден от мен график.",
     category: "RIASEC",
     field: "Conventional",
     answerType: "Likert"
   },
   {
     id: 10,
-    question: "Бихте ли предпочели структурирана работна среда пред гъвкава?",
+    question: "Предпочитам работната ми среда да бъде:",
     category: "WorkStyle",
     field: "StructurePreference",
     answerType: "MultipleChoice",
@@ -88,13 +86,13 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 11,
-    question: "Кое от тези най-добре Ви описва?",
+    question: "Най-добре мога да се опиша като:",
     category: "Preferences",
     field: "PersonalityTypes",
     answerType: "MultipleChoice",
     options: [
       "Аналитичен мислител",
-      "Креативен решавач на проблеми",
+      "Човек, креативно решаващ проблеми",
       "Емпатичен слушател",
       "Организиран до детайли",
       "Уверен лидер",
@@ -103,16 +101,14 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 12,
-    question:
-      "Колко удобно се чувствате при работа с технологии, инструменти или машини?",
+    question: "Чувствам се уверен при работа с технологични устройства.",
     category: "RIASEC",
     field: "TechComfort",
     answerType: "Likert"
   },
   {
     id: 13,
-    question:
-      "Бихте ли предпочели да работите на открито, в офис или в творческо студио?",
+    question: "Бих предпочел да работя в/на: ",
     category: "Preferences",
     field: "WorkEnvironment",
     answerType: "MultipleChoice",
@@ -120,17 +116,15 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 14,
-    question:
-      "Обичате ли да работите в екип или предпочитате индивидуални задачи?",
+    question: "Предпочитам да се занимавам с:",
     category: "WorkStyle",
     field: "Collaboration",
     answerType: "MultipleChoice",
-    options: ["Екип", "Индивидуални задачи"]
+    options: ["Екипна работа", "Индивидуални задачи"]
   },
   {
     id: 15,
-    question:
-      "Кое е по-важно за вас в една работа: креативност, стабилност или да помагате на другите?",
+    question: "За мен, най-важно в една работа е:",
     category: "Preferences",
     field: "JobPriority",
     answerType: "MultipleChoice",
@@ -138,8 +132,7 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 16,
-    question:
-      "Развивате ли се най-добре в бърза и динамична среда, или предпочитате стабилен и предсказуем ритъм на работа?",
+    question: "Развивам се най-добре в работна атмосфера, която е:",
     category: "WorkStyle",
     field: "WorkEnvironment",
     answerType: "MultipleChoice",
@@ -147,7 +140,7 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 17,
-    question: "Какво е най-високото ниво на образование, което сте завършили?",
+    question: "Най-високата образователна степен, която съм завършил, е:",
     category: "Preferences",
     field: "EducationLevel",
     answerType: "MultipleChoice",
@@ -155,16 +148,15 @@ export const questions: QuestionMapping[] = [
   },
   {
     id: 18,
-    question: "Какъв тип професионална роля искате да заемате след 5 години?",
+    question: "След 5 години, виждам себе си като",
     category: "Preferences",
     field: "CareerGoals",
     answerType: "MultipleChoice",
-    options: ["Лидерска роля", "Технически експерт", "Креативна позиция"]
+    options: ["Лидер", "Технически експерт", "Творец"]
   },
   {
     id: 19,
-    question:
-      "Какъв тип дейности в работата ви носят най-голямо удовлетворение?",
+    question: "Най-голямо удоволствие изпитвам от:",
     category: "Preferences",
     field: "JobSatisfaction",
     answerType: "MultipleChoice",
