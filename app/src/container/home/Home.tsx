@@ -36,7 +36,7 @@ const Home: FC = () => {
           description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/global-stats/1`}
+          href={`${import.meta.env.BASE_URL}app/global-stats/qualities`}
           title="Oбщи Статистики"
           description="Вижте статистики за цялата платформа и потребителите ни!"
         />
