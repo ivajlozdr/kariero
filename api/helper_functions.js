@@ -1,8 +1,7 @@
 const deepl = require("deepl-node");
 const DEEPL_API_KEY = require("./credentials").DEEPL_API_KEY;
 const translator = new deepl.Translator(DEEPL_API_KEY);
-const CUSTOM_SEARCH_API_KEY = require("./credentials").CUSTOM_SEARCH_API_KEY;
-const CX = require("./credentials").CX;
+const CUSTOM_SEARCH_API_DATA = require("./credentials").CUSTOM_SEARCH_API_DATA;
 const ONET_API_KEY = require("./credentials").ONET_API_KEY;
 
 const translate = async (entry) => {
@@ -76,38 +75,56 @@ async function translateList(list, type, context = "") {
 
 async function searchJobs(keyword) {
   const url = `https://customsearch.googleapis.com/customsearch/v1`;
-  const params = {
-    key: CUSTOM_SEARCH_API_KEY,
-    cx: CX,
-    q: `${keyword} site:jobs.bg`
-  };
 
-  try {
-    const response = await fetch(
-      `${url}?${new URLSearchParams(params).toString()}`
-    );
+  // Create an array of fetch promises
+  const searchPromises = CUSTOM_SEARCH_API_DATA.map(async (engine) => {
+    const params = {
+      key: engine.key,
+      cx: engine.cx,
+      q: `${keyword} site:jobs.bg`
+    };
 
-    if (!response.ok) {
-      throw new Error(`Search request failed with status: ${response.status}`);
-    }
+    try {
+      const response = await fetch(
+        `${url}?${new URLSearchParams(params).toString()}`
+      );
 
-    const data = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          `Search request failed with status: ${response.status}`
+        );
+      }
 
-    const items = data.items;
-    if (!items || items.length === 0) {
-      console.log("No items found in search results");
+      const data = await response.json();
+      const items = data.items || [];
+
+      return items
+        .map((item) => item.link)
+        .filter((link) => link.includes("www.jobs.bg/front_job_search.php"));
+    } catch (error) {
+      console.error(
+        `Error searching jobs for keyword: ${keyword} using engine ${engine.cx}`,
+        error
+      );
       return [];
     }
+  });
 
-    const filteredUrls = items
-      .map((item) => item.link)
-      .filter((url) => url.includes("www.jobs.bg/front_job_search.php"));
+  // Run all fetches concurrently
+  const results = await Promise.allSettled(searchPromises);
 
-    return filteredUrls;
-  } catch (error) {
-    console.error(`Error searching jobs for keyword: ${keyword}`, error);
-    return [];
+  // Flatten and filter results to remove empty arrays
+  const filteredUrls = results
+    .filter((result) => result.status === "fulfilled")
+    .flatMap((result) => result.value);
+
+  if (filteredUrls.length === 0) {
+    console.error(
+      `Failed to fetch JobsBG data for "${keyword}" using all engines.`
+    );
   }
+
+  return filteredUrls;
 }
 
 async function fetchCareerCode(keyword) {
