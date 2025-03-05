@@ -25,7 +25,8 @@ def scrape_jobs():
 
         # Step 2: Set initial cookies
         initial_cookies = [
-            {"name": "datadome", "value": "wKpErMEfRHKIw921sPbeXxcCFv6tqr9zXgzFwzUx2vQofZawXAYawWUweGIRzOAXoX6YTur2ekU3vmJDzk_gRt2D8kj6Mak8U9C3I49QNQNUZ2qOJ8SMSjUOvvnEQRy3", "domain": ".jobs.bg", "path": "/"}
+            {"name": "JOBSSESSID", "value": "tprdm9kuoqts4jtvr65decep3m", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "sR__SYtexbyBR3ioJgSdkCRUqclg2szd7s6MQdmG6yCIb99ccuXEB6ON9cBCqfDdBWCg0f6AV1_E5NDinDRoTfvRAkZmDq8p3tCZ2Ti70Dphmptgd0EUldZ7VtJWSu8P", "domain": ".jobs.bg", "path": "/"}
         ]
 
         for cookie in initial_cookies:
