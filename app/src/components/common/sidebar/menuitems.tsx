@@ -43,14 +43,6 @@ export const MENUITEMS = [
         title: "За качества"
       },
       {
-        path: `${import.meta.env.BASE_URL}app/global-stats/work-style`,
-        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
-        type: "link",
-        active: false,
-        selected: false,
-        title: "За работен стил"
-      },
-      {
         path: `${import.meta.env.BASE_URL}app/global-stats/traits`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",

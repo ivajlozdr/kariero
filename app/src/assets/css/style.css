@@ -2354,7 +2354,7 @@ footer svg {
 }
 [data-nav-layout="horizontal"] .landing-body .landing-banner {
   @apply relative w-full h-[37rem] top-0 bg-[url("../images/media/landing/banner.jpg")] bg-cover bg-center bg-no-repeat
-        before:absolute before:w-full before:h-full before:bg-primary before:opacity-70;
+        before:absolute before:w-full before:h-full before:bg-secondary before:opacity-50;
 }
 [data-nav-layout="horizontal"]
   .landing-body
@@ -19647,7 +19647,7 @@ option.selectionList {
 }
 
 .card-container {
-  @apply grid grid-cols-4 gap-4 bg-primary p-4 mb-6 rounded-lg flex flex-col justify-between transition-all;
+  @apply grid grid-cols-1 sm:grid-cols-4 gap-4 bg-primary p-4 mb-6 rounded-lg flex flex-col justify-between transition-all;
 }
 
 .gradient-text {

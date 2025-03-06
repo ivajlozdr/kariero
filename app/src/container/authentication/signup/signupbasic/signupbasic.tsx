@@ -1,8 +1,9 @@
 import { FC, Fragment, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import desktoplogo from "../../../../assets/images/brand-logos/desktop-logo.svg";
-import desktopdarklogo from "../../../../assets/images/brand-logos/desktop-dark.png";
 import * as EmailValidator from "email-validator";
+import LogoPrimaryLight from "../../../../assets/images/brand-logos/kariero-primary-light.svg";
+import LogoDarker from "../../../../assets/images/brand-logos/kariero-darker.svg";
+import LogoGray from "../../../../assets/images/brand-logos/kariero-gray.svg";
 
 interface SignupbasicProps {}
 
@@ -16,7 +17,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
   });
   const [passwordshow1, setpasswordshow1] = useState(false);
   const [passwordshow2, setpasswordshow2] = useState(false);
-
+  const [colorMode, setColorMode] = useState<"dark" | "light">("light");
   const [alerts, setAlerts] = useState<
     { message: string; color: string; icon: JSX.Element }[]
   >([]);
@@ -24,11 +25,9 @@ const Signupbasic: FC<SignupbasicProps> = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
     const token =
       localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
-      // Redirect to the app if token exists
       navigate(`${import.meta.env.BASE_URL}app/home/`);
     }
   }, [navigate]);
@@ -41,7 +40,6 @@ const Signupbasic: FC<SignupbasicProps> = () => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -123,7 +121,6 @@ const Signupbasic: FC<SignupbasicProps> = () => {
         throw new Error(errorData.error || "Нещо се случи! :(");
       }
 
-      // Redirect to the verification page
       navigate(`${import.meta.env.BASE_URL}twostepverification`, {
         state: { email: formData.email }
       });
@@ -147,6 +144,13 @@ const Signupbasic: FC<SignupbasicProps> = () => {
     }
   };
 
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("karierodarktheme")
+      ? "dark"
+      : "light";
+    setColorMode(storedTheme);
+  }, []);
+
   return (
     <Fragment>
       <div className="container">
@@ -154,15 +158,19 @@ const Signupbasic: FC<SignupbasicProps> = () => {
           <div className="grid grid-cols-12">
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-3 sm:col-span-2"></div>
             <div className="xxl:col-span-4 xl:col-span-4 lg:col-span-4 md:col-span-6 sm:col-span-8 col-span-12">
-              <div className="my-[2.5rem] flex justify-center">
-                <Link to={`${import.meta.env.BASE_URL}app/home/`}>
-                  <img src={desktoplogo} alt="logo" className="desktop-logo" />
+              <div className="my-[2rem] flex justify-center">
+                <div className="relative group">
                   <img
-                    src={desktopdarklogo}
+                    src={colorMode === "dark" ? LogoDarker : LogoGray}
                     alt="logo"
-                    className="desktop-dark"
+                    className="transition-all duration-100 transform opacity-100 scale-50 group-hover:scale-70 group-hover:opacity-0"
                   />
-                </Link>
+                  <img
+                    src={colorMode === "dark" ? LogoPrimaryLight : LogoGray}
+                    alt="logo-hover"
+                    className="absolute top-0 left-0 transition-all duration-100 transform opacity-0 scale-50 group-hover:scale-[0.7] group-hover:opacity-100"
+                  />
+                </div>
               </div>
               <div className="box">
                 <div className="box-body !p-[3rem]">

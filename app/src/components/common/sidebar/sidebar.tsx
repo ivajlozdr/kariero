@@ -6,10 +6,10 @@ import { ThemeChanger } from "../../../redux/action";
 import store from "../../../redux/store";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
-import logoLight from "../../../assets/images/brand-logos/kariero-logo-light.svg";
-import logoDark from "../../../assets/images/brand-logos/kariero-logo.svg";
+import LogoPrimaryLight from "../../../assets/images/brand-logos/kariero-primary-light.svg";
+import LogoDarker from "../../../assets/images/brand-logos/kariero-darker.svg";
+import LogoGray from "../../../assets/images/brand-logos/kariero-gray.svg";
 
-// @ts-ignore
 const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
   const [menuitems, setMenuitems] = useState<any>(MENUITEMS);
 
@@ -447,14 +447,23 @@ const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
         <div className="main-sidebar-header">
           <Link
             to={`${import.meta.env.BASE_URL}app/home/`}
-            className="header-logo"
+            className="header-logo group relative inline-block"
           >
             <img
-              src={local_varaiable === "dark" ? logoDark : logoLight}
+              src={local_varaiable.class === "dark" ? LogoDarker : LogoGray}
               alt="logo"
+              className="transition-all duration-100 transform opacity-100 scale-90 group-hover:scale-110 group-hover:opacity-0"
+            />
+            <img
+              src={
+                local_varaiable.class === "dark" ? LogoPrimaryLight : LogoGray
+              }
+              alt="logo-hover"
+              className="absolute top-0 left-0 transition-all duration-100 transform opacity-0 group-hover:scale-100 group-hover:opacity-100"
             />
           </Link>
         </div>
+
         <SimpleBar
           className="main-sidebar bg-primary dark:bg-bodybg"
           id="sidebar-scroll"

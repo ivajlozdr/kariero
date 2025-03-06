@@ -10,6 +10,8 @@ import {
   UserResponses
 } from "./quiz-types";
 import { FullCareerDetails } from "../../types_common";
+import { fetchJobOffers } from "../../functions_common";
+import { Offers } from "../jobdetails/jobs-types";
 
 /**
  * Актуализира RIASEC резултатите чрез промяна на стойността за определена категория.
@@ -363,7 +365,8 @@ export const submitQuiz = async (
   >,
   setCareers: React.Dispatch<
     React.SetStateAction<FullCareerDetails[] | undefined>
-  >
+  >,
+  setJobOffersList: React.Dispatch<React.SetStateAction<Offers[]>>
 ): Promise<void> => {
   try {
     const date = new Date().toISOString();
@@ -410,6 +413,13 @@ export const submitQuiz = async (
     console.log("O*NET Data:", onetData);
 
     setCareers(onetData);
+    const careersArray = onetData.map((career) => ({
+      keyword: career.translated.title,
+      occupation_code: career.code
+    }));
+
+    const jobOffers = await fetchJobOffers(careersArray);
+    setJobOffersList(jobOffers);
   } catch (error) {
     console.error("Error in submitQuiz processing:", error);
   }

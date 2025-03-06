@@ -13,11 +13,9 @@ import { submitQuiz } from "./helper-functions";
 import CareerQuiz from "./components/CareerQuiz";
 import Loader from "../../pages/Loader";
 import QuizNotification from "../../components/common/notification/QuizNotification";
-import { fake } from "./hardcodedTestData";
-import { useNavigate } from "react-router-dom";
+import { Offers } from "../jobdetails/jobs-types";
 
 const QuizComponent: React.FC = () => {
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [careers, setCareers] = useState<FullCareerDetails[]>();
   const [scores, setScores] = useState<Scores>(initialScores);
@@ -27,6 +25,7 @@ const QuizComponent: React.FC = () => {
   const [careerRecommendations, setCareerRecommendations] = useState<
     CareerRecommendation[]
   >([]);
+  const [jobOffersList, setJobOffersList] = useState<Offers[]>([]);
   const [notification, setNotification] = useState<QuizNotificationType | null>(
     null
   );
@@ -40,7 +39,8 @@ const QuizComponent: React.FC = () => {
           userResponses,
           token,
           setCareerRecommendations,
-          setCareers
+          setCareers,
+          setJobOffersList
         );
         setIsSubmitting(false);
       }
@@ -71,7 +71,7 @@ const QuizComponent: React.FC = () => {
         classNames="fade"
         unmountOnExit
       >
-        <Loader description="AI определя най-добрите за Вас кариери, това може да отнеме около 30 секунди, моля изчакайте" />
+        <Loader description="AI определя най-добрите за Вас кариери, това може да отнеме около 2 минути, моля изчакайте" />
       </CSSTransition>
 
       <CSSTransition
@@ -101,31 +101,9 @@ const QuizComponent: React.FC = () => {
           careerPaths={careerRecommendations}
           careersData={careers || []}
           setNotification={setNotification}
+          jobOffersList={jobOffersList}
         />
       </CSSTransition>
-      <button
-        onClick={() => {
-          console.log(scores);
-        }}
-      >
-        print scores
-      </button>
-      <button
-        onClick={() => {
-          console.log(isSubmitting);
-        }}
-      >
-        print isSubmitting
-      </button>
-      <button
-        onClick={() => {
-          navigate("/app/job/details", {
-            state: { fullCareerDetails: fake }
-          });
-        }}
-      >
-        JUMP TO DETAILS
-      </button>
     </div>
   );
 };

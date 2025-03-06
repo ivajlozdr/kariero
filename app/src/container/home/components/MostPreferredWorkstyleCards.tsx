@@ -7,7 +7,7 @@ const MostPreferredWorkstyleCards: FC = () => {
   const options = generateOptions("MostPreferredWorkstyleCards", data);
 
   return (
-    <div className="box custom-box mt-6">
+    <div className="box custom-box">
       <div className="box-body !p-0">
         <div className="box-header">
           <h2 className="box-title">

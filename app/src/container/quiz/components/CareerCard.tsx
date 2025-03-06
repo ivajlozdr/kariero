@@ -7,10 +7,10 @@ const CareerCard: React.FC<CareerCardProps> = ({
   skills,
   reason,
   setNotification,
-  handleClick
+  handleClick,
+  jobOffers
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const hardcodedSalary = "60,000 - 90,000 лв.";
 
   const handleReasonClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -43,16 +43,18 @@ const CareerCard: React.FC<CareerCardProps> = ({
           >
             {description}
           </p>
-          <div className="flex items-center space-x-2 mb-4">
-            <div className="mt-[0.5rem] p-1 px-2 rounded-lg bg-gradient-to-r from-primary to-secondary shadow-sm text-center text-xs flex items-center space-x-1">
-              <span className="font-semibold text-white text-xs">
-                Средна заплата:
-              </span>
-              <h4 className="font-bold text-white text-sm">
-                {hardcodedSalary}
-              </h4>
+          {jobOffers && jobOffers.average_salary > 0 && (
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="mt-[0.5rem] p-1 px-2 rounded-lg bg-gradient-to-r from-primary to-secondary shadow-sm text-center text-xs flex items-center space-x-1">
+                <span className="font-semibold text-white text-xs">
+                  Средна заплата:
+                </span>
+                <h4 className="font-bold text-white text-sm">
+                  {jobOffers.average_salary} лв.
+                </h4>
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center">
             <span
               className="italic text-xs text-primary cursor-pointer"

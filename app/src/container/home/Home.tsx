@@ -2,6 +2,7 @@ import { FC, Fragment } from "react";
 import RedirectCard from "./components/RedirectCard";
 import { useGlobalState } from "../../pages/GlobalStateProvider";
 import WidgetCardsComponent from "./components/WidgetCards";
+import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 
 const Home: FC = () => {
   const { data, userData } = useGlobalState();
@@ -24,16 +25,12 @@ const Home: FC = () => {
         </div>
       </div>
       <WidgetCardsComponent />
+      <MostPreferredWorkstyleCards />
       <div className="card-container">
         <RedirectCard
           href={`${import.meta.env.BASE_URL}app/quiz`}
           title="Кариерни Насоки"
           description="Решете кратък, интерактивен въпросник и открийте вашите кариерни възможности!"
-        />
-        <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/contact`}
-          title="За Контакт"
-          description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
         <RedirectCard
           href={`${import.meta.env.BASE_URL}app/global-stats/recommendations`}
@@ -44,6 +41,11 @@ const Home: FC = () => {
           href={`${import.meta.env.BASE_URL}app/global-stats/desired-qualities`}
           title="Най-изисквани Качества"
           description="Открийте кои качества са най-ценени и търсени от работодателите!"
+        />{" "}
+        <RedirectCard
+          href={`${import.meta.env.BASE_URL}app/contact`}
+          title="За Контакт"
+          description="Изпитвате трудности в приложението или сте намерили проблем? Нямате притеснения, свържете се с нас и ще Ви съдействаме!"
         />
       </div>
     </Fragment>

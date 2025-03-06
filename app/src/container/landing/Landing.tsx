@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import store from "../../redux/store";
 import { ThemeChanger } from "../../redux/action";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import togglelogo from "../../assets/images/brand-logos/toggle-logo.png";
-import toggledark from "../../assets/images/brand-logos/toggle-dark.png";
+import LogoPrimaryLight from "../../assets/images/brand-logos/kariero-primary-light.svg";
+import LogoDarker from "../../assets/images/brand-logos/kariero-darker.svg";
+import LogoGray from "../../assets/images/brand-logos/kariero-gray.svg";
 import desktoplogo from "../../assets/images/brand-logos/desktop-logo.png";
 import desktopwhitelogo from "../../assets/images/brand-logos/desktop-white.png";
 import { connect } from "react-redux";
 import Footer from "../../components/common/footer/footer";
 
-const Landing: FC = ({ ThemeChanger }: any) => {
+const Landing: FC = ({ local_varaiable, ThemeChanger }: any) => {
   useEffect(() => {
     const rootDiv = document.getElementById("root");
     if (rootDiv) {
@@ -97,13 +98,24 @@ const Landing: FC = ({ ThemeChanger }: any) => {
           <div className="header-content-left">
             <div className="header-element">
               <div className="horizontal-logo">
-                <a
-                  href={`${import.meta.env.BASE_URL}app/home`}
-                  className="header-logo"
-                >
-                  <img src={togglelogo} alt="logo" className="toggle-logo" />
-                  <img src={toggledark} alt="logo" className="toggle-dark" />
-                </a>
+                <div className="header-logo group relative inline-block">
+                  <img
+                    src={
+                      local_varaiable.class === "dark" ? LogoDarker : LogoGray
+                    }
+                    alt="logo"
+                    className="transition-all duration-100 transform opacity-100 scale-90 group-hover:scale-110 group-hover:opacity-0"
+                  />
+                  <img
+                    src={
+                      local_varaiable.class === "dark"
+                        ? LogoPrimaryLight
+                        : LogoGray
+                    }
+                    alt="logo-hover"
+                    className="absolute top-0 left-0 transition-all duration-100 transform opacity-0 group-hover:scale-100 group-hover:opacity-100"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -143,26 +155,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
           <div className="main-sidebar mx-0">
             <nav className="main-menu-container nav nav-pills flex-column sub-open">
               <div className="landing-logo-container my-auto hidden lg:block">
-                <div className="responsive-logo">
-                  <Link
-                    className="responsive-logo-light"
-                    to={`${import.meta.env.BASE_URL}app/home`}
-                    aria-label="Brand"
-                  >
-                    <img src={desktoplogo} alt="logo" className="mx-auto" />
-                  </Link>
-                  <Link
-                    className="responsive-logo-dark"
-                    to={`${import.meta.env.BASE_URL}app/home`}
-                    aria-label="Brand"
-                  >
-                    <img
-                      src={desktopwhitelogo}
-                      alt="logo"
-                      className="mx-auto"
-                    />
-                  </Link>
-                </div>
+                <div className="responsive-logo"></div>
               </div>
               <div className="lg:flex hidden space-x-2 rtl:space-x-reverse">
                 <Link
@@ -195,14 +188,14 @@ const Landing: FC = ({ ThemeChanger }: any) => {
         onClick={handleClick}
       >
         <div className="landing-banner !h-auto" id="home">
-          <section className="section !pb-0 text-[0.813rem]">
+          <section className="section !bg-primary/20 !pb-0 text-[0.813rem]">
             <div className="container main-banner-container">
               <div className="grid grid-cols-12 justify-center text-center">
                 <div className="xxl:col-span-2 xl:col-span-2 lg:col-span-2 col-span-12"></div>
                 <div className="xxl:col-span-8 xl:col-span-8 lg:col-span-8 col-span-12">
                   <div className="">
                     <h5 className="landing-banner-heading mb-3 !text-[2.4rem]">
-                      <span className="text-primary dark:text-secondary font-bold italic">
+                      <span className="text-secondary font-bold italic">
                         Кариеро
                       </span>
                       , правилният избор.
@@ -210,7 +203,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
                     <p className="text-[1.125rem] mb-[3rem] opacity-[0.8] font-normal text-white">
                       Присъединете се към нашата платформа и открийте
                       най-подходящата професия за вас! Време е да разкриете своя
-                      потенциал 🚀
+                      потенциал!
                     </p>
                   </div>
                 </div>
@@ -219,215 +212,7 @@ const Landing: FC = ({ ThemeChanger }: any) => {
             </div>
           </section>
         </div>
-        {/* <section
-          className="section section-bg dark:!bg-black/10 text-defaulttextcolor"
-          id="jobs"
-        >
-          <div className="container">
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-[3rem]">
-              <div>
-                <p className="text-[0.75rem] font-semibold mb-1">Find jobs</p>
-                <h3 className="font-semibold mb-0 dark:text-defaulttextcolor/70">
-                  Browse Jobs by Top Categories
-                </h3>
-                <span className="text-[#8c9097] dark:text-white/50 text-[0.9375rem] font-normal block">
-                  Sed do eiusmod tempor incididunt ut labore et dolore magna
-                  aliqua
-                </span>
-              </div>
-              <div>
-                <Link
-                  to="#"
-                  className="ti-btn bg-primary text-white !font-medium"
-                >
-                  View All Categories <i className="bi bi-arrow-right"></i>
-                </Link>
-              </div>
-            </div>
-            <div className="grid grid-cols-12 gap-x-6">
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding1}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Business Development
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold ">
-                            120 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding2}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Customer Support
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold ">
-                            370 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding3}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Marketing
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold">
-                            743 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding4}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Product Management
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold">
-                            156 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding5}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Accountant
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold">
-                            67 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-4 md:col-span-6 col-span-12">
-                <div className="box border dark:border-defaultborder/10">
-                  <div className="grid grid-cols-12 g-0">
-                    <div className="md:col-span-3 col-span-4">
-                      <img
-                        src={jobslanding6}
-                        className="img-fluid rounded-start h-full browse-jobs-image !rounded-s-md"
-                        alt="..."
-                      />
-                    </div>
-                    <div className="md:col-span-9 col-span-8 my-auto">
-                      <div className="box-body">
-                        <h5 className="box-title font-semibold !text-[1.25rem]">
-                          Technical Support
-                        </h5>
-                        <p className="mb-4">
-                          <span className="text-default font-semibold">
-                            140 Jobs
-                          </span>{" "}
-                          available
-                        </p>
-                        <Link className="text-primary font-semibold" to="#">
-                          Explore Jobs
-                          <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section> */}
+
         <section
           className="section bg-light text-defaulttextcolor text-defaultsize"
           id="steps"

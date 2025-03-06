@@ -1,10 +1,11 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import store from "../../../redux/store";
 import { connect } from "react-redux";
 import { ThemeChanger } from "../../../redux/action";
-import logoLight from "../../../assets/images/brand-logos/kariero-logo-light.svg";
-import logoDark from "../../../assets/images/brand-logos/kariero-logo.svg";
+import LogoPrimaryLight from "../../../assets/images/brand-logos/kariero-primary-light.svg";
+import LogoDarker from "../../../assets/images/brand-logos/kariero-darker.svg";
+import LogoGray from "../../../assets/images/brand-logos/kariero-gray.svg";
 
 interface HeaderProps {}
 
@@ -52,8 +53,6 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
     navigate(`${import.meta.env.BASE_URL}signin/`);
   };
 
-  const [isLogoHovered, setIsLogoHovered] = useState(false);
-
   return (
     <Fragment>
       <header className="app-header relative overflow-hidden">
@@ -67,20 +66,22 @@ const Header: FC<HeaderProps> = ({ local_varaiable, ThemeChanger }: any) => {
                   <a
                     href={`${import.meta.env.BASE_URL}app/home/`}
                     className="header-logo"
-                    onMouseEnter={() => setIsLogoHovered(true)}
-                    onMouseLeave={() => setIsLogoHovered(false)}
                   >
                     <img
                       src={
-                        local_varaiable.class == "dark" ? logoLight : logoDark
+                        local_varaiable.class === "dark" ? LogoDarker : LogoGray
                       }
                       alt="logo"
-                      className="logo"
-                      style={{
-                        transform: isLogoHovered ? "scale(1.8)" : "scale(1.5)",
-                        transformOrigin: "center",
-                        transition: "transform 0.3s ease"
-                      }}
+                      className="transition-all duration-100 transform opacity-100 scale-90 group-hover:scale-110 group-hover:opacity-0"
+                    />
+                    <img
+                      src={
+                        local_varaiable.class === "dark"
+                          ? LogoPrimaryLight
+                          : LogoGray
+                      }
+                      alt="logo-hover"
+                      className="absolute top-0 left-0 transition-all duration-100 transform opacity-0 group-hover:scale-100 group-hover:opacity-100"
                     />
                   </a>
                 </div>

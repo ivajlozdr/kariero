@@ -1,4 +1,5 @@
 import { FullCareerDetails } from "../../types_common";
+import { Offers } from "../jobdetails/jobs-types";
 
 export type QuestionMapping = {
   id: number;
@@ -122,6 +123,7 @@ export interface CareerCardProps {
     React.SetStateAction<QuizNotificationType | null>
   >;
   handleClick: () => void;
+  jobOffers: Offers | null;
 }
 
 export interface CareersProps {
@@ -130,4 +132,5 @@ export interface CareersProps {
   setNotification: React.Dispatch<
     React.SetStateAction<QuizNotificationType | null>
   >;
+  jobOffersList: Offers[];
 }

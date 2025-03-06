@@ -20,56 +20,12 @@ const JobDetails: FC = () => {
   const location = useLocation();
   const [favouriteNotification, setFavouriteNotification] =
     useState<FavouriteNotificationState | null>(null);
-
-  // @ts-ignore
-  const [fullCareerDetails, setFullCareerDetails] =
-    useState<FullCareerDetails | null>(() => {
-      if (location.state?.fullCareerDetails) {
-        return location.state.fullCareerDetails;
-      }
-
-      const savedDetails = localStorage.getItem("fullCareerDetails");
-      return savedDetails ? JSON.parse(savedDetails) : null;
-    });
-
-  const [jobOffers, setJobOffers] = useState<Offers>();
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchJobOffers = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/job-offers`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            keyword: fullCareerDetails?.translated.title || "",
-            occupation_code: fullCareerDetails?.occupation.code
-          })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch job offers");
-      }
-
-      const data = await response.json();
-      setJobOffers(data);
-      console.log("data: ", data);
-    } catch (error) {
-      console.error("Error fetching job Offers:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (fullCareerDetails) {
-      fetchJobOffers();
-    }
-  }, [fullCareerDetails]);
+  const fullCareerDetails: FullCareerDetails | null =
+    location.state?.fullCareerDetails ??
+    JSON.parse(localStorage.getItem("fullCareerDetails") || "null");
+  const jobOffers: Offers | null =
+    location.state?.jobOffers ??
+    JSON.parse(localStorage.getItem("jobOffers") || "null");
 
   useEffect(() => {
     if (fullCareerDetails) {
@@ -80,11 +36,6 @@ const JobDetails: FC = () => {
     }
   }, [fullCareerDetails]);
 
-  if (loading) {
-    return (
-      <Loader description="Зареждаме информация за обяви, моля изчакайте" />
-    );
-  }
   console.log("jobOffers: ", jobOffers);
   if (!fullCareerDetails) {
     return (
@@ -119,23 +70,17 @@ const JobDetails: FC = () => {
             <OccupationDescription fullCareerDetails={fullCareerDetails} />
             <Education fullCareerDetails={fullCareerDetails} />
             <Technologies fullCareerDetails={fullCareerDetails} />
-            <div>
-              <h4 className="font-semibold mb-0 !text-defaulttextcolor">
-                Обяви за {translated.title}
-              </h4>
-              <p className="!text-defaulttextcolor text-defaultsize mb-4">
-                Разгледайте различни обяви.
-              </p>
-              {jobOffers?.job_offers ? (
+            {jobOffers && "job_offers" in jobOffers && (
+              <div>
+                <h4 className="font-semibold mb-0 !text-defaulttextcolor">
+                  Обяви за {translated.title}
+                </h4>
+                <p className="!text-defaulttextcolor text-defaultsize mb-4">
+                  Открийте страхотни възможности за работа!
+                </p>
                 <JobOffers jobOffers={jobOffers} />
-              ) : (
-                <div className="flex flex-col items-center justify-center py-6 text-center">
-                  <p className="text-lg font-semibold">
-                    Няма намерени обяви :(
-                  </p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
           <div className="xxl:col-span-4 col-span-12">
             <PaginatedTasks tasks={translated.tasks} />

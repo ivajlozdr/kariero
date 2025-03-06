@@ -1,7 +1,8 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import desktoplogo from "../../../assets/images/brand-logos/desktop-logo.svg";
-import desktopdarklogo from "../../../assets/images/brand-logos/desktop-dark.png";
+import LogoPrimaryLight from "../../../assets/images/brand-logos/kariero-primary-light.svg";
+import LogoDarker from "../../../assets/images/brand-logos/kariero-darker.svg";
+import LogoGray from "../../../assets/images/brand-logos/kariero-gray.svg";
 
 interface ResetRequestProps {}
 
@@ -11,7 +12,7 @@ const ResetRequest: FC<ResetRequestProps> = () => {
     { message: string; color: string; icon: JSX.Element }[]
   >([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [colorMode, setColorMode] = useState<"dark" | "light">("light");
   const handlePasswordResetRequest = async () => {
     setIsSubmitting(true);
 
@@ -61,28 +62,31 @@ const ResetRequest: FC<ResetRequestProps> = () => {
     }
   };
 
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("karierodarktheme")
+      ? "dark"
+      : "light";
+    setColorMode(storedTheme);
+  }, []);
+
   return (
     <Fragment>
       <div className="min-h-screen flex justify-center items-center">
         <div className="xxl:col-span-7 xl:col-span-7 lg:col-span-12 col-span-12">
           <div className="flex justify-center items-center flex-col">
-            {/* Logo outside the box and centered */}
-            <div className="mb-4 text-center">
-              <Link
-                aria-label="anchor"
-                to={`${import.meta.env.BASE_URL}app/home/`}
-              >
+            <div className="mx-[50rem] my-[2rem] flex justify-center">
+              <div className="relative group">
                 <img
-                  src={desktoplogo}
-                  alt="Desktop Logo"
-                  className="authentication-brand desktop-logo mb-4 block dark:hidden"
+                  src={colorMode === "dark" ? LogoDarker : LogoGray}
+                  alt="logo"
+                  className="transition-all duration-100 transform opacity-100 scale-50 group-hover:scale-70 group-hover:opacity-0"
                 />
                 <img
-                  src={desktopdarklogo}
-                  alt="Desktop Dark Logo"
-                  className="authentication-brand desktop-dark mb-4 hidden dark:block"
+                  src={colorMode === "dark" ? LogoPrimaryLight : LogoGray}
+                  alt="logo-hover"
+                  className="absolute top-0 left-0 transition-all duration-100 transform opacity-0 scale-50 group-hover:scale-[0.7] group-hover:opacity-100"
                 />
-              </Link>
+              </div>
             </div>
             {/* Box with padding and shadow */}
             <div className="box w-[400px] p-8 bg-white shadow-lg rounded-lg">

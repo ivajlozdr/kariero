@@ -14,6 +14,7 @@ const pythonPathLocal = require("./config.js").pythonPathLocal;
 const SECRET_KEY = require("./credentials.js").SECRET_KEY;
 const EMAIL_USER = require("./credentials.js").EMAIL_USER;
 const EMAIL_PASS = require("./credentials.js").EMAIL_PASS;
+const VPS_CONFIG = require("./credentials.js").VPS_CONFIG;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -210,8 +211,8 @@ app.post("/password-reset-request", (req, res) => {
     });
 
     // Create a reset link with the token
-    const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
-    // const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
+    // const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
+    const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
 
     // Send email with reset link
     const mailOptions = {
@@ -398,13 +399,8 @@ app.post("/translate/career-paths", async (req, res) => {
 //   try {
 //     const { keyword, occupation_code } = req.body;
 
-//     // Translate the keyword
-//     console.log("Translating keyword:", keyword);
-//     const translatedKeyword = await hf.translate(keyword);
-//     console.log("Translated keyword:", translatedKeyword);
-
 //     // Perform the search using Google Custom Search API
-//     const jobSearchUrls = await hf.searchJobs(translatedKeyword);
+//     const jobSearchUrls = await hf.searchJobs(keyword);
 //     console.log("Job search URLs:", jobSearchUrls);
 
 //     if (jobSearchUrls.length === 0) {
@@ -489,12 +485,7 @@ app.post("/translate/career-paths", async (req, res) => {
 //         console.error("SSH connection error:", err);
 //         res.status(500).json({ error: "Failed to connect to the VPS" });
 //       })
-//       .connect({
-//         host: "164.138.221.231",
-//         port: 22, // Default SSH port
-//         username: "root",
-//         password: "y!+22vXkgSBR"
-//       });
+//       .connect(VPS_CONFIG);
 //   } catch (error) {
 //     console.error("Error in /job-offers endpoint:", error);
 //     res
@@ -514,20 +505,22 @@ app.post("/job-offers", async (req, res) => {
     ssh.on("ready", async () => {
       console.log("SSH connection established.");
 
-      const commands = await Promise.all(
+      const commandsWithQuery = await Promise.all(
         queries.map(async ({ keyword }) => {
           const jobSearchUrls = await hf.searchJobs(keyword);
           if (jobSearchUrls.length === 0) {
             console.log(`No valid URLs found for ${keyword}`);
             return null;
           }
-
           const url = jobSearchUrls[0];
-          return `xvfb-run python3.8 scraper.py ${url}`;
+          return {
+            command: `xvfb-run python3.8 scraper.py ${url}`,
+            keyword
+          };
         })
       );
 
-      const validCommands = commands.filter((cmd) => cmd !== null);
+      const validCommands = commandsWithQuery.filter((item) => item !== null);
       if (validCommands.length === 0) {
         ssh.end();
         return res
@@ -539,7 +532,7 @@ app.post("/job-offers", async (req, res) => {
       let errors = [];
 
       for (let idx = 0; idx < validCommands.length; idx++) {
-        const command = validCommands[idx];
+        const { command, keyword } = validCommands[idx];
 
         await new Promise((resolve) => {
           ssh.exec(command, (err, stream) => {
@@ -559,7 +552,11 @@ app.post("/job-offers", async (req, res) => {
               if (code === 0) {
                 try {
                   const parsedResponse = JSON.parse(response.trim());
-                  responses.push(parsedResponse);
+
+                  responses.push({
+                    ...parsedResponse,
+                    career: keyword
+                  });
                 } catch (parseError) {
                   console.error("Error parsing response:", parseError);
                   errors.push({ index: idx, error: "Parsing failed" });
@@ -582,12 +579,7 @@ app.post("/job-offers", async (req, res) => {
       res.status(500).json({ error: "Failed to connect to the VPS" });
     });
 
-    ssh.connect({
-      host: "164.138.221.231",
-      port: 22,
-      username: "root",
-      password: "y!+22vXkgSBR"
-    });
+    ssh.connect(VPS_CONFIG);
   } catch (error) {
     console.error("Error in /job-offers endpoint:", error);
     res

@@ -4,16 +4,20 @@ import CareerCard from "./CareerCard";
 import CareerPathCard from "./CareerPathCard";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
+import { Offers } from "../../jobdetails/jobs-types";
+import { FullCareerDetails } from "../../../types_common";
 
 // Основен компонент Careers
 const Careers: React.FC<CareersProps> = ({
   careerPaths,
   careersData,
-  setNotification
+  setNotification,
+  jobOffersList
 }) => {
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(null);
   const [showCareerCards, setShowCareerCards] = useState(true);
   const navigate = useNavigate();
+
   const handlePathSelection = (path: CareerPath) => {
     setShowCareerCards(false);
     setTimeout(() => {
@@ -34,10 +38,13 @@ const Careers: React.FC<CareersProps> = ({
     return careersData[index] || null;
   };
 
-  const handleClick = (fullCareerDetails: any) => {
+  const handleClick = (
+    fullCareerDetails: FullCareerDetails,
+    jobOffers: Offers | null
+  ) => {
     const confirmNavigation = () => {
       navigate("/app/job/details", {
-        state: { fullCareerDetails: fullCareerDetails }
+        state: { fullCareerDetails: fullCareerDetails, jobOffers: jobOffers }
       });
     };
 
@@ -120,6 +127,12 @@ const Careers: React.FC<CareersProps> = ({
               const fullCareerDetails = getCareerDetailsByIndex(careerIndex);
               const careerReason = career.reason;
 
+              const jobOffers =
+                jobOffersList.find(
+                  (offers) =>
+                    offers.career === fullCareerDetails?.translated.title
+                ) || null;
+
               return fullCareerDetails ? (
                 <CareerCard
                   key={index}
@@ -130,7 +143,8 @@ const Careers: React.FC<CareersProps> = ({
                   )}
                   reason={careerReason}
                   setNotification={setNotification}
-                  handleClick={() => handleClick(fullCareerDetails)}
+                  handleClick={() => handleClick(fullCareerDetails, jobOffers)}
+                  jobOffers={jobOffers}
                 />
               ) : (
                 <div key={index} className="text-red-500">

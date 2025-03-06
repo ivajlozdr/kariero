@@ -5,6 +5,7 @@ import {
   NotificationState,
   NotificationType
 } from "./types_common";
+import { Offers } from "./container/jobdetails/jobs-types";
 
 /**
  * Обновява основния цвят в HEX формат.
@@ -153,6 +154,11 @@ export const handleVerticalMenuClick = (
   }
 };
 
+/**
+ * Генерира състоянието на известието за любими кариери.
+ * @param {FavouriteNotificationType} type - Типът на известието ("add" или "remove").
+ * @returns {FavouriteNotificationState} Обект, съдържащ типа, съобщението и заглавието на известието.
+ */
 export const getFavouriteNotificationState = (
   type: FavouriteNotificationType
 ): FavouriteNotificationState => ({
@@ -167,10 +173,56 @@ export const getFavouriteNotificationState = (
       : "Кариера премахната от любими"
 });
 
+/**
+ * Затваря известието за любими кариери.
+ * @param {React.Dispatch<React.SetStateAction<FavouriteNotificationState | null>>} setFavouriteNotification - Функция за актуализиране на състоянието на известието.
+ */
 export const handleFavouriteNotificationClose = (
   setFavouriteNotification: React.Dispatch<
     React.SetStateAction<FavouriteNotificationState | null>
   >
 ) => {
   setFavouriteNotification(null);
+};
+
+/**
+ * Извлича предложения за работа въз основа на подадените детайли за кариерата.
+ * @param {{ keyword: string; occupation_code: string }[]} careerDetailsArray - Масив от обекти с ключова дума и код на професията.
+ * @returns {Promise<Offers[]>} Промис, който връща масив с предложения за работа.
+ */
+export const fetchJobOffers = async (
+  careerDetailsArray: { keyword: string; occupation_code: string }[]
+): Promise<Offers[]> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/job-offers`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(careerDetailsArray)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch job offers");
+    }
+
+    const { results } = await response.json();
+
+    if (!Array.isArray(results)) {
+      throw new Error("Invalid response format");
+    }
+
+    console.log("results", results);
+    return results;
+  } catch (error) {
+    console.error("Error fetching job offers:", error);
+    return careerDetailsArray.map((career) => ({
+      career: career.keyword,
+      average_salary: 0,
+      job_offers: []
+    }));
+  }
 };
