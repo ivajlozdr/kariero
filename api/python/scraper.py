@@ -24,34 +24,16 @@ def scrape_jobs():
         page.goto(URL)
 
         # Step 2: Set initial cookies
-        initial_cookies = [
-            {"name": "JOBSSESSID", "value": "bdvko4grgo31vmdqaeo2tif527", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "wflaKkFUf3yAV61QjniVSH5CtPSTLmTHFRg8KHJ0bOtAJuXA8q5ACgEdXQWxM92BRhnVkOz_xCUQTASpTVJBx4NPMfUkKHVKC414g6~2QjG1MGiMYms69RrQZBKFKdb~", "domain": ".jobs.bg", "path": "/"}
+        cookies = [
+            {"name": "JOBSSESSID", "value": "9d209hij07b3o9tjjbml2sd9su", "domain": ".jobs.bg", "path": "/"},
+            {"name": "datadome", "value": "b2nPMs6xWk_Kwo06dclaHA_BM2SReC8OdvA0vDpfKB9K~VAI_SYdhk~iPSF~TH6Lt1KfmZWihuePjg0VldUVGeTKngcEWWuKLEvKoqo3bhBSwYeLHD7M0IqcFDWrjAYS", "domain": ".jobs.bg", "path": "/"}
         ]
 
-        for cookie in initial_cookies:
+        for cookie in cookies:
             page.context.add_cookies([cookie])
 
         # Step 3: Refresh the page after adding the cookies
         page.reload()
-
-        # Step 4: Get the new set of cookies
-        new_cookies = page.context.cookies()
-
-        filtered_cookies = [
-            {
-                "name": cookie["name"],
-                "value": cookie["value"],
-                "domain": cookie["domain"],
-                "path": cookie["path"]
-            }
-            for cookie in new_cookies if cookie["name"] in ["JOBSSESSID", "datadome"]
-        ]
-
-        page.context.add_cookies(filtered_cookies)
-
-        # Open the target URL
-        page.goto(URL)
 
         # Fetch the page content after rendering
         page_source = page.content()
