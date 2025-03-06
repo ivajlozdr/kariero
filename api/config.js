@@ -11,6 +11,6 @@ module.exports = {
     password: "",
     database: "kariero"
   },
-  pythonPath: "/home/noit1/virtualenv/artcompass-api/bin/python",
+  pythonPath: "/home/noit1/virtualenv/kariero-api/bin/python",
   pythonPathLocal: "python"
 };

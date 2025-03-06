@@ -4,8 +4,8 @@ const dbOptsLocal = require("./config.js").dbOptsLocal;
 const hf = require("./helper_functions");
 require("dotenv").config();
 
-const db = mysql.createConnection(dbOptsLocal);
-// const db = mysql.createConnection(dbOpts);
+// const db = mysql.createConnection(dbOptsLocal);
+const db = mysql.createConnection(dbOpts);
 
 db.connect((err) => {
   if (err) throw err;

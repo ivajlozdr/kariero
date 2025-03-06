@@ -211,8 +211,8 @@ app.post("/password-reset-request", (req, res) => {
     });
 
     // Create a reset link with the token
-    // const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
-    const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
+    const resetLink = `https://kariero.noit.eu/resetpassword/resetbasic/${token}`;
+    // const resetLink = `http://localhost:5173/resetpassword/resetbasic/${token}`;
 
     // Send email with reset link
     const mailOptions = {
@@ -395,105 +395,6 @@ app.post("/translate/career-paths", async (req, res) => {
   }
 });
 
-// app.post("/job-offers", async (req, res) => {
-//   try {
-//     const { keyword, occupation_code } = req.body;
-
-//     // Perform the search using Google Custom Search API
-//     const jobSearchUrls = await hf.searchJobs(keyword);
-//     console.log("Job search URLs:", jobSearchUrls);
-
-//     if (jobSearchUrls.length === 0) {
-//       console.log("No valid URLs found");
-//       return res.status(404).send("No valid front job search URLs found.");
-//     }
-
-//     // Use the first valid URL to pass to the Python script
-//     const url = jobSearchUrls[0];
-//     console.log("Selected URL for Python scraper:", url);
-
-//     if (!url) {
-//       console.error("No URL found for Python scraper");
-//       return res.status(400).json({ error: "URL is required" });
-//     }
-
-//     // Set up SSH connection to VPS
-//     const ssh = new Client();
-//     ssh
-//       .on("ready", () => {
-//         console.log("SSH connection established.");
-
-//         // Execute the Python script on the VPS
-//         const command = `xvfb-run python3.8 scraper.py ${url}`; // XServer command for VPS
-
-//         ssh.exec(command, (err, stream) => {
-//           if (err) {
-//             console.error("Error executing Python script:", err);
-//             return res
-//               .status(500)
-//               .json({ error: "Failed to execute Python script" });
-//           }
-
-//           let response = "";
-
-//           // Capture stdout data
-//           stream.on("data", (data) => {
-//             response += data.toString();
-//           });
-
-//           // Capture stderr data
-//           stream.on("stderr", (data) => {
-//             console.error("Python script stderr:", data.toString());
-//           });
-
-//           // On stream close, process the response
-//           stream.on("close", (code) => {
-//             console.log("Python process exited with code:", code);
-//             ssh.end();
-
-//             if (code !== 0) {
-//               console.error("Python scraper failed");
-//               return res.status(500).json({ error: "Python scraper failed" });
-//             }
-
-//             try {
-//               // Parse the response from Python script
-//               const parsedResponse = JSON.parse(response.trim());
-
-//               // Save to the database
-//               db.saveOffers(parsedResponse, occupation_code, (err) => {
-//                 if (err) {
-//                   console.error("Error saving offers to database:", err);
-//                   return res
-//                     .status(500)
-//                     .json({ error: "Failed to save offers to database" });
-//                 }
-
-//                 // Send response to the client
-//                 res.status(200).json(parsedResponse);
-//               });
-//             } catch (error) {
-//               console.error("Error parsing Python script response:", error);
-//               res
-//                 .status(500)
-//                 .json({ error: "Failed to parse Python script output" });
-//             }
-//           });
-//         });
-//       })
-//       .on("error", (err) => {
-//         console.error("SSH connection error:", err);
-//         res.status(500).json({ error: "Failed to connect to the VPS" });
-//       })
-//       .connect(VPS_CONFIG);
-//   } catch (error) {
-//     console.error("Error in /job-offers endpoint:", error);
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while processing the request." });
-//   }
-// });
-
 app.post("/job-offers", async (req, res) => {
   try {
     const queries = req.body; // Expecting an array of { keyword, occupation_code }
@@ -604,9 +505,7 @@ app.post("/get-model-response", (req, res) => {
   }
 
   // Spawn the Python process
-  const pythonProcess = spawn(pythonPathLocal, [
-    "./python/fetch_ai_response.py"
-  ]);
+  const pythonProcess = spawn(pythonPath, ["./python/fetch_ai_response.py"]);
 
   let response = "";
 
