@@ -394,200 +394,107 @@ app.post("/translate/career-paths", async (req, res) => {
   }
 });
 
-app.post("/job-offers", async (req, res) => {
-  try {
-    const { keyword, occupation_code } = req.body;
-
-    // Translate the keyword
-    console.log("Translating keyword:", keyword);
-    const translatedKeyword = await hf.translate(keyword);
-    console.log("Translated keyword:", translatedKeyword);
-
-    // Perform the search using Google Custom Search API
-    const jobSearchUrls = await hf.searchJobs(translatedKeyword);
-    console.log("Job search URLs:", jobSearchUrls);
-
-    if (jobSearchUrls.length === 0) {
-      console.log("No valid URLs found");
-      return res.status(404).send("No valid front job search URLs found.");
-    }
-
-    // Use the first valid URL to pass to the Python script
-    const url = jobSearchUrls[0];
-    console.log("Selected URL for Python scraper:", url);
-
-    if (!url) {
-      console.error("No URL found for Python scraper");
-      return res.status(400).json({ error: "URL is required" });
-    }
-
-    // Set up SSH connection to VPS
-    const ssh = new Client();
-    ssh
-      .on("ready", () => {
-        console.log("SSH connection established.");
-
-        // Execute the Python script on the VPS
-        const command = `xvfb-run python3.8 scraper.py ${url}`; // XServer command for VPS
-
-        ssh.exec(command, (err, stream) => {
-          if (err) {
-            console.error("Error executing Python script:", err);
-            return res
-              .status(500)
-              .json({ error: "Failed to execute Python script" });
-          }
-
-          let response = "";
-
-          // Capture stdout data
-          stream.on("data", (data) => {
-            response += data.toString();
-          });
-
-          // Capture stderr data
-          stream.on("stderr", (data) => {
-            console.error("Python script stderr:", data.toString());
-          });
-
-          // On stream close, process the response
-          stream.on("close", (code) => {
-            console.log("Python process exited with code:", code);
-            ssh.end();
-
-            if (code !== 0) {
-              console.error("Python scraper failed");
-              return res.status(500).json({ error: "Python scraper failed" });
-            }
-
-            try {
-              // Parse the response from Python script
-              const parsedResponse = JSON.parse(response.trim());
-
-              // Save to the database
-              db.saveOffers(parsedResponse, occupation_code, (err) => {
-                if (err) {
-                  console.error("Error saving offers to database:", err);
-                  return res
-                    .status(500)
-                    .json({ error: "Failed to save offers to database" });
-                }
-
-                // Send response to the client
-                res.status(200).json(parsedResponse);
-              });
-            } catch (error) {
-              console.error("Error parsing Python script response:", error);
-              res
-                .status(500)
-                .json({ error: "Failed to parse Python script output" });
-            }
-          });
-        });
-      })
-      .on("error", (err) => {
-        console.error("SSH connection error:", err);
-        res.status(500).json({ error: "Failed to connect to the VPS" });
-      })
-      .connect({
-        host: "164.138.221.231",
-        port: 22, // Default SSH port
-        username: "root",
-        password: "y!+22vXkgSBR"
-      });
-  } catch (error) {
-    console.error("Error in /job-offers endpoint:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while processing the request." });
-  }
-});
-
 // app.post("/job-offers", async (req, res) => {
 //   try {
-//     const queries = req.body; // Expecting an array of { keyword, occupation_code }
-//     if (!Array.isArray(queries) || queries.length === 0) {
-//       return res.status(400).json({ error: "Invalid request body" });
+//     const { keyword, occupation_code } = req.body;
+
+//     // Translate the keyword
+//     console.log("Translating keyword:", keyword);
+//     const translatedKeyword = await hf.translate(keyword);
+//     console.log("Translated keyword:", translatedKeyword);
+
+//     // Perform the search using Google Custom Search API
+//     const jobSearchUrls = await hf.searchJobs(translatedKeyword);
+//     console.log("Job search URLs:", jobSearchUrls);
+
+//     if (jobSearchUrls.length === 0) {
+//       console.log("No valid URLs found");
+//       return res.status(404).send("No valid front job search URLs found.");
 //     }
 
-//     const ssh = new Client();
-//     ssh.on("ready", async () => {
-//       console.log("SSH connection established.");
+//     // Use the first valid URL to pass to the Python script
+//     const url = jobSearchUrls[0];
+//     console.log("Selected URL for Python scraper:", url);
 
-//       const commands = await Promise.all(
-//         queries.map(async ({ keyword }) => {
-//           const jobSearchUrls = await hf.searchJobs(keyword);
-//           if (jobSearchUrls.length === 0) {
-//             console.log(`No valid URLs found for ${keyword}`);
-//             return null;
+//     if (!url) {
+//       console.error("No URL found for Python scraper");
+//       return res.status(400).json({ error: "URL is required" });
+//     }
+
+//     // Set up SSH connection to VPS
+//     const ssh = new Client();
+//     ssh
+//       .on("ready", () => {
+//         console.log("SSH connection established.");
+
+//         // Execute the Python script on the VPS
+//         const command = `xvfb-run python3.8 scraper.py ${url}`; // XServer command for VPS
+
+//         ssh.exec(command, (err, stream) => {
+//           if (err) {
+//             console.error("Error executing Python script:", err);
+//             return res
+//               .status(500)
+//               .json({ error: "Failed to execute Python script" });
 //           }
 
-//           const url = jobSearchUrls[0];
-//           return `xvfb-run python3.8 scraper.py ${url}`;
-//         })
-//       );
+//           let response = "";
 
-//       const validCommands = commands.filter((cmd) => cmd !== null);
-//       if (validCommands.length === 0) {
-//         ssh.end();
-//         return res
-//           .status(404)
-//           .json({ error: "No valid job search URLs found" });
-//       }
+//           // Capture stdout data
+//           stream.on("data", (data) => {
+//             response += data.toString();
+//           });
 
-//       let responses = [];
-//       let errors = [];
+//           // Capture stderr data
+//           stream.on("stderr", (data) => {
+//             console.error("Python script stderr:", data.toString());
+//           });
 
-//       for (let idx = 0; idx < validCommands.length; idx++) {
-//         const command = validCommands[idx];
+//           // On stream close, process the response
+//           stream.on("close", (code) => {
+//             console.log("Python process exited with code:", code);
+//             ssh.end();
 
-//         await new Promise((resolve) => {
-//           ssh.exec(command, (err, stream) => {
-//             if (err) {
-//               console.error("Error executing script:", err);
-//               errors.push({ index: idx, error: err });
-//               return resolve();
+//             if (code !== 0) {
+//               console.error("Python scraper failed");
+//               return res.status(500).json({ error: "Python scraper failed" });
 //             }
 
-//             let response = "";
-//             stream.on("data", (data) => {
-//               response += data.toString();
-//             });
+//             try {
+//               // Parse the response from Python script
+//               const parsedResponse = JSON.parse(response.trim());
 
-//             stream.on("close", (code) => {
-//               console.log(`Python script exited with code:`, code);
-//               if (code === 0) {
-//                 try {
-//                   const parsedResponse = JSON.parse(response.trim());
-//                   responses.push(parsedResponse);
-//                 } catch (parseError) {
-//                   console.error("Error parsing response:", parseError);
-//                   errors.push({ index: idx, error: "Parsing failed" });
+//               // Save to the database
+//               db.saveOffers(parsedResponse, occupation_code, (err) => {
+//                 if (err) {
+//                   console.error("Error saving offers to database:", err);
+//                   return res
+//                     .status(500)
+//                     .json({ error: "Failed to save offers to database" });
 //                 }
-//               } else {
-//                 errors.push({ index: idx, error: "Script execution failed" });
-//               }
-//               resolve();
-//             });
+
+//                 // Send response to the client
+//                 res.status(200).json(parsedResponse);
+//               });
+//             } catch (error) {
+//               console.error("Error parsing Python script response:", error);
+//               res
+//                 .status(500)
+//                 .json({ error: "Failed to parse Python script output" });
+//             }
 //           });
 //         });
-//       }
-
-//       ssh.end();
-//       res.status(200).json({ results: responses, errors });
-//     });
-
-//     ssh.on("error", (err) => {
-//       console.error("SSH connection error:", err);
-//       res.status(500).json({ error: "Failed to connect to the VPS" });
-//     });
-
-//     ssh.connect({
-//       host: "164.138.221.231",
-//       port: 22,
-//       username: "root",
-//       password: "y!+22vXkgSBR"
-//     });
+//       })
+//       .on("error", (err) => {
+//         console.error("SSH connection error:", err);
+//         res.status(500).json({ error: "Failed to connect to the VPS" });
+//       })
+//       .connect({
+//         host: "164.138.221.231",
+//         port: 22, // Default SSH port
+//         username: "root",
+//         password: "y!+22vXkgSBR"
+//       });
 //   } catch (error) {
 //     console.error("Error in /job-offers endpoint:", error);
 //     res
@@ -595,6 +502,99 @@ app.post("/job-offers", async (req, res) => {
 //       .json({ error: "An error occurred while processing the request." });
 //   }
 // });
+
+app.post("/job-offers", async (req, res) => {
+  try {
+    const queries = req.body; // Expecting an array of { keyword, occupation_code }
+    if (!Array.isArray(queries) || queries.length === 0) {
+      return res.status(400).json({ error: "Invalid request body" });
+    }
+
+    const ssh = new Client();
+    ssh.on("ready", async () => {
+      console.log("SSH connection established.");
+
+      const commands = await Promise.all(
+        queries.map(async ({ keyword }) => {
+          const jobSearchUrls = await hf.searchJobs(keyword);
+          if (jobSearchUrls.length === 0) {
+            console.log(`No valid URLs found for ${keyword}`);
+            return null;
+          }
+
+          const url = jobSearchUrls[0];
+          return `xvfb-run python3.8 scraper.py ${url}`;
+        })
+      );
+
+      const validCommands = commands.filter((cmd) => cmd !== null);
+      if (validCommands.length === 0) {
+        ssh.end();
+        return res
+          .status(404)
+          .json({ error: "No valid job search URLs found" });
+      }
+
+      let responses = [];
+      let errors = [];
+
+      for (let idx = 0; idx < validCommands.length; idx++) {
+        const command = validCommands[idx];
+
+        await new Promise((resolve) => {
+          ssh.exec(command, (err, stream) => {
+            if (err) {
+              console.error("Error executing script:", err);
+              errors.push({ index: idx, error: err });
+              return resolve();
+            }
+
+            let response = "";
+            stream.on("data", (data) => {
+              response += data.toString();
+            });
+
+            stream.on("close", (code) => {
+              console.log(`Python script exited with code:`, code);
+              if (code === 0) {
+                try {
+                  const parsedResponse = JSON.parse(response.trim());
+                  responses.push(parsedResponse);
+                } catch (parseError) {
+                  console.error("Error parsing response:", parseError);
+                  errors.push({ index: idx, error: "Parsing failed" });
+                }
+              } else {
+                errors.push({ index: idx, error: "Script execution failed" });
+              }
+              resolve();
+            });
+          });
+        });
+      }
+
+      ssh.end();
+      res.status(200).json({ results: responses, errors });
+    });
+
+    ssh.on("error", (err) => {
+      console.error("SSH connection error:", err);
+      res.status(500).json({ error: "Failed to connect to the VPS" });
+    });
+
+    ssh.connect({
+      host: "164.138.221.231",
+      port: 22,
+      username: "root",
+      password: "y!+22vXkgSBR"
+    });
+  } catch (error) {
+    console.error("Error in /job-offers endpoint:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the request." });
+  }
+});
 
 // Достъпване на конретен AI модел
 app.post("/get-model-response", (req, res) => {

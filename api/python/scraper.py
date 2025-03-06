@@ -2,6 +2,7 @@
 import sys
 import json
 import re
+import time
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -25,8 +26,7 @@ def scrape_jobs():
 
         # Step 2: Set initial cookies
         initial_cookies = [
-            {"name": "JOBSSESSID", "value": "tprdm9kuoqts4jtvr65decep3m", "domain": ".jobs.bg", "path": "/"},
-            {"name": "datadome", "value": "sR__SYtexbyBR3ioJgSdkCRUqclg2szd7s6MQdmG6yCIb99ccuXEB6ON9cBCqfDdBWCg0f6AV1_E5NDinDRoTfvRAkZmDq8p3tCZ2Ti70Dphmptgd0EUldZ7VtJWSu8P", "domain": ".jobs.bg", "path": "/"}
+            {"name": "datadome", "value": "wflaKkFUf3yAV61QjniVSH5CtPSTLmTHFRg8KHJ0bOtAJuXA8q5ACgEdXQWxM92BRhnVkOz_xCUQTASpTVJBx4NPMfUkKHVKC414g6~2QjG1MGiMYms69RrQZBKFKdb~", "domain": ".jobs.bg", "path": "/"}
         ]
 
         for cookie in initial_cookies:
@@ -49,6 +49,28 @@ def scrape_jobs():
         ]
 
         page.context.add_cookies(filtered_cookies)
+
+        # Step 5: Define the checking function
+        def check_content_loaded():
+            page_source = page.content()
+            soup = BeautifulSoup(page_source, "html.parser")
+            job_list = soup.select("ul.page-1 > li")  # Check for the job listings
+            return len(job_list) > 0  # Returns True if job elements are found
+
+        # Step 6: Loop until the desired content is loaded
+        retries = 0
+        while retries < 10:  # Retry up to 10 times
+            if check_content_loaded():  # Check if the content is loaded
+                print("Desired content loaded successfully!")
+                break
+            else:
+                retries += 1
+                print(f"Retry {retries}: Waiting 10 seconds and refreshing...")
+                time.sleep(10)  # Wait for 10 seconds before retrying
+                page.reload()  # Reload the page after the wait
+
+
+
 
         # Open the target URL
         page.goto(URL)
