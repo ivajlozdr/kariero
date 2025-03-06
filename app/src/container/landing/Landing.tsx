@@ -6,8 +6,6 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import LogoPrimaryLight from "../../assets/images/brand-logos/kariero-primary-light.svg";
 import LogoDarker from "../../assets/images/brand-logos/kariero-darker.svg";
 import LogoGray from "../../assets/images/brand-logos/kariero-gray.svg";
-import desktoplogo from "../../assets/images/brand-logos/desktop-logo.png";
-import desktopwhitelogo from "../../assets/images/brand-logos/desktop-white.png";
 import { connect } from "react-redux";
 import Footer from "../../components/common/footer/footer";
 
