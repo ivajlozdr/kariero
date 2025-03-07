@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const db = require("./database");
 const hf = require("./helper_functions");
 const { spawn } = require("child_process");
+// const { Client } = require("ssh2");
 const pythonPath = require("./config.js").pythonPath;
 const pythonPathLocal = require("./config.js").pythonPathLocal;
 const SECRET_KEY = require("./credentials.js").SECRET_KEY;
@@ -393,6 +394,100 @@ app.post("/translate/career-paths", async (req, res) => {
     });
   }
 });
+
+// app.post("/job-offers", async (req, res) => {
+//   try {
+//     const queries = req.body; // Expecting an array of { keyword, occupation_code }
+//     if (!Array.isArray(queries) || queries.length === 0) {
+//       return res.status(400).json({ error: "Invalid request body" });
+//     }
+
+//     const ssh = new Client();
+//     ssh.on("ready", async () => {
+//       console.log("SSH connection established.");
+
+//       const commandsWithQuery = await Promise.all(
+//         queries.map(async ({ keyword }) => {
+//           const jobSearchUrls = await hf.searchJobs(keyword);
+//           if (jobSearchUrls.length === 0) {
+//             console.log(`No valid URLs found for ${keyword}`);
+//             return null;
+//           }
+//           const url = jobSearchUrls[0];
+//           return {
+//             command: `xvfb-run python3.8 scraper.py ${url}`,
+//             keyword
+//           };
+//         })
+//       );
+
+//       const validCommands = commandsWithQuery.filter((item) => item !== null);
+//       if (validCommands.length === 0) {
+//         ssh.end();
+//         return res
+//           .status(404)
+//           .json({ error: "No valid job search URLs found" });
+//       }
+
+//       let responses = [];
+//       let errors = [];
+
+//       for (let idx = 0; idx < validCommands.length; idx++) {
+//         const { command, keyword } = validCommands[idx];
+
+//         await new Promise((resolve) => {
+//           ssh.exec(command, (err, stream) => {
+//             if (err) {
+//               console.error("Error executing script:", err);
+//               errors.push({ index: idx, error: err });
+//               return resolve();
+//             }
+
+//             let response = "";
+//             stream.on("data", (data) => {
+//               response += data.toString();
+//             });
+
+//             stream.on("close", (code) => {
+//               console.log(`Python script exited with code:`, code);
+//               if (code === 0) {
+//                 try {
+//                   const parsedResponse = JSON.parse(response.trim());
+
+//                   responses.push({
+//                     ...parsedResponse,
+//                     career: keyword
+//                   });
+//                 } catch (parseError) {
+//                   console.error("Error parsing response:", parseError);
+//                   errors.push({ index: idx, error: "Parsing failed" });
+//                 }
+//               } else {
+//                 errors.push({ index: idx, error: "Script execution failed" });
+//               }
+//               resolve();
+//             });
+//           });
+//         });
+//       }
+
+//       ssh.end();
+//       res.status(200).json({ results: responses, errors });
+//     });
+
+//     ssh.on("error", (err) => {
+//       console.error("SSH connection error:", err);
+//       res.status(500).json({ error: "Failed to connect to the VPS" });
+//     });
+
+//     ssh.connect(VPS_CONFIG);
+//   } catch (error) {
+//     console.error("Error in /job-offers endpoint:", error);
+//     res
+//       .status(500)
+//       .json({ error: "An error occurred while processing the request." });
+//   }
+// });
 
 // Достъпване на конретен AI модел
 app.post("/get-model-response", (req, res) => {
