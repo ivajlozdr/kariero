@@ -272,7 +272,7 @@ const Signinbasic: FC<SigninbasicProps> = () => {
                         to={`${import.meta.env.BASE_URL}signup`}
                         className="text-primary"
                       >
-                        Създадете тук!
+                        Създайте тук!
                       </Link>
                     </p>
                   </div>

@@ -311,7 +311,7 @@ const Signupbasic: FC<SignupbasicProps> = () => {
                           type="submit"
                           className="ti-btn ti-btn-lg bg-primary text-white !font-medium dark:border-defaultborder/10"
                         >
-                          Създадете
+                          Създайте
                         </button>
                       </div>
                     </div>

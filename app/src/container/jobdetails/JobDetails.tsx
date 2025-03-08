@@ -70,7 +70,7 @@ const JobDetails: FC = () => {
             <OccupationDescription fullCareerDetails={fullCareerDetails} />
             <Education fullCareerDetails={fullCareerDetails} />
             <Technologies fullCareerDetails={fullCareerDetails} />
-            {jobOffers && "job_offers" in jobOffers && (
+            {jobOffers?.job_offers?.length ? (
               <div>
                 <h4 className="font-semibold mb-0 !text-defaulttextcolor">
                   Обяви за {translated.title}
@@ -80,7 +80,7 @@ const JobDetails: FC = () => {
                 </p>
                 <JobOffers jobOffers={jobOffers} />
               </div>
-            )}
+            ) : null}
           </div>
           <div className="xxl:col-span-4 col-span-12">
             <PaginatedTasks tasks={translated.tasks} />

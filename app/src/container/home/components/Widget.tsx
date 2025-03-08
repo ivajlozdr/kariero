@@ -69,6 +69,7 @@ const Widget: FC<WidgetProps> = ({
                           is1803 &&
                           "truncate overflow-hidden max-w-[130px] whitespace-nowrap text-xs"
                         }`}
+                        title={selectedLabel}
                       >
                         {selectedLabel}
                       </p>
@@ -124,6 +125,7 @@ const Widget: FC<WidgetProps> = ({
                           ? "1.25rem truncate overflow-hidden max-w-[150px] whitespace-nowrap"
                           : "1.125rem"
                       }] font-semibold`}
+                      title={String(selectedValue)}
                     >
                       {selectedValue}
                     </span>
@@ -165,6 +167,7 @@ const Widget: FC<WidgetProps> = ({
                     className={`mb-0 text-[#8c9097] dark:text-white/50 ${
                       is1803 && "text-xs"
                     }`}
+                    title={selectedLabel}
                   >
                     {selectedLabel}
                   </p>
@@ -175,6 +178,7 @@ const Widget: FC<WidgetProps> = ({
                           ? "1.25rem truncate overflow-hidden max-w-[150px] whitespace-nowrap"
                           : "1.125rem"
                       }] font-semibold`}
+                      title={String(selectedValue)}
                     >
                       {selectedValue}
                     </span>
