@@ -41,11 +41,11 @@ const PaginatedTasks: FC<Props> = ({ tasks }) => {
             >
               <div className="sm:flex items-center">
                 <span className="avatar avatar-md !rounded-full bg-primary/10 border dark:border-defaultborder/10 flex items-center justify-center">
-                  <i className="ti ti-clipboard-text text-primary group-hover:text-secondary text-[1.5rem]"></i>
+                  <i className="ti ti-clipboard-text text-primary group-hover:text-white/85 dark:group-hover:text-secondary text-[1.5rem]"></i>
                 </span>
 
                 <div className="ms-2 flex-grow max-w-[85%] relative">
-                  <p className="font-semibold text-[.875rem] whitespace-normal p-1 overflow-hidden transition-[max-height] duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
+                  <p className="font-semibold text-[.875rem] hover:text-white/85 dark:hover:text-defaulttextcolor whitespace-normal p-1 overflow-hidden transition-[max-height] duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
                     {item.translated_name}
                   </p>
                 </div>

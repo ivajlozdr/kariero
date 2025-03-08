@@ -39,9 +39,8 @@ const RelatedOccupations: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
               className="list-group-item d-flex align-items-center !border-0 hover:bg-primary/70 hover:text-white transition group"
             >
               <p className="mb-0 me-4 d-flex align-items-center">
-                <i className="bi bi-briefcase text-primary transition-colors group-hover:text-secondary me-2"></i>
-                {item.translated_name} (
-                {fullCareerDetails.related_occupations.occupation[index].code})
+                <i className="bi bi-briefcase text-primary transition-colors group-hover:text-white/85 dark:group-hover:text-secondary me-2"></i>
+                {item.translated_name}
               </p>
             </li>
           ))}
