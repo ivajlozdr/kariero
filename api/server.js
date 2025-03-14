@@ -505,7 +505,9 @@ app.post("/get-model-response", (req, res) => {
   }
 
   // Spawn the Python process
-  const pythonProcess = spawn(pythonPath, ["./python/fetch_ai_response.py"]);
+  const pythonProcess = spawn(pythonPathLocal, [
+    "./python/fetch_ai_response.py"
+  ]);
 
   let response = "";
 

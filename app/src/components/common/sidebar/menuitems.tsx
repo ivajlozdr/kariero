@@ -25,6 +25,17 @@ export const MENUITEMS = [
       "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
   },
   {
+    path: `${import.meta.env.BASE_URL}app/favourites`,
+    icon: <i className="side-menu__icon bx bx-briefcase-alt-2"></i>,
+    type: "link",
+    Name: "",
+    active: false,
+    selected: false,
+    title: "Любими професии",
+    class:
+      "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
+  },
+  {
     icon: <i className="side-menu__icon ti ti-chart-line"></i>,
     type: "sub",
     Name: "",
