@@ -739,6 +739,65 @@ const getMostPreferredWorkstyle = (columnName, limit, callback) => {
   db.query(query, [limit], callback);
 };
 
+const getUsersTopRecommendedOccupations = (userId, limit, callback) => {
+  const query = `
+    SELECT 
+      code, 
+      title_bg, 
+      title_en, 
+      description, 
+      bright_outlook, 
+      education, 
+      COUNT(code) AS recommendation_count
+    FROM occupations
+    WHERE user_id = ?
+    GROUP BY code
+    ORDER BY recommendation_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [userId, limit], callback);
+};
+
+const getUsersTopRecommendedRelatedOccupations = (userId, limit, callback) => {
+  const query = `
+    SELECT 
+      ro.onet_id, 
+      ro.name_en,
+      ro.name_bg, 
+      COUNT(ro.onet_id) AS recommendation_count
+    FROM related_occupations ro
+    WHERE ro.occupation_code IN (
+      SELECT occupation_code 
+      FROM occupations 
+      WHERE user_id = ?
+    )
+    GROUP BY ro.onet_id
+    ORDER BY recommendation_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [userId, limit], callback);
+};
+
+const getUsersMostNeededAttributes = (tableName, userId, limit, callback) => {
+  const query = `
+    SELECT 
+      t.onet_id, 
+      t.name_en, 
+      t.name_bg, 
+      COUNT(t.onet_id) AS occurrence_count
+    FROM ${tableName} t
+    WHERE t.occupation_code IN (
+      SELECT occupation_code 
+      FROM occupations 
+      WHERE user_id = ?
+    )
+    GROUP BY t.onet_id
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [userId, limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -756,10 +815,15 @@ module.exports = {
   saveOffers,
   deleteFavouriteOccupation,
   getUsersCount,
+  // platform
   getDistinctOccupations,
   getTopRecommendedOccupations,
   getTopRecommendedRelatedOccupations,
   getMostNeededAttributes,
   getMostSelectedPreferences,
-  getMostPreferredWorkstyle
+  getMostPreferredWorkstyle,
+  // individual
+  getUsersTopRecommendedOccupations,
+  getUsersTopRecommendedRelatedOccupations,
+  getUsersMostNeededAttributes
 };

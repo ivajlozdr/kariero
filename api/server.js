@@ -1433,6 +1433,341 @@ app.get("/stats/platform/all-data", (req, res) => {
     });
 });
 
+// Вземане на данни за най-препоръчваните професии на даден потребител ДИРЕКТНО
+app.post("/stats/individual/top-recommended-occupations", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да е положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersTopRecommendedOccupations(userId, limit, (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-препоръчваните професии на даден потребител директно"
+        });
+      }
+      if (result.length === 0) {
+        return res.status(404).json({ error: "Няма професии с препоръки" });
+      }
+      res.json(result);
+    });
+  });
+});
+
+// Вземане на данни за най-препоръчваните професии на даден потребител ИНДИРЕКТНО
+app.post(
+  "/stats/individual/top-recommended-related-occupations",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
+
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да е положително число." });
+    }
+
+    const { token } = req.body;
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(400).json({ error: "Невалиден или изтекъл token" });
+      }
+
+      const userId = decoded.id; // Получаване на ID на потребителя
+
+      db.getUsersTopRecommendedRelatedOccupations(
+        userId,
+        limit,
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              error:
+                "Грешка при вземането на най-препоръчваните професии на даден потребител индиректно"
+            });
+          }
+          if (result.length === 0) {
+            return res.status(404).json({ error: "Няма професии с препоръки" });
+          }
+          res.json(result);
+        }
+      );
+    });
+  }
+);
+
+// Вземане на данни за най-нужните способности сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-abilities", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-нужните способности сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes(
+      "abilities",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          // Връщане на грешка при проблем с заявката към базата данни
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-нужните способности сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          // Връщане на съобщение, ако няма намерени резултати
+          return res.status(404).json({ error: "Няма намерени способности." });
+        }
+        // Връщане на резултатите в JSON формат
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-нужните знания сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-knowledge", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-нужните знания сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes(
+      "knowledge",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          // Връщане на грешка при проблем с заявката към базата данни
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-нужните знания сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          // Връщане на съобщение, ако няма намерени резултати
+          return res.status(404).json({ error: "Няма намерени знания." });
+        }
+        // Връщане на резултатите в JSON формат
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-нужните умения сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-skills", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-нужните умения сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes("skills", userId, limit, (err, result) => {
+      if (err) {
+        // Връщане на грешка при проблем с заявката към базата данни
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-нужните умения сред препоръките на даден потребител."
+        });
+      }
+      if (result.length === 0) {
+        // Връщане на съобщение, ако няма намерени резултати
+        return res.status(404).json({ error: "Няма намерени умения." });
+      }
+      // Връщане на резултатите в JSON формат
+      res.json(result);
+    });
+  });
+});
+
+// Вземане на данни за най-често срещаните задачи сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-tasks", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-често срещаните задачи сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes("tasks", userId, limit, (err, result) => {
+      if (err) {
+        // Връщане на грешка при проблем с заявката към базата данни
+        return res.status(500).json({
+          error:
+            "Грешка при вземането на най-често срещаните задачи сред препоръките на даден потребител."
+        });
+      }
+      if (result.length === 0) {
+        // Връщане на съобщение, ако няма намерени резултати
+        return res.status(404).json({ error: "Няма намерени умения." });
+      }
+      // Връщане на резултатите в JSON формат
+      res.json(result);
+    });
+  });
+});
+
+// Вземане на данни за най-нужните технологични умения сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-technology-skills", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-нужните технологични умения сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes(
+      "technology_skills",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          // Връщане на грешка при проблем с заявката към базата данни
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-нужните технологични умения сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          // Връщане на съобщение, ако няма намерени резултати
+          return res.status(404).json({ error: "Няма намерени умения." });
+        }
+        // Връщане на резултатите в JSON формат
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-често срещаните трудови дейности сред препоръките на даден потребител
+app.post("/stats/individual/most-needed-work-activities", (req, res) => {
+  // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  // Проверка дали лимитът е положително число
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    // Извличане на данните за най-често срещаните трудови дейности сред препоръките на даден потребител от базата данни
+    db.getUsersMostNeededAttributes(
+      "work_activities",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          // Връщане на грешка при проблем с заявката към базата данни
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-често срещаните трудови дейности сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          // Връщане на съобщение, ако няма намерени резултати
+          return res.status(404).json({ error: "Няма намерени умения." });
+        }
+        // Връщане на резултатите в JSON формат
+        res.json(result);
+      }
+    );
+  });
+});
+
 // Start server
 app.listen(5001, () => {
   console.log("Server started on port 5001");
