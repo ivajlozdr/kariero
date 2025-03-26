@@ -1160,7 +1160,7 @@ app.get("/stats/platform/most-selected-career-goals", (req, res) => {
   );
 });
 
-// Вземане на данни за най-предпочитани типове структура:
+// Вземане на данни за най-предпочитани типове структура
 app.get("/stats/platform/most-preferred-workstyle-structure", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10; // По подразбиране 10, ако лимитът не е предоставен или е невалиден
 
@@ -1768,7 +1768,7 @@ app.post("/stats/individual/most-needed-work-activities", (req, res) => {
   });
 });
 
-// Вземане на данни за най-често срещаните характеристики на личността сред препоръките на даден потребител:
+// Вземане на данни за най-често срещаните характеристики на личността сред препоръките на даден потребител
 app.post("/stats/individual/most-selected-personality-types", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -1809,7 +1809,7 @@ app.post("/stats/individual/most-selected-personality-types", (req, res) => {
   });
 });
 
-// Вземане на данни за предпочитаното работно място сред препоръките на даден потребител:
+// Вземане на данни за предпочитаното работно място сред препоръките на даден потребител
 app.post("/stats/individual/most-selected-work-environments", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -1850,7 +1850,7 @@ app.post("/stats/individual/most-selected-work-environments", (req, res) => {
   });
 });
 
-// Вземане на данни за най-често срещаните приоритети при търсене на професия сред препоръките на даден потребител:
+// Вземане на данни за най-често срещаните приоритети при търсене на професия сред препоръките на даден потребител
 app.post("/stats/individual/most-selected-job-priorities", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -1891,7 +1891,7 @@ app.post("/stats/individual/most-selected-job-priorities", (req, res) => {
   });
 });
 
-// Вземане на данни за най-предпочитаните дейности в търсената професия сред препоръките на даден потребител:
+// Вземане на данни за най-предпочитаните дейности в търсената професия сред препоръките на даден потребител
 app.post(
   "/stats/individual/most-selected-job-satisfaction-levels",
   (req, res) => {
@@ -1935,7 +1935,7 @@ app.post(
   }
 );
 
-// Вземане на данни за най-често срещаните постигнати нива на образование сред препоръките на даден потребител:
+// Вземане на данни за най-често срещаните постигнати нива на образование сред препоръките на даден потребител
 app.post("/stats/individual/most-selected-education-levels", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -1976,7 +1976,7 @@ app.post("/stats/individual/most-selected-education-levels", (req, res) => {
   });
 });
 
-// Вземане на данни за най-желани професионални роли сред препоръките на даден потребител:
+// Вземане на данни за най-желани професионални роли сред препоръките на даден потребител
 app.post("/stats/individual/most-selected-career-goals", (req, res) => {
   const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -2016,6 +2016,135 @@ app.post("/stats/individual/most-selected-career-goals", (req, res) => {
     );
   });
 });
+
+// Вземане на данни за най-предпочитани типове структура сред препоръките на даден потребител
+app.post("/stats/individual/most-preferred-workstyle-structure", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostPreferredWorkstyle(
+      "structure_preference_workstyle",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на данни за най-предпочитани типове структура сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res.status(404).json({
+            error: "Няма намерени типове структура."
+          });
+        }
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-предпочитани начини за работа сред препоръките на даден потребител
+app.post(
+  "/stats/individual/most-preferred-workstyle-collaboration",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да бъде положително число." });
+    }
+
+    const { token } = req.body;
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(400).json({ error: "Невалиден или изтекъл token" });
+      }
+
+      const userId = decoded.id; // Получаване на ID на потребителя
+
+      db.getUsersMostPreferredWorkstyle(
+        "collaboration_workstyle",
+        userId,
+        limit,
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              error:
+                "Грешка при вземането на данни за най-предпочитани начини за работа сред препоръките на даден потребител."
+            });
+          }
+          if (result.length === 0) {
+            return res.status(404).json({
+              error: "Няма намерени начини за работа."
+            });
+          }
+          res.json(result);
+        }
+      );
+    });
+  }
+);
+
+// Вземане на данни за най-предпочитани работни атмосфери сред препоръките на даден потребител
+app.post(
+  "/stats/individual/most-preferred-workstyle-work-environment",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да бъде положително число." });
+    }
+
+    const { token } = req.body;
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(400).json({ error: "Невалиден или изтекъл token" });
+      }
+
+      const userId = decoded.id; // Получаване на ID на потребителя
+
+      db.getUsersMostPreferredWorkstyle(
+        "work_environment_workstyle",
+        userId,
+        limit,
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              error:
+                "Грешка при вземането на данни за най-предпочитани работни атмосфери сред препоръките на даден потребител."
+            });
+          }
+          if (result.length === 0) {
+            return res.status(404).json({
+              error: "Няма намерени работни атмосфери."
+            });
+          }
+          res.json(result);
+        }
+      );
+    });
+  }
+);
 
 // Start server
 app.listen(5001, () => {
