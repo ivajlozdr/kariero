@@ -798,6 +798,35 @@ const getUsersMostNeededAttributes = (tableName, userId, limit, callback) => {
   db.query(query, [userId, limit], callback);
 };
 
+const getUsersMostSelectedPreferences = (column, userId, limit, callback) => {
+  const query = `
+    SELECT ${column} AS preference, COUNT(*) AS occurrence_count
+    FROM final_scores
+    WHERE user_id = ?
+    GROUP BY ${column}
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [userId, limit], callback);
+};
+
+const getUsersMostPreferredWorkstyle = (
+  columnName,
+  userId,
+  limit,
+  callback
+) => {
+  const query = `
+    SELECT ${columnName} AS preference, COUNT(*) AS occurrence_count
+    FROM final_scores
+    WHERE user_id = ?
+    GROUP BY ${columnName}
+    ORDER BY occurrence_count DESC
+    LIMIT ?;
+  `;
+  db.query(query, [userId, limit], callback);
+};
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -825,5 +854,7 @@ module.exports = {
   // individual
   getUsersTopRecommendedOccupations,
   getUsersTopRecommendedRelatedOccupations,
-  getUsersMostNeededAttributes
+  getUsersMostNeededAttributes,
+  getUsersMostSelectedPreferences,
+  getUsersMostPreferredWorkstyle
 };

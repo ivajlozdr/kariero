@@ -1023,11 +1023,11 @@ app.get("/stats/platform/most-selected-work-environments", (req, res) => {
     (err, result) => {
       if (err) {
         return res.status(500).json({
-          error: "Грешка при вземането на най-често срещаните работни среди."
+          error: "Грешка при вземането на най-често срещаните работно място."
         });
       }
       if (result.length === 0) {
-        return res.status(404).json({ error: "Няма намерени работни среди." });
+        return res.status(404).json({ error: "Няма намерени работно място." });
       }
       res.json(result);
     }
@@ -1147,13 +1147,13 @@ app.get("/stats/platform/most-selected-career-goals", (req, res) => {
     (err, result) => {
       if (err) {
         return res.status(500).json({
-          error: "Грешка при вземането на най-често срещаните цели за кариера."
+          error: "Грешка при вземането на най-желаните професионални роли."
         });
       }
       if (result.length === 0) {
         return res
           .status(404)
-          .json({ error: "Няма намерени цели за кариера." });
+          .json({ error: "Няма намерени професионални роли." });
       }
       res.json(result);
     }
@@ -1762,6 +1762,255 @@ app.post("/stats/individual/most-needed-work-activities", (req, res) => {
           return res.status(404).json({ error: "Няма намерени умения." });
         }
         // Връщане на резултатите в JSON формат
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-често срещаните характеристики на личността сред препоръките на даден потребител:
+app.post("/stats/individual/most-selected-personality-types", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostSelectedPreferences(
+      "personality_types_preferences",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-често срещаните характеристики на личността сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res
+            .status(404)
+            .json({ error: "Няма намерени характеристики на личността." });
+        }
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за предпочитаното работно място сред препоръките на даден потребител:
+app.post("/stats/individual/most-selected-work-environments", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostPreferredWorkstyle(
+      "work_environment_preferences",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на предпочитани работни места сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res
+            .status(404)
+            .json({ error: "Няма намерени работни места." });
+        }
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-често срещаните приоритети при търсене на професия сред препоръките на даден потребител:
+app.post("/stats/individual/most-selected-job-priorities", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostSelectedPreferences(
+      "job_priority_preferences",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на приоритети при търсене на професия сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res.status(404).json({
+            error: "Няма намерени приоритети при търсене на професия."
+          });
+        }
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-предпочитаните дейности в търсената професия сред препоръките на даден потребител:
+app.post(
+  "/stats/individual/most-selected-job-satisfaction-levels",
+  (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    if (limit <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Лимитът трябва да бъде положително число." });
+    }
+
+    const { token } = req.body;
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(400).json({ error: "Невалиден или изтекъл token" });
+      }
+
+      const userId = decoded.id; // Получаване на ID на потребителя
+
+      db.getUsersMostSelectedPreferences(
+        "job_satisfaction_preferences",
+        userId,
+        limit,
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              error:
+                "Грешка при вземането на предпочитани дейности в търсената професия сред препоръките на даден потребител."
+            });
+          }
+          if (result.length === 0) {
+            return res.status(404).json({
+              error: "Няма намерени предпочитани дейности в търсената професия."
+            });
+          }
+          res.json(result);
+        }
+      );
+    });
+  }
+);
+
+// Вземане на данни за най-често срещаните постигнати нива на образование сред препоръките на даден потребител:
+app.post("/stats/individual/most-selected-education-levels", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostSelectedPreferences(
+      "education_level_preferences",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на нива на образование сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res.status(404).json({
+            error: "Няма намерени нива на образование."
+          });
+        }
+        res.json(result);
+      }
+    );
+  });
+});
+
+// Вземане на данни за най-желани професионални роли сред препоръките на даден потребител:
+app.post("/stats/individual/most-selected-career-goals", (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  if (limit <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Лимитът трябва да бъде положително число." });
+  }
+
+  const { token } = req.body;
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+
+    const userId = decoded.id; // Получаване на ID на потребителя
+
+    db.getUsersMostSelectedPreferences(
+      "career_goals_preferences",
+      userId,
+      limit,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            error:
+              "Грешка при вземането на най-желани професионални роли сред препоръките на даден потребител."
+          });
+        }
+        if (result.length === 0) {
+          return res.status(404).json({
+            error: "Няма намерени желани професионални роли."
+          });
+        }
         res.json(result);
       }
     );
