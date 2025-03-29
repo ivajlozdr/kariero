@@ -14,13 +14,19 @@ const CareerQuiz: React.FC<CareerQuizProps> = ({
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showQuestion, setShowQuestion] = useState<boolean>(true);
+  const [isOnCooldown, setIsOnCooldown] = useState(false);
 
   const nextQuestion = async () => {
+    if (isOnCooldown) return;
+    setIsOnCooldown(true);
     if (currentQuestionIndex < questions.length - 1) {
       setShowQuestion(false);
       setTimeout(() => {
         setCurrentQuestionIndex((prev) => prev + 1);
         setShowQuestion(true);
+        setTimeout(() => {
+          setIsOnCooldown(false);
+        }, 600);
       }, 500);
     }
   };

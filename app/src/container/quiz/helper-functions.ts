@@ -344,6 +344,8 @@ export const fetchOnetData = async (
   }
 };
 
+let isOnCooldown = false;
+
 /**
  * Изпраща резултатите от теста към OpenAI и O*NET за получаване на кариерни препоръки и свързани подробности за кариера.
  *
@@ -369,6 +371,8 @@ export const submitQuiz = async (
   setJobOffersList: React.Dispatch<React.SetStateAction<Offers[]>>
 ): Promise<void> => {
   try {
+    if (isOnCooldown) return;
+    isOnCooldown = true;
     const date = new Date().toISOString();
 
     console.log("Final Scores:", scores);
@@ -420,6 +424,9 @@ export const submitQuiz = async (
 
     const jobOffers = await fetchJobOffers(careersArray);
     setJobOffersList(jobOffers);
+    setTimeout(() => {
+      isOnCooldown = false;
+    }, 600);
   } catch (error) {
     console.error("Error in submitQuiz processing:", error);
   }
