@@ -26,7 +26,7 @@ export const MENUITEMS = [
   },
   {
     path: `${import.meta.env.BASE_URL}app/favourites`,
-    icon: <i className="side-menu__icon bx bx-briefcase-alt-2"></i>,
+    icon: <i className="side-menu__icon bx bx-heart"></i>,
     type: "link",
     Name: "",
     active: false,
@@ -36,12 +36,15 @@ export const MENUITEMS = [
       "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2"
   },
   {
+    menutitle: "СТАТИСТИКИ"
+  },
+  {
     icon: <i className="side-menu__icon ti ti-chart-line"></i>,
     type: "sub",
     Name: "",
     active: false,
     selected: false,
-    title: "Общи Статистики",
+    title: "Общи",
     class:
       "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
@@ -71,6 +74,52 @@ export const MENUITEMS = [
       },
       {
         path: `${import.meta.env.BASE_URL}app/global-stats/desired-qualities`,
+        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Топ изисквания"
+      }
+    ]
+  },
+  {
+    icon: <i className="side-menu__icon ti ti-chart-line"></i>,
+    type: "sub",
+    Name: "",
+    active: false,
+    selected: false,
+    title: "Индивидуални",
+    class:
+      "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+    children: [
+      {
+        path: `${import.meta.env.BASE_URL}app/individual-stats/qualities`,
+        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
+        type: "link",
+        active: false,
+        selected: false,
+        title: "За качества"
+      },
+      {
+        path: `${import.meta.env.BASE_URL}app/individual-stats/traits`,
+        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
+        type: "link",
+        active: false,
+        selected: false,
+        title: "За характеристики"
+      },
+      {
+        path: `${import.meta.env.BASE_URL}app/individual-stats/recommendations`,
+        icon: <i className="side-menu__icon ti ti-chart-line"></i>,
+        type: "link",
+        active: false,
+        selected: false,
+        title: "Топ препоръки"
+      },
+      {
+        path: `${
+          import.meta.env.BASE_URL
+        }app/individual-stats/desired-qualities`,
         icon: <i className="side-menu__icon ti ti-chart-line"></i>,
         type: "link",
         active: false,
