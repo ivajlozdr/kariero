@@ -4,11 +4,13 @@ import { handleTopStatsSortCategory } from "../helper_functions";
 import { Treemap } from "./Charts";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-const TopNeededQualitiesTreemap: FC = () => {
-  const { data } = useGlobalState();
+interface TopNeededQualitiesTreemapProps {
+  dataType: "individual" | "platform";
+}
 
-  const [topStatsSortCategory, setTopStatsSortCategory] =
-    useState<QualitiesCategory>("Abilities");
+const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({ dataType }) => {
+  const { data } = useGlobalState();
+  const [topStatsSortCategory, setTopStatsSortCategory] = useState<QualitiesCategory>("Abilities");
 
   const QualitiesCategoryDisplayNames: Record<QualitiesCategory, string> = {
     Abilities: "Способности",
@@ -21,15 +23,15 @@ const TopNeededQualitiesTreemap: FC = () => {
   const getTreemapDataToUse = () => {
     switch (topStatsSortCategory) {
       case "Abilities":
-        return data.mostNeededAbilities;
+        return data.mostNeededAbilities[dataType];
       case "Knowledge":
-        return data.mostNeededKnowledge;
+        return data.mostNeededKnowledge[dataType];
       case "Skills":
-        return data.mostNeededSkills;
+        return data.mostNeededSkills[dataType];
       case "TechnologySkills":
-        return data.mostNeededTechnologySkills;
+        return data.mostNeededTechnologySkills[dataType];
       case "WorkActivities":
-        return data.mostNeededWorkActivities;
+        return data.mostNeededWorkActivities[dataType];
       default:
         return [];
     }
@@ -97,7 +99,7 @@ const TopNeededQualitiesTreemap: FC = () => {
           <div className="box-body flex justify-center items-center">
             <div id="treemap-basic" className="w-full">
               <Treemap
-                data={getTreemapDataToUse()}
+                data={getTreemapDataToUse() ?? []}
                 role={topStatsSortCategory}
               />
             </div>

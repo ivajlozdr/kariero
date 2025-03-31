@@ -18,158 +18,198 @@ import { Option, QualitiesCategory } from "./home-types";
  */
 export const fetchData = async (
   token: string,
-  setUserData: React.Dispatch<React.SetStateAction<any>>,
-  setData: React.Dispatch<React.SetStateAction<any>>
+  setUserData: React.Dispatch<React.SetStateAction<any>>, // Set user data
+  setStatsData: React.Dispatch<React.SetStateAction<any>> // Set combined stats
 ): Promise<void> => {
   try {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/user-data`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((res) => res.json())
-      .then((userData) => setUserData(userData))
-      .catch((error) => console.error("Error fetching user data:", error));
-
-    const endpoints = [
-      { key: "usersCount", endpoint: "/stats/platform/users-count" },
+    // Fetch user data
+    const userResponse = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/user-data`,
       {
-        key: "distinctOccupations",
-        endpoint: "/stats/platform/distinct-occupations-with-count"
-      },
-      {
-        key: "topRecommendedOccupations",
-        endpoint: "/stats/platform/top-recommended-occupations?limit=50"
-      },
-      {
-        key: "topRecommendedRelatedOccupations",
-        endpoint: "/stats/platform/top-recommended-related-occupations?limit=50"
-      },
-      {
-        key: "mostNeededAbilities",
-        endpoint: "/stats/platform/most-needed-abilities?limit=15"
-      },
-      {
-        key: "mostNeededKnowledge",
-        endpoint: "/stats/platform/most-needed-knowledge?limit=15"
-      },
-      {
-        key: "mostNeededSkills",
-        endpoint: "/stats/platform/most-needed-skills?limit=15"
-      },
-      {
-        key: "mostNeededTasks",
-        endpoint: "/stats/platform/most-needed-tasks?limit=2"
-      },
-      {
-        key: "mostNeededTechnologySkills",
-        endpoint: "/stats/platform/most-needed-technology-skills?limit=15"
-      },
-      {
-        key: "mostNeededWorkActivities",
-        endpoint: "/stats/platform/most-needed-work-activities?limit=15"
-      },
-      {
-        key: "mostSelectedPersonalityTypes",
-        endpoint: "/stats/platform/most-selected-personality-types?limit=2"
-      },
-      {
-        key: "mostSelectedWorkEnvironments",
-        endpoint: "/stats/platform/most-selected-work-environments?limit=2"
-      },
-      {
-        key: "mostSelectedJobPriorities",
-        endpoint: "/stats/platform/most-selected-job-priorities?limit=2"
-      },
-      {
-        key: "mostSelectedEducationLevels",
-        endpoint: "/stats/platform/most-selected-education-levels?limit=2"
-      },
-      {
-        key: "mostSelectedCareerGoals",
-        endpoint: "/stats/platform/most-selected-career-goals?limit=2"
-      },
-      {
-        key: "mostSelectedJobSatisfactionLevels",
-        endpoint:
-          "/stats/platform/most-selected-job-satisfaction-levels?limit=2"
-      },
-      {
-        key: "mostPreferredWorkStyleStructure",
-        endpoint: "/stats/platform/most-preferred-workstyle-structure?limit=2"
-      },
-      {
-        key: "mostPreferredWorkStyleCollaboration",
-        endpoint:
-          "/stats/platform/most-preferred-workstyle-collaboration?limit=2"
-      },
-      {
-        key: "mostPreferredWorkStyleWorkEnvironment",
-        endpoint:
-          "/stats/platform/most-preferred-workstyle-work-environment?limit=2"
-      }
-    ];
-
-    endpoints.forEach(({ key, endpoint }) => {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         }
-      })
+      }
+    );
+    const userData = await userResponse.json();
+    setUserData(userData);
+
+    const platformOnlyCategories = ["usersCount"];
+    const distinctOccupationsEndpoint = "distinct-occupations-with-count";
+    const categoryLimits: Record<string, number> = {
+      topRecommendedOccupations: 50,
+      topRecommendedRelatedOccupations: 50,
+      mostNeededAbilities: 15,
+      mostNeededKnowledge: 15,
+      mostNeededSkills: 15,
+      mostNeededTasks: 2,
+      mostNeededTechnologySkills: 15,
+      mostNeededWorkActivities: 15,
+      mostSelectedPersonalityTypes: 2,
+      mostSelectedWorkEnvironments: 2,
+      mostSelectedJobPriorities: 2,
+      mostSelectedEducationLevels: 2,
+      mostSelectedCareerGoals: 2,
+      mostSelectedJobSatisfactionLevels: 2,
+      mostPreferredWorkstyleStructure: 2,
+      mostPreferredWorkstyleCollaboration: 2,
+      mostPreferredWorkstyleWorkEnvironment: 2
+    };
+
+    const fetchRequests = [
+      ...platformOnlyCategories.map((key) =>
+        fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/stats/platform/${key.replace(
+            /[A-Z]/g,
+            (m) => "-" + m.toLowerCase()
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => ({ key, data }))
+          .catch((error) => {
+            console.error(`Error fetching platform ${key}:`, error);
+            return { key, data: null };
+          })
+      ),
+      fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/stats/platform/${distinctOccupationsEndpoint}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
         .then((res) => res.json())
-        .then((data) => {
-          setData((prevState: DataType) => ({
-            ...prevState,
-            [key]: data
-          }));
-        })
-        .catch((error) => console.error(`Error fetching ${key}:`, error));
-    });
+        .then((data) => ({ key: "distinctOccupations", data }))
+        .catch((error) => {
+          console.error("Error fetching distinct occupations:", error);
+          return { key: "distinctOccupations", data: null };
+        }),
+      ...Object.entries(categoryLimits).flatMap(([key, limit]) => [
+        fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/stats/platform/${key.replace(
+            /[A-Z]/g,
+            (m) => "-" + m.toLowerCase()
+          )}?limit=${limit}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => ({ key, type: "platform", data }))
+          .catch((error) => {
+            console.error(`Error fetching platform ${key}:`, error);
+            return { key, type: "platform", data: null };
+          }),
+        fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/stats/individual/${key.replace(
+            /[A-Z]/g,
+            (m) => "-" + m.toLowerCase()
+          )}?limit=${limit}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ token })
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => ({ key, type: "individual", data }))
+          .catch((error) => {
+            console.error(`Error fetching individual ${key}:`, error);
+            return { key, type: "individual", data: null };
+          })
+      ])
+    ];
+
+    const responses = await Promise.all(fetchRequests);
+
+    // Organize data into structured format
+    const statsData = responses.reduce<Record<string, any>>((acc, response) => {
+      const { key, type, data } = response as {
+        key: string;
+        type?: "platform" | "individual";
+        data: any;
+      };
+
+      if (type) {
+        acc[key] = acc[key] || {};
+        acc[key][type] = data;
+      } else {
+        acc[key] = data;
+      }
+
+      return acc;
+    }, {});
+
+    setStatsData(statsData);
   } catch (error) {
     console.error("Error in fetchData:", error);
-    throw error;
   }
 };
 
-export function generateOptions(componentName: string, data: any): Option[] {
+export function generateOptions(
+  componentName: string,
+  dataType: "individual" | "platform",
+  data: DataType
+): Option[] {
   let options: Option[];
-
   switch (componentName) {
     case "MostPreferredWorkstyleCards": {
-      const mostPreferredWorkStyleWorkEnvironment =
-        data?.mostPreferredWorkStyleWorkEnvironment[0]?.preference;
-      const mostPreferredWorkStyleWorkEnvironmenCount =
-        data?.mostPreferredWorkStyleWorkEnvironment[0]?.occurrence_count;
-      const mostPreferredWorkStyleCollaboration =
-        data?.mostPreferredWorkStyleCollaboration[0]?.preference;
-      const mostPreferredWorkStyleCollaborationCount =
-        data?.mostPreferredWorkStyleCollaboration[0]?.occurrence_count;
-      const mostPreferredWorkStyleStructure =
-        data?.mostPreferredWorkStyleStructure[0]?.preference;
-      const mostPreferredWorkStyleStructureCount =
-        data?.mostPreferredWorkStyleStructure[0]?.occurrence_count;
+      console.log("16378912638126382", data);
+      const mostPreferredWorkstyleWorkEnvironment =
+        data?.mostPreferredWorkstyleWorkEnvironment?.[dataType]?.[0]
+          ?.preference;
+      const mostPreferredWorkstyleWorkEnvironmenCount =
+        data?.mostPreferredWorkstyleWorkEnvironment?.[dataType]?.[0]
+          ?.occurrence_count;
+      const mostPreferredWorkstyleCollaboration =
+        data?.mostPreferredWorkstyleCollaboration?.[dataType]?.[0]?.preference;
+      const mostPreferredWorkstyleCollaborationCount =
+        data?.mostPreferredWorkstyleCollaboration?.[dataType]?.[0]
+          ?.occurrence_count;
+      const mostPreferredWorkstyleStructure =
+        data?.mostPreferredWorkstyleStructure?.[dataType]?.[0]?.preference;
+      const mostPreferredWorkstyleStructureCount =
+        data?.mostPreferredWorkstyleStructure?.[dataType]?.[0]
+          ?.occurrence_count;
 
       options = [
         {
           label: "Предпочитание за работна атмосфера",
-          name: mostPreferredWorkStyleWorkEnvironment,
-          value: mostPreferredWorkStyleWorkEnvironmenCount ?? 0,
+          name: mostPreferredWorkstyleWorkEnvironment,
+          value: mostPreferredWorkstyleWorkEnvironmenCount ?? 0,
           icon: "ti ti-home-eco"
         },
         {
           label: "Предпочитание за колаборация",
-          name: mostPreferredWorkStyleCollaboration,
-          value: mostPreferredWorkStyleCollaborationCount ?? 0,
+          name: mostPreferredWorkstyleCollaboration,
+          value: mostPreferredWorkstyleCollaborationCount ?? 0,
           icon: "ti ti-users-group"
         },
         {
           label: "Предпочитание за работна структура",
-          name: mostPreferredWorkStyleStructure,
-          value: mostPreferredWorkStyleStructureCount ?? 0,
+          name: mostPreferredWorkstyleStructure,
+          value: mostPreferredWorkstyleStructureCount ?? 0,
           icon: "ti ti-hierarchy"
         }
       ];
@@ -177,29 +217,39 @@ export function generateOptions(componentName: string, data: any): Option[] {
     }
     case "MostSelectedCards": {
       const mostSelectedWorkEnvironment =
-        data?.mostSelectedWorkEnvironments[0]?.preference || "Няма данни";
+        data?.mostSelectedWorkEnvironments?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedWorkEnvironmentCount =
-        data?.mostSelectedWorkEnvironments[0]?.occurrence_count ?? 0;
+        data?.mostSelectedWorkEnvironments?.[dataType]?.[0]?.occurrence_count ??
+        0;
       const mostSelectedPersonalityTypes =
-        data?.mostSelectedPersonalityTypes[0]?.preference || "Няма данни";
+        data?.mostSelectedPersonalityTypes?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedPersonalityTypesCount =
-        data?.mostSelectedPersonalityTypes[0]?.occurrence_count ?? 0;
+        data?.mostSelectedPersonalityTypes?.[dataType]?.[0]?.occurrence_count ??
+        0;
       const mostSelectedJobSatisfaction =
-        data?.mostSelectedJobSatisfactionLevels[0]?.preference || "Няма данни";
+        data?.mostSelectedJobSatisfactionLevels?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedJobSatisfactionCount =
-        data?.mostSelectedJobSatisfactionLevels[0]?.occurrence_count ?? 0;
+        data?.mostSelectedJobSatisfactionLevels?.[dataType]?.[0]
+          ?.occurrence_count ?? 0;
       const mostSelectedJobPriorities =
-        data?.mostSelectedJobPriorities[0]?.preference || "Няма данни";
+        data?.mostSelectedJobPriorities?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedJobPrioritiesCount =
-        data?.mostSelectedJobPriorities[0]?.occurrence_count ?? 0;
+        data?.mostSelectedJobPriorities?.[dataType]?.[0]?.occurrence_count ?? 0;
       const mostSelectedEducationLevel =
-        data?.mostSelectedEducationLevels[0]?.preference || "Няма данни";
+        data?.mostSelectedEducationLevels?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedEducationLevelCount =
-        data?.mostSelectedEducationLevels[0]?.occurrence_count ?? 0;
+        data?.mostSelectedEducationLevels?.[dataType]?.[0]?.occurrence_count ??
+        0;
       const mostSelectedCareerGoals =
-        data?.mostSelectedCareerGoals[0]?.preference || "Няма данни";
+        data?.mostSelectedCareerGoals?.[dataType]?.[0]?.preference ||
+        "Няма данни";
       const mostSelectedCareerGoalsCount =
-        data?.mostSelectedCareerGoals[0]?.occurrence_count ?? 0;
+        data?.mostSelectedCareerGoals?.[dataType]?.[0]?.occurrence_count ?? 0;
 
       options = [
         {
@@ -243,13 +293,14 @@ export function generateOptions(componentName: string, data: any): Option[] {
     }
     case "WidgetCardsComponent": {
       const mostRecommendedOccupation =
-        data?.topRecommendedOccupations[0]?.title_bg;
+        data?.topRecommendedOccupations?.[dataType]?.[0]?.title_bg;
       const mostRecommendedOccupationCount =
-        data?.topRecommendedOccupations[0]?.recommendation_count;
+        data?.topRecommendedOccupations?.[dataType]?.[0]?.recommendation_count;
       const mostRecommendedRelatedOccupation =
-        data?.topRecommendedRelatedOccupations[0]?.name_bg;
+        data?.topRecommendedRelatedOccupations?.[dataType]?.[0]?.name_bg;
       const mostRecommendedRelatedOccupationCount =
-        data?.topRecommendedRelatedOccupations[0]?.recommendation_count;
+        data?.topRecommendedRelatedOccupations?.[dataType]?.[0]
+          ?.recommendation_count;
 
       options = [
         {

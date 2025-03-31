@@ -2,9 +2,19 @@ import { FC } from "react";
 import { generateOptions } from "../helper_functions";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-const MostPreferredWorkstyleCards: FC = () => {
+interface MostPreferredWorkstyleCardsProps {
+  dataType: "individual" | "platform";
+}
+
+const MostPreferredWorkstyleCards: FC<MostPreferredWorkstyleCardsProps> = ({
+  dataType
+}) => {
   const { data } = useGlobalState();
-  const options = generateOptions("MostPreferredWorkstyleCards", data);
+  const options = generateOptions(
+    "MostPreferredWorkstyleCards",
+    dataType,
+    data
+  );
 
   return (
     <div className="box custom-box">

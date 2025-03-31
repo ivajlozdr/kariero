@@ -10,7 +10,11 @@ type CategoryKey =
   | "mostNeededTechnologySkills"
   | "mostNeededWorkActivities";
 
-const MostNeededCards: FC = () => {
+interface MostNeededCardsProps {
+  dataType: "individual" | "platform";
+}
+
+const MostNeededCards: FC<MostNeededCardsProps> = ({ dataType }) => {
   const { data } = useGlobalState();
   const categories: { title: string; key: CategoryKey; icon: string }[] = [
     {
@@ -85,7 +89,7 @@ const MostNeededCards: FC = () => {
           <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300">
             <div className="accordion-body">
               {categories.map(({ title, key, icon }) => {
-                const item = data[key]?.[0];
+                const item = data[key][dataType]?.[0];
                 const name = item?.name_bg || "Няма данни";
                 const count = item?.occurrence_count ?? 0;
 

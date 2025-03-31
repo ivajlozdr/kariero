@@ -3,10 +3,14 @@ import Widget from "./Widget";
 import { extractWidgetCardData, generateOptions } from "../helper_functions";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-const WidgetCardsComponent: FC = () => {
+interface WidgetCardsComponentProps {
+  dataType: "individual" | "platform";
+}
+
+const WidgetCardsComponent: FC<WidgetCardsComponentProps> = ({ dataType }) => {
   const { data } = useGlobalState();
   const widgetData = extractWidgetCardData(data);
-  const options = generateOptions("WidgetCardsComponent", data);
+  const options = generateOptions("WidgetCardsComponent", dataType, data);
   return (
     <div className="grid xxl:grid-cols-3 xl:grid-cols-3 grid-cols-1 gap-x-6">
       <Widget

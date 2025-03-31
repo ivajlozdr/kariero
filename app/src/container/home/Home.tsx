@@ -24,8 +24,8 @@ const Home: FC = () => {
           </p>
         </div>
       </div>
-      <WidgetCardsComponent />
-      <MostPreferredWorkstyleCards />
+      <WidgetCardsComponent dataType="platform" />
+      <MostPreferredWorkstyleCards dataType="platform" />
       <div className="card-container">
         <RedirectCard
           href={`${import.meta.env.BASE_URL}app/quiz`}

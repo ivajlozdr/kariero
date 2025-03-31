@@ -9,23 +9,53 @@ export interface UserData {
 export interface DataType {
   usersCount: UsersCount[];
   distinctOccupations: DistinctOccupations;
-  topRecommendedOccupations: TopRecommendedOccupation[];
-  topRecommendedRelatedOccupations: MostNeededQuality[];
-  mostNeededAbilities: MostNeededQuality[];
-  mostNeededKnowledge: MostNeededQuality[];
-  mostNeededSkills: MostNeededQuality[];
-  mostNeededTasks: MostNeededQuality[];
-  mostNeededTechnologySkills: MostNeededQuality[];
-  mostNeededWorkActivities: MostNeededQuality[];
-  mostSelectedPersonalityTypes: Most[];
-  mostSelectedWorkEnvironments: Most[];
-  mostSelectedJobPriorities: Most[];
-  mostSelectedEducationLevels: Most[];
-  mostSelectedCareerGoals: Most[];
-  mostSelectedJobSatisfactionLevels: Most[];
-  mostPreferredWorkStyleStructure: Most[];
-  mostPreferredWorkStyleCollaboration: Most[];
-  mostPreferredWorkStyleWorkEnvironment: Most[];
+  topRecommendedOccupations: {
+    platform?: TopRecommendedOccupation[];
+    individual?: TopRecommendedOccupation[];
+  };
+  topRecommendedRelatedOccupations: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededAbilities: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededKnowledge: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededSkills: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededTasks: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededTechnologySkills: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostNeededWorkActivities: {
+    platform?: MostNeededQuality[];
+    individual?: MostNeededQuality[];
+  };
+  mostSelectedPersonalityTypes: { platform?: Most[]; individual?: Most[] };
+  mostSelectedWorkEnvironments: { platform?: Most[]; individual?: Most[] };
+  mostSelectedJobPriorities: { platform?: Most[]; individual?: Most[] };
+  mostSelectedEducationLevels: { platform?: Most[]; individual?: Most[] };
+  mostSelectedCareerGoals: { platform?: Most[]; individual?: Most[] };
+  mostSelectedJobSatisfactionLevels: { platform?: Most[]; individual?: Most[] };
+  mostPreferredWorkstyleStructure: { platform?: Most[]; individual?: Most[] };
+  mostPreferredWorkstyleCollaboration: {
+    platform?: Most[];
+    individual?: Most[];
+  };
+  mostPreferredWorkstyleWorkEnvironment: {
+    platform?: Most[];
+    individual?: Most[];
+  };
 }
 
 export interface DistinctOccupations {

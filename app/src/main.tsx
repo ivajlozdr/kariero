@@ -52,16 +52,39 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="job/details" element={<JobDetails />} />
             <Route
               path="global-stats/qualities"
-              element={<MostNeededQualitiesCards />}
+              element={<MostNeededQualitiesCards dataType="platform" />}
             />
-            <Route path="global-stats/traits" element={<MostSelectedCards />} />
+            <Route
+              path="global-stats/traits"
+              element={<MostSelectedCards dataType="platform" />}
+            />
             <Route
               path="global-stats/recommendations"
-              element={<TopRecommendedOccupationsAndRelated />}
+              element={
+                <TopRecommendedOccupationsAndRelated dataType="platform" />
+              }
             />
             <Route
               path="global-stats/desired-qualities"
-              element={<TopNeededQualitiesTreemap />}
+              element={<TopNeededQualitiesTreemap dataType="platform" />}
+            />
+            <Route
+              path="individual-stats/qualities"
+              element={<MostNeededQualitiesCards dataType="individual" />}
+            />
+            <Route
+              path="individual-stats/traits"
+              element={<MostSelectedCards dataType="individual" />}
+            />
+            <Route
+              path="individual-stats/recommendations"
+              element={
+                <TopRecommendedOccupationsAndRelated dataType="individual" />
+              }
+            />
+            <Route
+              path="individual-stats/desired-qualities"
+              element={<TopNeededQualitiesTreemap dataType="individual" />}
             />
           </Route>
           <Route path="/" element={<Authenticationlayout />}>

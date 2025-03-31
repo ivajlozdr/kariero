@@ -2,9 +2,13 @@ import { FC } from "react";
 import { generateOptions } from "../helper_functions";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
 
-const MostSelectedCards: FC = () => {
+interface MostSelectedCardsProps {
+  dataType: "individual" | "platform";
+}
+
+const MostSelectedCards: FC<MostSelectedCardsProps> = ({ dataType }) => {
   const { data } = useGlobalState();
-  const options = generateOptions("MostSelectedCards", data);
+  const options = generateOptions("MostSelectedCards", dataType, data);
 
   return (
     <div className="box custom-box mt-6">

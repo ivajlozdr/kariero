@@ -16,7 +16,11 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { occupationDisplayNames } from "../home-data";
 
-const TopRecommendedOccupationsAndRelated: FC = () => {
+interface TopRecommendedOccupationsAndRelatedProps {
+  dataType: "individual" | "platform";
+}
+
+const TopRecommendedOccupationsAndRelated: FC<TopRecommendedOccupationsAndRelatedProps> = ({dataType}) => {
   const { data } = useGlobalState();
   const pageSize = 5; // Размер на страницата (брой елементи на страница)
   const [currentChartPage, setCurrentChartPage] = useState(1); // Текущата страница на графиката
@@ -28,14 +32,14 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
     useMemo(() => {
       // Пагиниране на обикновени професии
       const regularOccupations = paginateBarChartData<TopRecommendedOccupation>(
-        data.topRecommendedOccupations,
+        data.topRecommendedOccupations[dataType] || [],
         currentChartPage,
         pageSize
       );
 
       // Пагиниране на свързани професии
       const relatedOccupations = paginateBarChartData<MostNeededQuality>(
-        data.topRecommendedRelatedOccupations,
+        data.topRecommendedRelatedOccupations[dataType] || [],
         currentChartPage,
         pageSize
       );
@@ -50,10 +54,10 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
   // Меморизиране на общия брой страници на графиката
   const totalChartPages = useMemo(() => {
     return getTotalBarChartPages(
-      data.topRecommendedOccupations.length, // Използваме дължината на IMDb рейтингите
+      (data.topRecommendedOccupations[dataType] || []).length, // Използваме дължината на IMDb рейтингите
       pageSize
     );
-  }, [data.topRecommendedOccupations.length, pageSize]);
+  }, [(data.topRecommendedOccupations[dataType] || []).length, pageSize]);
 
   // Обработчици за пагинация (предишна и следваща страница)
   const handlePrevChartPage = () => {
@@ -61,7 +65,7 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
       "prev", // Преминаване на предишната страница
       currentChartPage,
       pageSize,
-      data.topRecommendedOccupations.length,
+      (data.topRecommendedOccupations[dataType] || []).length,
       setCurrentChartPage
     );
   };
@@ -71,7 +75,7 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
       "next", // Преминаване на следващата страница
       currentChartPage,
       pageSize,
-      data.topRecommendedOccupations.length,
+      (data.topRecommendedOccupations[dataType] || []).length,
       setCurrentChartPage
     );
   };
@@ -168,10 +172,10 @@ const TopRecommendedOccupationsAndRelated: FC = () => {
                 до{" "}
                 <b>
                   {currentChartPage === totalChartPages
-                    ? data.topRecommendedOccupations.length
+                    ? (data.topRecommendedOccupations[dataType] || []).length
                     : currentChartPage * 5}{" "}
                 </b>
-                от общо <b>{data.topRecommendedOccupations.length}</b> (Страница{" "}
+                от общо <b>{(data.topRecommendedOccupations[dataType] || []).length}</b> (Страница{" "}
                 <b>{currentChartPage}</b> )
                 <i className="bi bi-arrow-right ms-2 font-semibold"></i>
               </div>

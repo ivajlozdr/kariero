@@ -14,7 +14,7 @@ export interface RedirectCardProps {
 export interface Option {
   label: string; // Текстов етикет на опцията
   name?: string | undefined; // Допълнително име на опцията (по избор)
-  value: number; // Стойност, асоциирана с опцията
+  value: number | string | undefined; // Стойност, асоциирана с опцията
   icon: string; // Икона, представяща опцията
   subValue?: number; // Допълнителна числова стойност (по избор)
 }
