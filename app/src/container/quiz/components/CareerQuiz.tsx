@@ -46,7 +46,7 @@ const CareerQuiz: React.FC<CareerQuizProps> = ({
         <div className="p-4 flex items-center">
           <div className="flex-1">
             <p className="text-lg text-secondary">
-              Какво представлява този тест?
+              Чудите се как работи този тест?
             </p>
           </div>
           <div className="relative">

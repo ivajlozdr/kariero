@@ -48,12 +48,9 @@ const QuizComponent: React.FC = () => {
 
     setTimeout(() => {
       submitData();
-    }, 500);
+    }, 600);
   }, [userResponses, scores]);
 
-  useEffect(() => {
-    console.log(isSubmitting);
-  }, [isSubmitting]);
   return (
     <div>
       {notification && (
@@ -61,7 +58,6 @@ const QuizComponent: React.FC = () => {
           message={notification.message}
           type={notification.type}
           onClose={() => {
-            console.log("Notification closed!");
             setNotification(null);
           }}
           onConfirm={notification.onConfirm}
