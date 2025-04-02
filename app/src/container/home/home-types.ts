@@ -28,7 +28,7 @@ export interface OccupationSeriesType {
 // Тип, представящ категории качества
 export type QualitiesCategory =
   | "Abilities" // Способности
-  | "Knowledge" // Знания
+  | "Knowledge" // Познания
   | "Skills" // Умения
   | "TechnologySkills" // Технологични умения
   | "WorkActivities"; // Работни дейности

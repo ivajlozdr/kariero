@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { generateOptions } from "../helper_functions";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
+import Redirect from "../../../components/common/redirect/Redirect";
 
 interface MostSelectedCardsProps {
   dataType: "individual" | "platform";
@@ -9,6 +10,21 @@ interface MostSelectedCardsProps {
 const MostSelectedCards: FC<MostSelectedCardsProps> = ({ dataType }) => {
   const { data } = useGlobalState();
   const options = generateOptions("MostSelectedCards", dataType, data);
+  const hasData = useMemo(() => {
+    return (
+      dataType !== "individual" ||
+      (data.mostSelectedWorkEnvironments?.individual?.length ?? 0) > 0 ||
+      (data.mostSelectedPersonalityTypes?.individual?.length ?? 0) > 0 ||
+      (data.mostSelectedJobSatisfactionLevels?.individual?.length ?? 0) > 0 ||
+      (data.mostSelectedJobPriorities?.individual?.length ?? 0) > 0 ||
+      (data.mostSelectedEducationLevels?.individual?.length ?? 0) > 0 ||
+      (data.mostSelectedCareerGoals?.individual?.length ?? 0) > 0
+    );
+  }, [dataType, data]);
+
+  if (dataType === "individual" && !hasData) {
+    return <Redirect />;
+  }
 
   return (
     <div className="box custom-box mt-6">

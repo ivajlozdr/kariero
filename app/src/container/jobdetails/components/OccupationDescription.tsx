@@ -77,7 +77,7 @@ const OccupationDescription: FC<CommonCareerProps> = ({
 
             <div className="space-y-4">
               <h6 className="font-semibold text-md border-l-4 border-primary pl-3">
-                Знания
+                Познания
               </h6>
               <ol
                 onMouseEnter={() => setIsHovered(true)}

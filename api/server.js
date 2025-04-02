@@ -805,7 +805,7 @@ app.get("/stats/platform/most-needed-abilities", (req, res) => {
   });
 });
 
-// Вземане на данни за най-нужните знания
+// Вземане на данни за най-нужните познания
 app.get("/stats/platform/most-needed-knowledge", (req, res) => {
   // Получаване на параметъра за лимит от заявката (по подразбиране 10, ако не е предоставен)
   const limit = parseInt(req.query.limit, 10) || 10;
@@ -817,17 +817,17 @@ app.get("/stats/platform/most-needed-knowledge", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните знания от базата данни
+  // Извличане на данните за най-нужните познания от базата данни
   db.getMostNeededAttributes("knowledge", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
       return res
         .status(500)
-        .json({ error: "Грешка при вземането на най-нужните знания." });
+        .json({ error: "Грешка при вземането на най-нужните познания." });
     }
     if (result.length === 0) {
       // Връщане на съобщение, ако няма намерени резултати
-      return res.status(404).json({ error: "Няма намерени знания." });
+      return res.status(404).json({ error: "Няма намерени познания." });
     }
     // Връщане на резултатите в JSON формат
     res.json(result);
@@ -846,7 +846,6 @@ app.get("/stats/platform/most-needed-skills", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните знания от базата данни
   db.getMostNeededAttributes("skills", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
@@ -875,7 +874,6 @@ app.get("/stats/platform/most-needed-tasks", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните знания от базата данни
   db.getMostNeededAttributes("tasks", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
@@ -904,7 +902,6 @@ app.get("/stats/platform/most-needed-technology-skills", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните знания от базата данни
   db.getMostNeededAttributes("technology_skills", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни
@@ -935,7 +932,6 @@ app.get("/stats/platform/most-needed-work-activities", (req, res) => {
       .json({ error: "Лимитът трябва да бъде положително число." });
   }
 
-  // Извличане на данните за най-нужните знания от базата данни
   db.getMostNeededAttributes("work_activities", limit, (err, result) => {
     if (err) {
       // Връщане на грешка при проблем с заявката към базата данни

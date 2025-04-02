@@ -1,41 +1,61 @@
-import { FC, Fragment, useState } from "react";
-import { QualitiesCategory } from "../home-types";
+import { type FC, Fragment, useState, useMemo } from "react";
+import type { QualitiesCategory } from "../home-types";
 import { handleTopStatsSortCategory } from "../helper_functions";
 import { Treemap } from "./Charts";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
+import Redirect from "../../../components/common/redirect/Redirect";
 
 interface TopNeededQualitiesTreemapProps {
   dataType: "individual" | "platform";
 }
 
-const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({ dataType }) => {
+const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({
+  dataType
+}) => {
   const { data } = useGlobalState();
-  const [topStatsSortCategory, setTopStatsSortCategory] = useState<QualitiesCategory>("Abilities");
+  const [topStatsSortCategory, setTopStatsSortCategory] =
+    useState<QualitiesCategory>("Abilities");
+  const hasData = useMemo(() => {
+    return (
+      dataType !== "individual" ||
+      (data.mostNeededAbilities?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededKnowledge?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededSkills?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededTechnologySkills?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededWorkActivities?.individual?.length ?? 0) > 0
+    );
+  }, [dataType, data]);
 
   const QualitiesCategoryDisplayNames: Record<QualitiesCategory, string> = {
     Abilities: "Способности",
-    Knowledge: "Знания",
+    Knowledge: "Познания",
     Skills: "Умения",
     TechnologySkills: "Технологични умения",
     WorkActivities: "Трудови дейности"
   };
 
   const getTreemapDataToUse = () => {
+    if (!data) return [];
+
     switch (topStatsSortCategory) {
       case "Abilities":
-        return data.mostNeededAbilities[dataType];
+        return data.mostNeededAbilities?.[dataType] ?? [];
       case "Knowledge":
-        return data.mostNeededKnowledge[dataType];
+        return data.mostNeededKnowledge?.[dataType] ?? [];
       case "Skills":
-        return data.mostNeededSkills[dataType];
+        return data.mostNeededSkills?.[dataType] ?? [];
       case "TechnologySkills":
-        return data.mostNeededTechnologySkills[dataType];
+        return data.mostNeededTechnologySkills?.[dataType] ?? [];
       case "WorkActivities":
-        return data.mostNeededWorkActivities[dataType];
+        return data.mostNeededWorkActivities?.[dataType] ?? [];
       default:
         return [];
     }
   };
+
+  if (dataType === "individual" && !hasData) {
+    return <Redirect />;
+  }
 
   return (
     <Fragment>
@@ -43,12 +63,10 @@ const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({ dataTyp
         <div className="box custom-box h-[30rem]">
           <div className="box-header justify-between">
             <div className="box-title">
-              Най-изисквани{" "}
-              {
-                QualitiesCategoryDisplayNames[
-                  topStatsSortCategory as keyof typeof QualitiesCategoryDisplayNames
-                ]
-              }
+              Топ 15 най-търсени{" "}
+              {QualitiesCategoryDisplayNames[
+                topStatsSortCategory as keyof typeof QualitiesCategoryDisplayNames
+              ].toLowerCase()}
             </div>
             <div className="flex flex-wrap gap-2">
               <div
@@ -75,7 +93,7 @@ const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({ dataTyp
                     } ${
                       index === 0
                         ? "rounded-l-md"
-                        : index === 2
+                        : index === 4
                         ? "rounded-r-md"
                         : ""
                     }`}
@@ -99,7 +117,7 @@ const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({ dataTyp
           <div className="box-body flex justify-center items-center">
             <div id="treemap-basic" className="w-full">
               <Treemap
-                data={getTreemapDataToUse() ?? []}
+                data={getTreemapDataToUse()}
                 role={topStatsSortCategory}
               />
             </div>

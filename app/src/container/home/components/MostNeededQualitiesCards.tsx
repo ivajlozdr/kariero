@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import Widget from "./Widget";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
+import Redirect from "../../../components/common/redirect/Redirect";
 
 type CategoryKey =
   | "mostNeededAbilities"
@@ -23,7 +24,7 @@ const MostNeededCards: FC<MostNeededCardsProps> = ({ dataType }) => {
       icon: "ti ti-user-star"
     },
     {
-      title: "Най-често изисквано знание",
+      title: "Най-често изисквано познание",
       key: "mostNeededKnowledge",
       icon: "ti ti-brain"
     },
@@ -43,6 +44,21 @@ const MostNeededCards: FC<MostNeededCardsProps> = ({ dataType }) => {
       icon: "ti ti-pencil-star"
     }
   ];
+
+  const hasData = useMemo(() => {
+    return (
+      dataType !== "individual" ||
+      (data.mostNeededAbilities?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededKnowledge?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededSkills?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededTechnologySkills?.individual?.length ?? 0) > 0 ||
+      (data.mostNeededWorkActivities?.individual?.length ?? 0) > 0
+    );
+  }, [dataType, data]);
+
+  if (dataType === "individual" && !hasData) {
+    return <Redirect />;
+  }
 
   return (
     <div className="accordion accordionicon-left accordions-items-separate mt-6">

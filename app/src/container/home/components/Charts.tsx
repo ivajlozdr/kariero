@@ -9,7 +9,7 @@ import {
 } from "../../../types_common";
 import { updatePrimaryColor } from "../../../functions_common";
 
-import Tooltip from "../../../components/common/tooltip/Tooltip";
+import Info from "../../../components/common/info/Info";
 
 interface State {
   options: any; // Конфигурационни опции за диаграмата
@@ -17,12 +17,20 @@ interface State {
 }
 
 export class MostRecommendedOccupationsChart extends Component<
-  { seriesData: OccupationSeriesType; category: string },
+  {
+    seriesData: OccupationSeriesType;
+    category: string;
+    handleInfoClick: () => void;
+  },
   State
 > {
   private observer: MutationObserver | null = null;
 
-  constructor(props: { seriesData: OccupationSeriesType; category: string }) {
+  constructor(props: {
+    seriesData: OccupationSeriesType;
+    category: string;
+    handleInfoClick: () => void;
+  }) {
     super(props);
 
     // Вземане на първоначалния цвят за темата
@@ -200,8 +208,11 @@ export class MostRecommendedOccupationsChart extends Component<
               ></span>
               <span>Професия с ярко бъдеще</span>
               <div className="ml-2 relative group transition-all duration-300 ease-in-out">
-                <Tooltip message="Професиите с ярко бъдеще се очакват да растат бързо през следващите няколко години, имат голям брой свободни работни места или са нови и възникващи професии." />
-                <i className="ti ti-info-circle text-[1rem] text-secondary"></i>
+                <Info
+                  onClick={this.props.handleInfoClick}
+                  width={15}
+                  height={15}
+                />
               </div>
             </div>
           )}
@@ -294,10 +305,16 @@ export class Treemap extends Component<TreemapProps, TreemapState> {
   }
 
   // Метод за форматиране на данните на база роля
-  static formatData(data: MostNeededQuality[]) {
-    return data.map((item) => {
-      return { x: item.name_bg, y: item.occurrence_count || 0 }; // Directly return the formatted object
-    });
+  static formatData(data: MostNeededQuality[] = []) {
+    if (!Array.isArray(data)) {
+      console.error("Treemap.formatData received invalid data:", data);
+      return [];
+    }
+
+    return data.map((item) => ({
+      x: item.name_bg,
+      y: item.occurrence_count || 0
+    }));
   }
 
   // Метод за извличане на основния цвят на базата на темата

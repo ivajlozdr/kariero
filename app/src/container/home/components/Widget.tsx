@@ -102,7 +102,9 @@ const Widget: FC<WidgetProps> = ({
                           {options.map(({ label, value }) => (
                             <li key={label}>
                               <Link
-                                onClick={() => handleOptionSelect(label, value)}
+                                onClick={() =>
+                                  handleOptionSelect(label, value!)
+                                }
                                 className={`ti-dropdown-item ${
                                   selectedLabel === label
                                     ? "active disabled"

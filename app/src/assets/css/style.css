@@ -19682,4 +19682,8 @@ option.selectionList {
   @apply mt-2 text-base font-medium p-3 bg-white dark:bg-bodybg rounded-b-lg;
 }
 
+.modal {
+  @apply flex flex-col rounded-xl text-defaulttextcolor dark:text-defaulttextcolor/70 text-[0.813rem] relative bg-bodybg dark:bg-bodybg p-6 shadow-lg w-full max-w-lg space-y-4 z-50;
+}
+
 /*# sourceMappingURL=style.css.map */

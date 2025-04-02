@@ -325,17 +325,19 @@ export function generateOptions(
   return options;
 }
 
-export function extractWidgetCardData(data: any) {
+export function extractWidgetCardData(data: DataType) {
   return {
     userCount: data?.usersCount[0]?.user_count ?? 0,
     distinctOccupations: data?.distinctOccupations.count ?? 0,
-    mostRecommendedOccupation: data?.topRecommendedOccupations[0]?.title_bg,
+    mostRecommendedOccupation:
+      data?.topRecommendedOccupations?.platform?.[0]?.title_bg,
     mostRecommendedOccupationCount:
-      data?.topRecommendedOccupations[0]?.recommendation_count ?? 0,
+      data?.topRecommendedOccupations?.platform?.[0]?.recommendation_count ?? 0,
     mostRecommendedRelatedOccupation:
-      data?.topRecommendedRelatedOccupations[0]?.name_bg,
+      data?.topRecommendedRelatedOccupations?.platform?.[0]?.name_bg,
     mostRecommendedRelatedOccupationCount:
-      data?.topRecommendedRelatedOccupations[0]?.recommendation_count ?? 0
+      data?.topRecommendedRelatedOccupations?.platform?.[0]
+        ?.recommendation_count ?? 0
   };
 }
 
@@ -387,6 +389,10 @@ export const paginateBarChartData = <T>(
   pageSize: number,
   category?: string
 ): T[] => {
+  if (!Array.isArray(seriesData) || seriesData.length === 0) {
+    return []; // Ensure empty array if no data is available
+  }
+
   const sortedData = category
     ? sortByCategory<T>(seriesData, category)
     : seriesData;
@@ -411,6 +417,11 @@ export const handleBarChartPageChange = (
   totalItems: number,
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 ) => {
+  if (totalItems === 0) {
+    setCurrentPage(1);
+    return;
+  }
+
   const totalPages = Math.ceil(totalItems / pageSize);
   const newPage =
     direction === "next"

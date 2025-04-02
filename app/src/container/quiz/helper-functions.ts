@@ -177,7 +177,7 @@ export const getAnswerLabel = (weight: number) => {
 /**
  * Изпраща заявка към OpenAI API за получаване на персонализирани препоръки за кариера въз основа на предоставените данни за потребителя.
  *
- * Тази функция извиква OpenAI API, изпращайки JSON обект със стойности за RIASEC, Preferences и WorkStyle на потребителя. След получаване на отговор от OpenAI, тя извлича и почиства данните, за да върне препоръки за кариера във формат JSON, който включва способности, умения, знания, интереси, работен стил, стойности на работата, технологични умения и препоръки за кариера.
+ * Тази функция извиква OpenAI API, изпращайки JSON обект със стойности за RIASEC, Preferences и WorkStyle на потребителя. След получаване на отговор от OpenAI, тя извлича и почиства данните, за да върне препоръки за кариера във формат JSON, който включва способности, умения, познания, интереси, работен стил, стойности на работата, технологични умения и препоръки за кариера.
  *
  * @param {Scores} scores - Обект със стойности за RIASEC, Preferences и WorkStyle на потребителя.
  * @returns {Promise<UserProfileData | null>} - Връща обект с препоръки за кариера или null в случай на грешка.
@@ -455,6 +455,8 @@ export const handleLikertAnswer = (
   setUserResponses: React.Dispatch<React.SetStateAction<UserResponses[]>>,
   nextQuestion: () => void
 ): void => {
+  if (isOnCooldown) return;
+  isOnCooldown = true;
   const currentQuestion = questions[currentQuestionIndex];
 
   if (currentQuestion.category === "RIASEC") {
@@ -472,6 +474,9 @@ export const handleLikertAnswer = (
 
   setUserResponses(updatedResponses);
   nextQuestion();
+  setTimeout(() => {
+    isOnCooldown = false;
+  }, 600);
 };
 
 /**
@@ -498,6 +503,8 @@ export const handleMultipleChoiceAnswer = (
   setUserResponses: React.Dispatch<React.SetStateAction<UserResponses[]>>,
   nextQuestion: () => void
 ): void => {
+  if (isOnCooldown) return;
+  isOnCooldown = true;
   const currentQuestion = questions[currentQuestionIndex];
 
   if (currentQuestion.category === "RIASEC") {
@@ -523,4 +530,7 @@ export const handleMultipleChoiceAnswer = (
 
   setUserResponses(updatedResponses);
   nextQuestion();
+  setTimeout(() => {
+    isOnCooldown = false;
+  }, 600);
 };

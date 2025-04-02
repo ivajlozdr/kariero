@@ -24,7 +24,7 @@ const Home: FC = () => {
           </p>
         </div>
       </div>
-      <WidgetCardsComponent dataType="platform" />
+      <WidgetCardsComponent />
       <MostPreferredWorkstyleCards dataType="platform" />
       <div className="card-container">
         <RedirectCard

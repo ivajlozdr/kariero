@@ -46,7 +46,9 @@ const QuizComponent: React.FC = () => {
       }
     };
 
-    submitData();
+    setTimeout(() => {
+      submitData();
+    }, 500);
   }, [userResponses, scores]);
 
   useEffect(() => {
