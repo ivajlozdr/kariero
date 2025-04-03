@@ -12,7 +12,7 @@ const Redirect: FC = () => {
       <div className="box custom-box h-[30rem] flex flex-col justify-center items-center">
         <div className="text-center p-6">
           <svg
-            className="w-16 h-16 mx-auto mb-4 text-gray-400"
+            className="w-16 h-16 mx-auto mb-4 text-defaulttextcolor dark:text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
