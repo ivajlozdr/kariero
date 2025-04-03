@@ -32,7 +32,7 @@ const Redirect: FC = () => {
           </p>
           <button
             onClick={handleRedirectToQuiz}
-            className="ti-btn ti-btn-primary-full rounded-md px-6 py-2.5 transition-all duration-300 hover:shadow-lg"
+            className="bg-primary hover:bg-secondary text-white font-medium rounded-lg px-5 py-2.5 text-center transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             Генериране на препоръки
           </button>
