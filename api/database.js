@@ -283,14 +283,14 @@ const saveCategoryData = (translatedData, callback) => {
       try {
         const ids =
           translatedData?.[category]?.element?.map((item) => item.id) ?? [];
-        const namesBg =
-          translatedData?.translated?.[category].map(
-            (item) => item.translated_name
-          ) ?? [];
+
+        const namesBg = translatedData?.translated?.[category] ?? []; // Direct array of strings now
+
         const namesEn =
           translatedData?.[category]?.element?.map(
             (category) => category.name
           ) ?? [];
+
         const importance =
           translatedData?.[category]?.element?.map(
             (item) => item.score?.value
@@ -348,7 +348,6 @@ const saveCategoryData = (translatedData, callback) => {
                   occupationCode, // Parent occupation code
                   occ.title, // English title
                   translatedData?.translated?.related_occupations?.[index]
-                    ?.translated_name // Bulgarian title
                 ]
               ) ?? [];
             insertQuery = `
@@ -365,7 +364,6 @@ const saveCategoryData = (translatedData, callback) => {
                   occupationCode,
                   activity.name,
                   translatedData?.translated?.detailed_work_activities?.[index]
-                    ?.translated_name
                 ]
               ) ?? [];
             insertQuery = `
@@ -382,7 +380,6 @@ const saveCategoryData = (translatedData, callback) => {
                   occupationCode,
                   techSkill.title.name,
                   translatedData?.translated?.technology_skills?.[index]
-                    ?.translated_name
                 ]
               ) ?? [];
             insertQuery = `
@@ -397,7 +394,7 @@ const saveCategoryData = (translatedData, callback) => {
                 task.id,
                 occupationCode,
                 task.statement,
-                translatedData?.translated?.tasks?.[index]?.translated_name,
+                translatedData?.translated?.tasks?.[index],
                 task.score?.value ?? null
               ]) ?? [];
             insertQuery = `
@@ -827,6 +824,109 @@ const getUsersMostPreferredWorkstyle = (
   db.query(query, [userId, limit], callback);
 };
 
+const getOccupationData = (
+  table,
+  code,
+  foreignKey = "occupation_code",
+  orderBy = null,
+  columns = "*"
+) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT ${columns}
+      FROM ${table}
+      WHERE ${foreignKey} = ?
+      ${orderBy ? `ORDER BY ${orderBy} DESC` : ""}
+    `;
+    db.query(query, [code], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
+const getOccupationByCode = (code) => {
+  return getOccupationData(
+    "occupations",
+    code,
+    "code",
+    null,
+    "code, title_bg, title_en, description, bright_outlook, education"
+  ).then((results) => (results.length > 0 ? results[0] : null));
+};
+
+const getSkillsByOccupationCode = (code) =>
+  getOccupationData(
+    "skills",
+    code,
+    "occupation_code",
+    "importance",
+    "name_en, name_bg, importance"
+  );
+
+const getInterestsByOccupationCode = (code) =>
+  getOccupationData(
+    "interests",
+    code,
+    "occupation_code",
+    "importance",
+    "name_en, name_bg, importance"
+  );
+
+const getAbilitiesByOccupationCode = (code) =>
+  getOccupationData(
+    "abilities",
+    code,
+    "occupation_code",
+    "importance",
+    "name_en, name_bg, importance"
+  );
+
+const getTechSkillsByOccupationCode = (code) =>
+  getOccupationData(
+    "technology_skills",
+    code,
+    "occupation_code",
+    null,
+    "name_en, name_bg"
+  );
+
+const getWorkActivitiesByOccupationCode = (code) =>
+  getOccupationData(
+    "work_activities",
+    code,
+    "occupation_code",
+    null,
+    "name_en, name_bg"
+  );
+
+const getKnowledgeByOccupationCode = (code) =>
+  getOccupationData(
+    "knowledge",
+    code,
+    "occupation_code",
+    "importance",
+    "name_en, name_bg, importance"
+  );
+
+const getTasksByOccupationCode = (code) =>
+  getOccupationData(
+    "tasks",
+    code,
+    "occupation_code",
+    "importance",
+    "name_en, name_bg, importance"
+  );
+
+const getRelatedOccupationsByCode = (code) =>
+  getOccupationData(
+    "related_occupations",
+    code,
+    "occupation_code",
+    null,
+    "name_en, name_bg, occupation_code as related_code"
+  );
+
 module.exports = {
   checkEmailExists,
   createUser,
@@ -843,8 +943,8 @@ module.exports = {
   saveAIAnalysis,
   saveOffers,
   deleteFavouriteOccupation,
-  getUsersCount,
   // platform
+  getUsersCount,
   getDistinctOccupations,
   getTopRecommendedOccupations,
   getTopRecommendedRelatedOccupations,
@@ -856,5 +956,15 @@ module.exports = {
   getUsersTopRecommendedRelatedOccupations,
   getUsersMostNeededAttributes,
   getUsersMostSelectedPreferences,
-  getUsersMostPreferredWorkstyle
+  getUsersMostPreferredWorkstyle,
+  // existing entries
+  getOccupationByCode,
+  getSkillsByOccupationCode,
+  getInterestsByOccupationCode,
+  getAbilitiesByOccupationCode,
+  getTechSkillsByOccupationCode,
+  getWorkActivitiesByOccupationCode,
+  getKnowledgeByOccupationCode,
+  getTasksByOccupationCode,
+  getRelatedOccupationsByCode
 };

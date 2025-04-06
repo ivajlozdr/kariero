@@ -138,9 +138,7 @@ const Careers: React.FC<CareersProps> = ({
                   key={index}
                   title={fullCareerDetails.translated.title}
                   description={fullCareerDetails.translated.description}
-                  skills={fullCareerDetails.translated.skills.map(
-                    (skill) => skill.translated_name
-                  )}
+                  skills={fullCareerDetails.translated.skills}
                   reason={careerReason}
                   setNotification={setNotification}
                   handleClick={() => handleClick(fullCareerDetails, jobOffers)}

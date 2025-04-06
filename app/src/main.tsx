@@ -24,7 +24,7 @@ import MostSelectedCards from "./container/home/components/MostSelectedPreferenc
 import MostNeededQualitiesCards from "./container/home/components/MostNeededQualitiesCards.tsx";
 import TopNeededQualitiesTreemap from "./container/home/components/TopNeededQualitiesTreemap.tsx";
 import TopRecommendedOccupationsAndRelated from "./container/home/components/TopRecommendedOccupationsAndRelated.tsx";
-import Favourites from "./container/favourites/here.tsx";
+// import Favourites from "./container/favourites/here.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
@@ -46,7 +46,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             }
           >
             <Route index path="home" element={<Home />} />
-            <Route path="favourites" element={<Favourites />} />
+            {/* <Route path="favourites" element={<Favourites />} /> */}
             <Route path="quiz" element={<Quiz />} />
             <Route path="contact" element={<Contact />} />
             <Route path="job/details" element={<JobDetails />} />

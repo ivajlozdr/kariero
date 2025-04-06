@@ -21,6 +21,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 require("dotenv").config();
 
+const ssh = new Client();
+
+ssh
+  .on("ready", () => {
+    console.log("SSH Connection Established.");
+  })
+  .on("error", (err) => {
+    console.error("SSH Connection Error:", err);
+  })
+  .connect(VPS_CONFIG);
+
 const whitelist = ["http://localhost:5173", "https://kariero.noit.eu"];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -315,33 +326,6 @@ app.get("/user-data", (req, res) => {
   });
 });
 
-app.post("/translate/test", async (req, res) => {
-  try {
-    const { textToTranslate } = req.body;
-
-    // Helper function to translate individual pieces
-    const translateText = async (text) => {
-      try {
-        const translatedText = await hf.deepLTranslate(text);
-        return translatedText;
-      } catch (error) {
-        console.error("Error translating text:", error);
-        return text;
-      }
-    };
-
-    const translatedText = await translateText(textToTranslate);
-    console.log("translatedText", translatedText);
-    // Return the translated career paths
-    res.json(translatedText);
-  } catch (error) {
-    console.error("Error!", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while processing the request." });
-  }
-});
-
 app.post("/translate/career-paths", async (req, res) => {
   try {
     const { careerPaths } = req.body;
@@ -397,64 +381,45 @@ app.post("/translate/career-paths", async (req, res) => {
 
 app.post("/job-offers", async (req, res) => {
   try {
-    const query = req.body; // Expecting a single object with { keyword, occupation_code }
-
+    const query = req.body;
     if (!query || !query.keyword) {
       return res
         .status(400)
         .json({ error: "Invalid request body. Missing keyword." });
     }
 
-    const ssh = new Client();
-    ssh.on("ready", async () => {
-      console.log("SSH connection established.");
+    console.log("Processing request for keyword:", query.keyword);
 
-      const command = `xvfb-run python3.8 return.py "${query.keyword}"`; // Use the keyword directly
+    const command = `xvfb-run python3.8 return.py "${query.keyword}"`;
 
-      await new Promise((resolve) => {
-        console.log("Before executing Python:", process.memoryUsage());
+    ssh.exec(command, (err, stream) => {
+      if (err) {
+        console.error("Error executing script:", err);
+        return res
+          .status(500)
+          .json({ error: "Error executing the Python script" });
+      }
 
-        ssh.exec(command, (err, stream) => {
-          if (err) {
-            console.error("Error executing script:", err);
-            return res
-              .status(500)
-              .json({ error: "Error executing the Python script" });
-          }
-
-          let response = "";
-          stream.on("data", (data) => {
-            response += data.toString();
-          });
-
-          stream.on("close", (code) => {
-            console.log(`Python script exited with code: ${code}`);
-            if (code === 0) {
-              try {
-                const parsedResponse = JSON.parse(response.trim());
-                res.status(200).json(parsedResponse);
-              } catch (parseError) {
-                console.error("Error parsing response:", parseError);
-                res.status(500).json({ error: "Parsing failed" });
-              }
-            } else {
-              res.status(500).json({ error: "Script execution failed" });
-            }
-            resolve();
-          });
-        });
+      let response = "";
+      stream.on("data", (data) => {
+        response += data.toString();
       });
-      console.log("After executing Python:", process.memoryUsage());
 
-      ssh.end();
+      stream.on("close", (code) => {
+        console.log(`Python script exited with code: ${code}`);
+        if (code === 0) {
+          try {
+            const parsedResponse = JSON.parse(response.trim());
+            res.status(200).json(parsedResponse);
+          } catch (parseError) {
+            console.error("Error parsing response:", parseError);
+            res.status(500).json({ error: "Parsing failed" });
+          }
+        } else {
+          res.status(500).json({ error: "Script execution failed" });
+        }
+      });
     });
-
-    ssh.on("error", (err) => {
-      console.error("SSH connection error:", err);
-      res.status(500).json({ error: "Failed to connect to the VPS" });
-    });
-
-    ssh.connect(VPS_CONFIG);
   } catch (error) {
     console.error("Error in /job-offers endpoint:", error);
     res
@@ -478,35 +443,30 @@ app.post("/get-model-response", (req, res) => {
       .json({ error: "Invalid request. 'messages' must be an array." });
   }
 
-  // Spawn the Python process
   const pythonProcess = spawn(pythonPathLocal, [
     "./python/fetch_ai_response.py"
   ]);
 
   let response = "";
 
-  // Send messages as JSON to Python via stdin
   pythonProcess.stdin.write(
     JSON.stringify({ provider, messages, modelOpenAI, api_key })
   );
-  pythonProcess.stdin.end(); // Close the input stream
+  pythonProcess.stdin.end();
 
-  // Capture output from stdout
   pythonProcess.stdout.on("data", (data) => {
     response += data.toString();
   });
 
-  // Capture error output from stderr (for debugging)
   pythonProcess.stderr.on("data", (data) => {
     console.error("Python script stderr:", data.toString());
   });
 
-  // Handle the closing of the Python process
   pythonProcess.on("close", (code) => {
     if (code === 0) {
       try {
         const jsonResponse = JSON.parse(response.trim());
-        res.status(200).json(jsonResponse); // Return JSON to the client
+        res.status(200).json(jsonResponse);
       } catch (e) {
         console.error("Error parsing JSON response:", e);
         res.status(500).send("Error parsing response from Python");
@@ -520,7 +480,6 @@ app.post("/get-model-response", (req, res) => {
 app.post("/save-responses-scores", (req, res) => {
   const { token, scores, userResponses, date } = req.body;
 
-  // Verify the token to get the userId
   let userId;
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -530,7 +489,6 @@ app.post("/save-responses-scores", (req, res) => {
     return res.status(401).send("Invalid token.");
   }
 
-  // Validate request body
   if (!scores) {
     return res.status(400).send("Scores are required.");
   }
@@ -540,7 +498,6 @@ app.post("/save-responses-scores", (req, res) => {
       .send("User responses are required and must be an array.");
   }
 
-  // Save user responses and final scores
   db.saveUserResponses(userId, userResponses, date, (err, result) => {
     if (err) {
       console.error("Error saving user responses:", err);
@@ -557,7 +514,6 @@ app.post("/save-responses-scores", (req, res) => {
           .send("An error occurred while saving final scores.");
       }
 
-      // Return a success response
       res.status(200).send("Responses and scores saved successfully.");
     });
   });
@@ -618,7 +574,6 @@ app.post("/favourite-occupation", (req, res) => {
 app.post("/save-occupation", (req, res) => {
   const { token, keyword, date, reason } = req.body;
 
-  // Verify the token to get the userId
   let userId;
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -628,19 +583,15 @@ app.post("/save-occupation", (req, res) => {
     return res.status(401).send("Invalid token.");
   }
 
-  // Validate request body
   if (!keyword) {
     return res.status(400).send("Keyword is required.");
   }
 
-  // Fetch career code for the given keyword
   hf.fetchCareerCode(keyword)
     .then((code) => {
-      // Fetch and translate occupation details
-      return hf.fetchAndTranslateDetails(code);
+      return hf.fetchDetails(db, code);
     })
     .then((translatedData) => {
-      // Save occupation data
       db.saveOccupation(translatedData, userId, date, reason, (err) => {
         if (err) {
           console.error("Error saving occupation data:", err);
@@ -656,8 +607,6 @@ app.post("/save-occupation", (req, res) => {
               .status(500)
               .send("An error occurred while saving skills data.");
           }
-
-          // Return the translated occupation data and skills data
           res.status(200).json(translatedData);
         });
       });

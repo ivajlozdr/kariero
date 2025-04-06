@@ -143,7 +143,6 @@ export interface ElementArray {
 }
 
 export interface Element {
-  translated_name: string;
   id: string;
   related: string;
   name: string;
@@ -336,12 +335,12 @@ export interface Translated {
   title: string;
   description: string;
   education: string;
-  skills: Element[];
-  interests: Element[];
-  abilities: Element[];
-  knowledge: Element[];
-  detailed_work_activities: Element[];
-  technology_skills: Element[];
-  tasks: Element[];
-  related_occupations: Element[];
+  skills: string[];
+  interests: string[];
+  abilities: string[];
+  knowledge: string[];
+  detailed_work_activities: string[];
+  technology_skills: string[];
+  tasks: string[];
+  related_occupations: string[];
 }

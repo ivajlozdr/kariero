@@ -188,12 +188,12 @@ export const filterHotTechnology = (
         if (exampleItem.hot_technology) {
           hotTechnologies.push({
             name: exampleItem.hot_technology,
-            category: data.translated.technology_skills[i].translated_name
+            category: data.translated.technology_skills[i]
           });
         } else if (exampleItem.name) {
           regularTechnologies.push({
             name: exampleItem.name,
-            category: data.translated.technology_skills[i].translated_name
+            category: data.translated.technology_skills[i]
           });
         }
       });

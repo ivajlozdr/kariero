@@ -37,10 +37,10 @@ describe("Тестове на функцията saveCategoryData", () => {
         element: [{ id: "4", name: "Interest 1", score: { value: 2 } }]
       },
       translated: {
-        abilities: [{ translated_name: "Умение 1" }],
-        knowledge: [{ translated_name: "Познание 1" }],
-        skills: [{ translated_name: "Умение 1" }],
-        interests: [{ translated_name: "Интерес 1" }]
+        abilities: ["Умение 1"],
+        knowledge: ["Познание 1"],
+        skills: ["Умение 1"],
+        interests: ["Интерес 1"]
       }
     };
 

@@ -42,14 +42,13 @@ async function deepLTranslate(text, context = "", glossaryId = null) {
 
 async function deepLTranslateBatch(texts, context = "") {
   try {
-    // Batch translate with context parameter
     const results = await translator.translateText(texts, "EN", "BG", {
       context
     });
     return Array.isArray(results) ? results.map((r) => r.text) : [results.text];
   } catch (error) {
     console.error("DeepL Translation Error:", error);
-    return texts; // Fallback: return original texts if translation fails
+    return texts;
   }
 }
 
@@ -57,17 +56,13 @@ async function translateList(list, type, context = "") {
   if (!list || list.length === 0) return [];
 
   if (type === "deepl") {
-    // Batch translate the list using DeepL with context
     const translatedResults = await deepLTranslateBatch(list, context);
-    return translatedResults.map((translated) => ({
-      translated_name: translated
-    }));
+    return translatedResults;
   } else {
-    // Use regular translation API (which does not use context)
     const translatedItems = [];
     for (const item of list) {
       const translatedItem = await translate(item);
-      translatedItems.push({ translated_name: translatedItem });
+      translatedItems.push(translatedItem);
     }
     return translatedItems;
   }
@@ -76,7 +71,6 @@ async function translateList(list, type, context = "") {
 async function searchJobs(keyword) {
   const url = `https://customsearch.googleapis.com/customsearch/v1`;
 
-  // Create an array of fetch promises
   const searchPromises = CUSTOM_SEARCH_API_DATA.map(async (engine) => {
     const params = {
       key: engine.key,
@@ -110,10 +104,8 @@ async function searchJobs(keyword) {
     }
   });
 
-  // Run all fetches concurrently
   const results = await Promise.allSettled(searchPromises);
 
-  // Flatten and filter results to remove empty arrays
   const filteredUrls = results
     .filter((result) => result.status === "fulfilled")
     .flatMap((result) => result.value);
@@ -179,7 +171,7 @@ async function fetchCareerCode(keyword) {
   }
 }
 
-async function fetchAndTranslateDetails(code) {
+async function fetchONETData(code) {
   const detailsResponse = await fetch(
     `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
     {
@@ -197,9 +189,67 @@ async function fetchAndTranslateDetails(code) {
     );
   }
 
-  const detailsData = await detailsResponse.json();
+  return await detailsResponse.json();
+}
 
-  // Translate title and description with context
+async function fetchDetails(db, code) {
+  try {
+    const occupation = await db.getOccupationByCode(code);
+    if (!occupation) {
+      console.log(`Career ${code} not found in database, translating...`);
+      return await translateDetails(code);
+    }
+    console.log(`Career ${code} found in database, retrieving related data...`);
+    const [
+      skills,
+      interests,
+      abilities,
+      techSkills,
+      workActivities,
+      knowledge,
+      tasks,
+      relatedOccupations,
+      detailsData
+    ] = await Promise.all([
+      db.getSkillsByOccupationCode(code),
+      db.getInterestsByOccupationCode(code),
+      db.getAbilitiesByOccupationCode(code),
+      db.getTechSkillsByOccupationCode(code),
+      db.getWorkActivitiesByOccupationCode(code),
+      db.getKnowledgeByOccupationCode(code),
+      db.getTasksByOccupationCode(code),
+      db.getRelatedOccupationsByCode(code),
+      fetchONETData(code)
+    ]);
+
+    const educationData =
+      typeof occupation.education === "string" ? occupation.education : "";
+
+    return {
+      ...detailsData,
+      translated: {
+        title: occupation.title_bg,
+        description: occupation.description,
+        skills: skills.map((s) => s.name_bg),
+        interests: interests.map((i) => i.name_bg),
+        abilities: abilities.map((a) => a.name_bg),
+        knowledge: knowledge.map((k) => k.name_bg),
+        detailed_work_activities: workActivities.map((a) => a.name_bg),
+        technology_skills: techSkills.map((t) => t.name_bg),
+        tasks: tasks.map((t) => t.name_bg),
+        related_occupations: relatedOccupations.map((r) => r.name_bg),
+        education: educationData
+      }
+    };
+  } catch (error) {
+    console.error(`Error in fetchDetails: ${error.message}`);
+    throw error;
+  }
+}
+
+async function translateDetails(code) {
+  const detailsData = await fetchONETData(code);
+
   const translatedTitle = await deepLTranslate(
     detailsData.occupation.title,
     "This is the title of a career."
@@ -284,5 +334,7 @@ module.exports = {
   deepLTranslateBatch,
   searchJobs,
   fetchCareerCode,
-  fetchAndTranslateDetails
+  fetchONETData,
+  fetchDetails,
+  translateDetails
 };

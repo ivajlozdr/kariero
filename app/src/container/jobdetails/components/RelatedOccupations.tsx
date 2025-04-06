@@ -40,7 +40,7 @@ const RelatedOccupations: FC<CommonCareerProps> = ({ fullCareerDetails }) => {
             >
               <p className="mb-0 me-4 d-flex align-items-center">
                 <i className="bi bi-briefcase text-primary transition-colors group-hover:text-white/85 dark:group-hover:text-secondary me-2"></i>
-                {item.translated_name}
+                {item}
               </p>
             </li>
           ))}

@@ -43,7 +43,7 @@ const OccupationDescription: FC<CommonCareerProps> = ({
                       className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
                     >
                       <i className="inline-block mr-3 ti ti-user-star text-primary"></i>
-                      {item.translated_name}
+                      {item}
                     </li>
                   )
                 )}
@@ -68,7 +68,7 @@ const OccupationDescription: FC<CommonCareerProps> = ({
                       className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
                     >
                       <i className="inline-block mr-3 ti ti-book text-primary"></i>
-                      {item.translated_name}
+                      {item}
                     </li>
                   )
                 )}
@@ -93,7 +93,7 @@ const OccupationDescription: FC<CommonCareerProps> = ({
                       className="flex items-center text-sm rounded-lg p-2 transition-all duration-300"
                     >
                       <i className="inline-block mr-3 ti ti-brain text-primary"></i>
-                      {item.translated_name}
+                      {item}
                     </li>
                   )
                 )}

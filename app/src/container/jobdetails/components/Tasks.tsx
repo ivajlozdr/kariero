@@ -46,7 +46,7 @@ const PaginatedTasks: FC<Props> = ({ tasks }) => {
 
                 <div className="ms-2 flex-grow max-w-[85%] relative">
                   <p className="font-semibold text-[.875rem] hover:text-white/85 dark:hover:text-defaulttextcolor whitespace-normal p-1 overflow-hidden transition-[max-height] duration-500 ease-in-out max-h-[2em] group-hover:max-h-[10em]">
-                    {item.translated_name}
+                    {item}
                   </p>
                 </div>
               </div>
