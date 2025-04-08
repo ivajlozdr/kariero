@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import Widget from "./Widget";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
-import Redirect from "../../../components/common/redirect/Redirect";
+import Redirect from "../../../components/common/placeholders/Redirect";
 
 type CategoryKey =
   | "mostNeededAbilities"

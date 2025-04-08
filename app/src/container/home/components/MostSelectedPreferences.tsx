@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import { generateOptions } from "../helper_functions";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
-import Redirect from "../../../components/common/redirect/Redirect";
+import Redirect from "../../../components/common/placeholders/Redirect";
 
 interface MostSelectedCardsProps {
   dataType: "individual" | "platform";

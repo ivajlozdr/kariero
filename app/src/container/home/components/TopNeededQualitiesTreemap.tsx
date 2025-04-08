@@ -3,7 +3,7 @@ import type { QualitiesCategory } from "../home-types";
 import { handleTopStatsSortCategory } from "../helper_functions";
 import { Treemap } from "./Charts";
 import { useGlobalState } from "../../../pages/GlobalStateProvider";
-import Redirect from "../../../components/common/redirect/Redirect";
+import Redirect from "../../../components/common/placeholders/Redirect";
 
 interface TopNeededQualitiesTreemapProps {
   dataType: "individual" | "platform";

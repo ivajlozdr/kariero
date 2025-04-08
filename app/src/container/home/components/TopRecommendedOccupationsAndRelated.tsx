@@ -15,7 +15,7 @@ import {
 } from "../helper_functions";
 import { useMediaQuery } from "react-responsive";
 import { occupationDisplayNames } from "../home-data";
-import Redirect from "../../../components/common/redirect/Redirect";
+import Redirect from "../../../components/common/placeholders/Redirect";
 import { InfoModal } from "../../../components/common/info/InfoModal";
 
 interface TopRecommendedOccupationsAndRelatedProps {
