@@ -9,8 +9,6 @@ export default function Favourites() {
       title: "Software Engineer",
       description:
         "Develop and maintain software applications using modern technologies.",
-      recommendationReason:
-        "Based on your interest in problem-solving and technology",
       brightOutlook: true,
       savedDate: "April 2, 2025",
       isFavorite: true
@@ -20,8 +18,6 @@ export default function Favourites() {
       title: "Data Scientist",
       description:
         "Analyze large datasets and create predictive models to drive business decisions.",
-      recommendationReason:
-        "Matches your background in mathematics and statistics",
       brightOutlook: true,
       savedDate: "March 28, 2025",
       isFavorite: true
@@ -31,8 +27,6 @@ export default function Favourites() {
       title: "UX/UI Designer",
       description:
         "Design intuitive and engaging user experiences for web and mobile applications.",
-      recommendationReason:
-        "Aligns with your creative skills and attention to detail",
       brightOutlook: false,
       savedDate: "March 25, 2025",
       isFavorite: true
@@ -42,8 +36,6 @@ export default function Favourites() {
       title: "Product Manager",
       description:
         "Lead product development from conception to launch, working with cross-functional teams.",
-      recommendationReason:
-        "Fits your leadership abilities and strategic thinking",
       brightOutlook: true,
       savedDate: "March 20, 2025",
       isFavorite: true
