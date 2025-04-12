@@ -63,10 +63,11 @@ const TopNeededQualitiesTreemap: FC<TopNeededQualitiesTreemapProps> = ({
         <div className="box custom-box h-[30rem]">
           <div className="box-header justify-between">
             <div className="box-title">
-              Топ 15 най-търсени{" "}
+              {dataType === "individual" ? "Моите " : "Топ 15 най-търсени "}
               {QualitiesCategoryDisplayNames[
                 topStatsSortCategory as keyof typeof QualitiesCategoryDisplayNames
               ].toLowerCase()}
+              {dataType === "platform" && " в платформата"}
             </div>
             <div className="flex flex-wrap gap-2">
               <div

@@ -31,7 +31,9 @@ const MostSelectedCards: FC<MostSelectedCardsProps> = ({ dataType }) => {
       <div className="box-body !p-0">
         <div className="box-header p-4">
           <h2 className="box-title">
-            Най-често срещани характеристики за всички потребители в платформата
+            {dataType === "individual"
+              ? "Моите характеристики"
+              : "Най-често срещани характеристики в платформата"}
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 mb-4">

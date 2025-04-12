@@ -122,9 +122,11 @@ const TopRecommendedOccupationsAndRelated: FC<
                     : "100%"
               }}
             >
-              {`Топ 50 най-препоръчвани ${occupationDisplayNames[
+              {dataType === "individual" ? "Моите" : "Топ"}
+              {` 50 най-препоръчвани ${occupationDisplayNames[
                 occupationSortCategory as keyof typeof occupationDisplayNames
               ].toLowerCase()}`}
+              {dataType === "platform" && " в платформата"}
             </div>
 
             <div className="flex flex-wrap gap-2">
