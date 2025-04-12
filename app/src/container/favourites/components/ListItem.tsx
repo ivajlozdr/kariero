@@ -1,16 +1,15 @@
+import { FullCareerDetails } from "../../../types_common";
+
 export interface ListItemProps {
-  career: {
-    id: number;
-    title: string;
-    description: string;
-    brightOutlook: boolean;
-    savedDate: string;
-    isFavorite: boolean;
-  };
-  onRemove: (id: number) => void;
+  career: FullCareerDetails;
+  onRemove: (id: string) => void;
 }
 
 export default function ListItem({ career, onRemove }: ListItemProps) {
+  const formattedDate = career.date
+    ? new Date(career.date).toLocaleDateString()
+    : "Дата неизвестна";
+
   return (
     <div className="bg-white dark:bg-bodybg rounded-lg shadow-md overflow-hidden border border-primary/15 dark:border-primary/10 hover:shadow-xl transition-all duration-300 group">
       <div className="p-6 pb-5">
@@ -20,11 +19,11 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
               <i className="ti ti-briefcase text-xl h-5 w-5 text-primary dark:text-primary/90" />
             </div>
             <h2 className="text-xl font-semibold text-defaulttextcolor dark:text-white leading-tight">
-              {career.title}
+              {career.translated.title}
             </h2>
           </div>
           <button
-            onClick={() => onRemove(career.id)}
+            onClick={() => onRemove(career.occupation.code)}
             className="text-danger/70 hover:text-danger dark:text-danger/70 dark:hover:text-danger transition-colors p-1.5 rounded-full hover:bg-danger/10 dark:hover:bg-danger/10"
             aria-label="Remove from favorites"
           >
@@ -32,7 +31,7 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
           </button>
         </div>
 
-        {career.brightOutlook && (
+        {career.occupation.tags.bright_outlook && (
           <div className="mb-4">
             <div className="flex items-center bg-primary/15 dark:bg-primary/15 text-primary/90 dark:text-primary/90 px-3 py-1.5 rounded-full text-sm font-medium w-fit">
               <i className="ti ti-sun h-4 w-4 mr-1.5" />
@@ -43,14 +42,14 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
 
         <div className="mb-4">
           <p className="text-defaulttextcolor/90 dark:text-gray-300 line-clamp-2 leading-relaxed">
-            {career.description}
+            {career.translated.description}
           </p>
         </div>
 
         <div className="flex justify-between items-center pt-3 border-t border-primary/10 dark:border-primary/10 mt-2">
           <div className="flex items-center text-primary/80 dark:text-primary/70 text-sm">
             <i className="ti ti-calendar h-4 w-4 mr-1.5" />
-            Запазена на {career.savedDate}
+            Запазена на {formattedDate}
           </div>
           <button className="flex items-center text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary font-medium text-sm transition-colors py-1 px-2 rounded-md hover:bg-primary/10 dark:hover:bg-primary/10">
             Вижте детайли

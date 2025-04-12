@@ -86,6 +86,16 @@ const getFavouriteOccupation = async (translatedData, userId, callback) => {
   }
 };
 
+const getAllFavouriteOccupations = (userId, callback) => {
+  const query = `
+    SELECT id, code, user_id, title_bg, title_en, date
+    FROM favourite_occupations
+    WHERE user_id = ?
+    ORDER BY date DESC
+  `;
+  db.query(query, [userId], callback);
+};
+
 const saveUserResponses = (userId, userResponses, date, callback) => {
   // Generate column names dynamically for the SQL query
   const columns =
@@ -934,7 +944,6 @@ module.exports = {
   updateUserPassword,
   getUserById,
   getUserData,
-  getFavouriteOccupation,
   saveUserResponses,
   saveFinalScores,
   saveOccupation,
@@ -958,6 +967,8 @@ module.exports = {
   getUsersMostSelectedPreferences,
   getUsersMostPreferredWorkstyle,
   // existing entries
+  getAllFavouriteOccupations,
+  getFavouriteOccupation,
   getOccupationByCode,
   getSkillsByOccupationCode,
   getInterestsByOccupationCode,

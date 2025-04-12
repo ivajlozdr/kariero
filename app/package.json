@@ -21,6 +21,7 @@
     "apexcharts": "^3.45.2",
     "chroma-js": "^3.1.2",
     "email-validator": "^2.0.4",
+    "framer-motion": "^12.6.5",
     "ldrs": "^1.0.2",
     "leaflet": "^1.9.4",
     "moment": "^2.30.1",
