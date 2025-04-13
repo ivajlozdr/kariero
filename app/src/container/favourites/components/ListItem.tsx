@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { FullCareerDetails } from "../../../types_common";
 
 export interface ListItemProps {
@@ -6,6 +7,8 @@ export interface ListItemProps {
 }
 
 export default function ListItem({ career, onRemove }: ListItemProps) {
+  const navigate = useNavigate();
+
   const formattedDate = career.date
     ? new Date(career.date).toLocaleDateString()
     : "Дата неизвестна";
@@ -51,7 +54,14 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
             <i className="ti ti-calendar h-4 w-4 mr-1.5" />
             Запазена на {formattedDate}
           </div>
-          <button className="flex items-center text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary font-medium text-sm transition-colors py-1 px-2 rounded-md hover:bg-primary/10 dark:hover:bg-primary/10">
+          <button
+            onClick={() => {
+              navigate("/app/job/details", {
+                state: { fullCareerDetails: career }
+              });
+            }}
+            className="flex items-center text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary font-medium text-sm transition-colors py-1 px-2 rounded-md hover:bg-primary/10 dark:hover:bg-primary/10"
+          >
             Вижте детайли
             <i className="ti ti-chevron-right h-4 w-4 ml-1.5" />
           </button>
