@@ -683,8 +683,15 @@ app.get("/favourites", (req, res) => {
 app.get("/favourites/:code", async (req, res) => {
   const code = req.params.code;
   try {
-    const details = await hf.fetchDetails(db, code);
-    res.json(details);
+    const result = await hf.fetchDetails(db, code);
+    console.log("Fetched result:", JSON.stringify(result, null, 2));
+    try {
+      const safeResult = JSON.parse(JSON.stringify(result));
+      res.json(safeResult);
+    } catch (jsonErr) {
+      console.error("Failed to serialize result to JSON:", jsonErr);
+      res.status(500).json({ error: "Could not serialize response" });
+    }
   } catch (err) {
     console.error(`Failed to fetch details for ${code}`, err.message);
     res.status(500).json({ error: "Could not fetch details" });

@@ -107,7 +107,7 @@ export default function Favourites() {
         </div>
       </div>
 
-      {filteredCareers.length > 0 ? (
+      {/* {filteredCareers.length > 0 ? (
         <AnimatePresence>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCareers.map((career) => (
@@ -121,7 +121,7 @@ export default function Favourites() {
         </AnimatePresence>
       ) : (
         <EmptyState query={searchQuery} />
-      )}
+      )} */}
     </div>
   );
 }

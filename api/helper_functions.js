@@ -172,24 +172,37 @@ async function fetchCareerCode(keyword) {
 }
 
 async function fetchONETData(code) {
-  const detailsResponse = await fetch(
-    `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${ONET_API_KEY}`,
-        Accept: "application/json"
+  try {
+    const detailsResponse = await fetch(
+      `https://services.onetcenter.org/ws/online/occupations/${code}/details`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${ONET_API_KEY}`,
+          Accept: "application/json"
+        }
       }
-    }
-  );
-
-  if (!detailsResponse.ok) {
-    throw new Error(
-      `Details API request failed with status: ${detailsResponse.status}`
     );
-  }
 
-  return await detailsResponse.json();
+    if (!detailsResponse.ok) {
+      const errText = await detailsResponse.text();
+      console.error(
+        `ONET API responded with status ${detailsResponse.status}:`,
+        errText
+      );
+      throw new Error(
+        `Details API request failed with status: ${detailsResponse.status}`
+      );
+    }
+
+    return await detailsResponse.json();
+  } catch (err) {
+    console.error(
+      `[fetchONETData] Failed to fetch ONET data for ${code}:`,
+      err.message
+    );
+    throw err;
+  }
 }
 
 async function fetchDetails(db, code) {
@@ -208,8 +221,7 @@ async function fetchDetails(db, code) {
       workActivities,
       knowledge,
       tasks,
-      relatedOccupations,
-      detailsData
+      relatedOccupations
     ] = await Promise.all([
       db.getSkillsByOccupationCode(code),
       db.getInterestsByOccupationCode(code),
@@ -218,9 +230,10 @@ async function fetchDetails(db, code) {
       db.getWorkActivitiesByOccupationCode(code),
       db.getKnowledgeByOccupationCode(code),
       db.getTasksByOccupationCode(code),
-      db.getRelatedOccupationsByCode(code),
-      fetchONETData(code)
+      db.getRelatedOccupationsByCode(code)
     ]);
+
+    const detailsData = {};
 
     const educationData =
       typeof occupation.education === "string" ? occupation.education : "";
