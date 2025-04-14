@@ -3,7 +3,7 @@ import { FullCareerDetails } from "../../../types_common";
 
 export interface ListItemProps {
   career: FullCareerDetails;
-  onRemove: (id: string) => void;
+  onRemove: (career: FullCareerDetails) => void;
 }
 
 export default function ListItem({ career, onRemove }: ListItemProps) {
@@ -26,7 +26,7 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
             </h2>
           </div>
           <button
-            onClick={() => onRemove(career.occupation.code)}
+            onClick={() => onRemove(career)}
             className="text-danger/70 hover:text-danger dark:text-danger/70 dark:hover:text-danger transition-colors p-1.5 rounded-full hover:bg-danger/10 dark:hover:bg-danger/10"
             aria-label="Remove from favorites"
           >

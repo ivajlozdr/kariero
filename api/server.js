@@ -519,7 +519,7 @@ app.post("/save-responses-scores", (req, res) => {
   });
 });
 
-app.post("/favourite-occupation", (req, res) => {
+app.post("/favourites/toggle", (req, res) => {
   const { token, data, date } = req.body;
 
   let userId;

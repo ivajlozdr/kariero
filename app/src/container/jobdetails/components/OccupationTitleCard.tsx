@@ -1,6 +1,6 @@
-import { handleToggleFavouriteOccupation } from "../helper-functions";
 import { FC } from "react";
 import { OccupationTitleCardProps } from "../jobs-types";
+import { toggleFavouriteOccupation } from "../../../functions_common";
 
 const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
   fullCareerDetails,
@@ -61,12 +61,14 @@ const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
             <div className="btn-list sm:flex items-center mb-2">
               <div
                 aria-label="anchor"
-                onClick={handleToggleFavouriteOccupation(
-                  fullCareerDetails,
-                  token,
-                  date,
-                  setFavouriteNotification
-                )}
+                onClick={() => {
+                  toggleFavouriteOccupation(
+                    fullCareerDetails,
+                    token,
+                    date,
+                    setFavouriteNotification
+                  );
+                }}
                 className={`ti-btn ti-btn-icon ti-btn-primary me-[0.375rem] ${
                   favouriteNotification ? "ti-btn-primary.ac" : ""
                 }`}
