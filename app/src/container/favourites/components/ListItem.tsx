@@ -14,7 +14,7 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
     : "Дата неизвестна";
 
   return (
-    <div className="bg-white dark:bg-bodybg rounded-lg shadow-md overflow-hidden border border-primary/15 dark:border-primary/10 hover:shadow-xl transition-all duration-300 group">
+    <div className="bg-white dark:bg-bodybg hover:scale-105 rounded-lg shadow-md overflow-hidden border border-primary/15 dark:border-primary/10 hover:shadow-xl transition-all duration-300 group">
       <div className="p-6 pb-5">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
@@ -27,7 +27,7 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
           </div>
           <button
             onClick={() => onRemove(career)}
-            className="text-danger/70 hover:text-danger dark:text-danger/70 dark:hover:text-danger transition-colors p-1.5 rounded-full hover:bg-danger/10 dark:hover:bg-danger/10"
+            className="text-danger/70 hover:text-danger dark:text-danger/70 dark:hover:text-danger transition-colors p-1.5 rounded-full transform hover:scale-150 transition-all duration-300"
             aria-label="Remove from favorites"
           >
             <i className="ti ti-trash h-5 w-5 text-xl" />
@@ -60,7 +60,7 @@ export default function ListItem({ career, onRemove }: ListItemProps) {
                 state: { fullCareerDetails: career }
               });
             }}
-            className="flex items-center text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary font-medium text-sm transition-colors py-1 px-2 rounded-md hover:bg-primary/10 dark:hover:bg-primary/10"
+            className="flex items-center text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary font-medium text-sm transition-colors py-1 px-2 rounded-md transform hover:scale-125 transition-all duration-300"
           >
             Вижте детайли
             <i className="ti ti-chevron-right h-4 w-4 ml-1.5" />
