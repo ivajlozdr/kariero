@@ -72,9 +72,9 @@ export const fetchCareerDetails = async (
     }
 
     const details: FullCareerDetails = await response.json();
-    return details; // Return the career details
+    return details;
   } catch (error: any) {
     console.error(`Error fetching career details for ${code}:`, error.message);
-    throw error; // Re-throw the error for further handling
+    throw error;
   }
 };
