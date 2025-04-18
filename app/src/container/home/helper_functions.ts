@@ -175,7 +175,6 @@ export function generateOptions(
   let options: Option[];
   switch (componentName) {
     case "MostPreferredWorkstyleCards": {
-      console.log("16378912638126382", data);
       const mostPreferredWorkstyleWorkEnvironment =
         data?.mostPreferredWorkstyleWorkEnvironment?.[dataType]?.[0]
           ?.preference;

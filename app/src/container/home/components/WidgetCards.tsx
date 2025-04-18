@@ -7,7 +7,6 @@ const WidgetCardsComponent: FC = () => {
   const { data } = useGlobalState();
   const widgetData = extractWidgetCardData(data);
   const options = generateOptions("WidgetCardsComponent", "platform", data);
-  console.log("options", options);
   return (
     <div className="grid xxl:grid-cols-3 xl:grid-cols-3 grid-cols-1 gap-x-6">
       <Widget

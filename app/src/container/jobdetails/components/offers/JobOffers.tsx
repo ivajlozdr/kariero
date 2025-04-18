@@ -14,7 +14,6 @@ interface Props {
 }
 
 const JobOffers: FC<Props> = ({ jobOffers }) => {
-  console.log("jobOffers: ", jobOffers);
   return (
     <Swiper
       spaceBetween={30}

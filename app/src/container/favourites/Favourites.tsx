@@ -21,8 +21,8 @@ export default function Favourites() {
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const date = new Date().toISOString();
+
   useEffect(() => {
-    console.log("Fetching favorites...");
     fetchFavorites(token || "", setFavoritedCareers);
   }, []);
 

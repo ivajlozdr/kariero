@@ -48,7 +48,6 @@ const Signinbasic: FC<SigninbasicProps> = () => {
           if (result.valid) {
             navigate(`${import.meta.env.BASE_URL}app/home`);
           } else {
-            console.log("Invalid token");
             localStorage.removeItem("authToken");
             sessionStorage.removeItem("authToken");
             navigate("/signin");
@@ -109,7 +108,6 @@ const Signinbasic: FC<SigninbasicProps> = () => {
       }
 
       const data = await response.json();
-      console.log("response: ", data);
       setAlerts([
         {
           message: "Успешно влизане!",

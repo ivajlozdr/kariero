@@ -5,8 +5,6 @@ const OccupationDescription: FC<CommonCareerProps> = ({
   fullCareerDetails
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-
-  console.log("fullCareerDetails: ", fullCareerDetails);
   return (
     <div className="box custom-box">
       <div className="box-body space-y-8">

@@ -21,8 +21,7 @@ const Resetbasic: FC<ResetbasicProps> = () => {
   const passwordStrengthRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
-  const { token } = useParams(); // Assuming the token is passed in the URL as a parameter
-  console.log("token: ", token);
+  const { token } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +43,6 @@ const Resetbasic: FC<ResetbasicProps> = () => {
         }
 
         const result = await response.json();
-        console.log("result: ", result);
         if (!result.valid) navigate("/signin");
       } catch (error) {
         console.error("Error validating token:", error);

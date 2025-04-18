@@ -5,9 +5,8 @@ import WidgetCardsComponent from "./components/WidgetCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 
 const Home: FC = () => {
-  const { data, userData } = useGlobalState();
+  const { userData } = useGlobalState();
 
-  console.log("data: ", data);
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">

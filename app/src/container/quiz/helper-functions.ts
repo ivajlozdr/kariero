@@ -175,47 +175,62 @@ export const getAnswerLabel = (weight: number) => {
 };
 
 /**
- * Изпраща заявка към OpenAI API за получаване на персонализирани препоръки за кариера въз основа на предоставените данни за потребителя.
+ * Изпраща потребителски данни към изкуствен интелект за генериране на препоръки.
+ * Използва OpenAI или Gemini като доставчик, в зависимост от подадения параметър.
  *
- * Тази функция извиква OpenAI API, изпращайки JSON обект със стойности за RIASEC, Preferences и WorkStyle на потребителя. След получаване на отговор от OpenAI, тя извлича и почиства данните, за да върне препоръки за кариера във формат JSON, който включва способности, умения, познания, интереси, работен стил, стойности на работата, технологични умения и препоръки за кариера.
- *
- * @param {Scores} scores - Обект със стойности за RIASEC, Preferences и WorkStyle на потребителя.
- * @returns {Promise<UserProfileData | null>} - Връща обект с препоръки за кариера или null в случай на грешка.
+ * @param {Scores} scores - Обект, съдържащ резултати от различни тестове и предпочитания на потребителя.
+ * @param {string} provider - Името на AI доставчика ("openai" или "gemini").
+ * @param {string} [modelOpenAI="gpt-4o"] - Името на OpenAI модела, който да се използва (по подразбиране е "gpt-4o").
+ * @returns {Promise<UserProfileData | null>} - Връща обработен отговор от модела под формата на обект с кариерни препоръки или `null` при грешка.
  */
-export const fetchOpenAIResponse = async (
-  scores: Scores
+export const fetchModelResponse = async (
+  scores: Scores,
+  provider: string,
+  modelOpenAI: string = "gpt-4o"
 ): Promise<UserProfileData | null> => {
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
+    const messages = [
+      {
+        role: "system",
+        content:
+          "You are a career guidance assistant. You will analyse thoroughly data given to you and based off it you will provide accurate, personalised career path recommendations. Your response will always be only a valid JSON object, that is in the following structure: { Abilities:[ Array of at least 4 strings ], Skills:[ Array of at least 4 strings ], Knowledge:[ Array of at least 4 strings ], Interests:[ Array of at least 4 strings ], WorkStyle:[ Array of at least 4 strings ], WorkValues:[ Array of at least 4 strings ], TechnologySkills:[ Array of at least 4 strings ], CareerRecommendations:[{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]}] }. Provide a comprehensive explanation as to why the specific career is right for the individual under the 'reason' property. When you provide the arrays for Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills, make sure they are accurately derived from the data of the user prompt. Make sure everything is also compatible with O*NET's API data, especially for the Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills! It is important you do not miss-match categories. When providing careers, make sure career path is a broad keyword, that covers the field that the careers in listOfCareers belong to. Each career in listOfCareers should be a SPECIFIC CAREER WITH ITS OWN CAREER CODE in the O*NET API, not a keyword. Make sure the careers you provide are real careers that exist in O*NET. Each career's name must be plural (example: Graphic designer should be Graphic designers) to match the O*NET API's naming conventions."
       },
-      body: JSON.stringify({
-        model: "gpt-4o-2024-08-06",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a career guidance assistant. You will analyse thoroughly data given to you and based off it you will provide accurate, personalised career path recommendations. Your response will always be only a valid JSON object, that is in the following structure: { Abilities:[ Array of at least 4 strings ], Skills:[ Array of at least 4 strings ], Knowledge:[ Array of at least 4 strings ], Interests:[ Array of at least 4 strings ], WorkStyle:[ Array of at least 4 strings ], WorkValues:[ Array of at least 4 strings ], TechnologySkills:[ Array of at least 4 strings ], CareerRecommendations:[{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]},{careerPath:string,reason:string,listOfCareers:[{career:string,reason:string},{career:string,reason:string},{career:string,reason:string}]}] }. Provide a comprehensive explanation as to why the specific career is right for the individual under the 'reason' property. When you provide the arrays for Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills, make sure they are accurately derived from the data of the user prompt. Make sure everything is also compatible with O*NET's API data, especially for the Abilities, Skills, Knowledge, Interests, Work Style, Work Values, and Technology Skills! It is important you do not miss-match categories. When providing careers, make sure career path is a broad keyword, that covers the field that the careers in listOfCareers belong to. Each career in listOfCareers should be a SPECIFIC CAREER WITH ITS OWN CAREER CODE in the O*NET API, not a keyword. Make sure the careers you provide are real careers that exist in O*NET. Each career's name must be plural (example: Graphic designer should be Graphic designers) to match the O*NET API's naming conventions."
-          },
-          {
-            role: "user",
-            content: `Base your recommendations off this JSON object: ${JSON.stringify(
-              scores
-            )}. Here is a thorough explanation of everything inside the object, which you must understand before making your recommendation. The RIASEC object contains values based on the RIASEC model. These numeric values typically range from 0 to 10, representing extremes; values outside this range are rare and indicate very extreme tendencies. Use these RIASEC values to determine the user's work personality and consider them when suggesting career paths. The Preferences object provides details about the user's preferences for their dream career. It includes the user's personality type, preferred work environment, job priorities, education level, and career goals. The personality type describes the user’s overarching traits, while the work environment highlights their ideal workplace conditions. The job priority array outlines what the user values most in their career. The education level specifies their degree type, and career goals describe the role the user aspires to achieve in their career. The WorkStyle object details the user's working preferences. StructurePreference indicates whether they prefer a structured, hierarchical career or a more flexible one. Collaboration reveals if they prefer teamwork or working individually. WorkEnvironment shows whether they thrive in a fast-paced and dynamic environment or prefer a stable and predictable setting.`
-          }
-        ]
-      })
-    });
+      {
+        role: "user",
+        content: `Base your recommendations off this JSON object: ${JSON.stringify(
+          scores
+        )}. Here is a thorough explanation of everything inside the object, which you must understand before making your recommendation. The RIASEC object contains values based on the RIASEC model. These numeric values typically range from 0 to 10, representing extremes; values outside this range are rare and indicate very extreme tendencies. Use these RIASEC values to determine the user's work personality and consider them when suggesting career paths. The Preferences object provides details about the user's preferences for their dream career. It includes the user's personality type, preferred work environment, job priorities, education level, and career goals. The personality type describes the user’s overarching traits, while the work environment highlights their ideal workplace conditions. The job priority array outlines what the user values most in their career. The education level specifies their degree type, and career goals describe the role the user aspires to achieve in their career. The WorkStyle object details the user's working preferences. StructurePreference indicates whether they prefer a structured, hierarchical career or a more flexible one. Collaboration reveals if they prefer teamwork or working individually. WorkEnvironment shows whether they thrive in a fast-paced and dynamic environment or prefer a stable and predictable setting.`
+      }
+    ];
+    const api_key: string =
+      provider === "openai"
+        ? import.meta.env.VITE_OPENAI_API_KEY
+        : provider === "gemini"
+        ? import.meta.env.VITE_GEMINI_API_KEY
+        : "";
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/get-model-response`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages,
+          provider,
+          modelOpenAI,
+          api_key
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API Error: ${response.status}`);
+      throw new Error(`Server error: ${response.status}`);
     }
 
     const data = await response.json();
-    const rawContent = data?.choices[0]?.message?.content;
+    const rawContent = data?.response;
 
     if (!rawContent) {
       throw new Error(
@@ -229,8 +244,8 @@ export const fetchOpenAIResponse = async (
       .trim();
 
     return cleanedContent ? JSON.parse(cleanedContent) : null;
-  } catch (error) {
-    console.error("Error fetching OpenAI response:", error);
+  } catch (err) {
+    console.error("Error fetching model response:", err);
     return null;
   }
 };
@@ -378,7 +393,13 @@ export const submitQuiz = async (
     console.log("Final Scores:", scores);
     console.log("User Responses:", userResponses);
 
-    const recommendations = await fetchOpenAIResponse(scores);
+    const provider = "openai";
+    const modelOpenAI = "gpt-4o";
+    const recommendations = await fetchModelResponse(
+      scores,
+      provider,
+      modelOpenAI
+    );
 
     if (!recommendations) {
       throw new Error("Failed to fetch career recommendations from OpenAI.");
@@ -401,7 +422,6 @@ export const submitQuiz = async (
 
     if (response.ok) {
       const translatedData = await response.json();
-      console.log(translatedData);
       setCareerRecommendations(translatedData);
     } else {
       console.error("Failed to translate career recommendations");

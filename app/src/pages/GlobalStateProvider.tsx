@@ -50,7 +50,6 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
       fetchData(token, setUserData, setData);
-      console.log("fetching");
     }
   }, []);
 

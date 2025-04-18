@@ -216,7 +216,6 @@ export const fetchJobOffers = async (
       throw new Error("Invalid response format");
     }
 
-    console.log("results", results);
     return results;
   } catch (error) {
     console.error("Error fetching job offers:", error);
