@@ -69,7 +69,7 @@ export default function Favourites() {
                 Любими професии
               </h1>
               <p className="text-defaulttextcolor/75 dark:text-defaulttextcolor/50 max-w-lg">
-                Всички професии, които сте добавили към списъка си с любими,
+                Всички професии, които сте добавили към списъка Ви с любими,
                 можете да откриете тук и да разгледате техните подробности.
               </p>
             </div>
