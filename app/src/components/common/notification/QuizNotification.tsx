@@ -29,7 +29,6 @@ const QuizNotification: React.FC<NotificationProps> = ({
   const handleConfirm = () => {
     if (onConfirm) {
       onConfirm();
-      console.log("true!");
     }
     handleClose();
   };

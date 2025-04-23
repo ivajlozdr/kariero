@@ -5,9 +5,8 @@ import WidgetCardsComponent from "./components/WidgetCards";
 import MostPreferredWorkstyleCards from "./components/MostPreferredWorkstyleCards";
 
 const Home: FC = () => {
-  const { data, userData } = useGlobalState();
+  const { userData } = useGlobalState();
 
-  console.log("data: ", data);
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -38,8 +37,8 @@ const Home: FC = () => {
           description="Открийте кои професии са най-препоръчвани към нашите потребители и кои имат най-голям потенциал за бъдещо развитие!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/global-stats/desired-qualities`}
-          title="Най-изисквани Качества"
+          href={`${import.meta.env.BASE_URL}app/favourites`}
+          title="Любимите Професии"
           description="Открийте кои качества са най-ценени и търсени от работодателите!"
         />{" "}
         <RedirectCard

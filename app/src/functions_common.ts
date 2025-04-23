@@ -3,7 +3,8 @@ import {
   FavouriteNotificationType,
   FavouriteNotificationState,
   NotificationState,
-  NotificationType
+  NotificationType,
+  FullCareerDetails
 } from "./types_common";
 import { Offers } from "./container/jobdetails/jobs-types";
 
@@ -215,7 +216,6 @@ export const fetchJobOffers = async (
       throw new Error("Invalid response format");
     }
 
-    console.log("results", results);
     return results;
   } catch (error) {
     console.error("Error fetching job offers:", error);
@@ -224,5 +224,56 @@ export const fetchJobOffers = async (
       average_salary: 0,
       job_offers: []
     }));
+  }
+};
+
+/**
+ * Превключва статуса на любима професия, като изпраща заявка към бекенда.
+ *
+ * Изпраща POST заявка за запазване на любима професия на потребителя, включително информация за автентикация и дата. Връща съобщение за успех, ако операцията е успешна, или записва грешки в конзолата при неуспех.
+ *
+ * @param {FullCareerDetails} career - Подробна информация за професията, която ще бъде запазена.
+ * @param {string | null} token - Токен за автентикация за API-то.
+ * @param {string} date - Датата, на която е запазена любимата професия.
+ */
+export const toggleFavouriteOccupation = async (
+  career: FullCareerDetails,
+  token: string | null,
+  date: string,
+  setFavouriteNotification: React.Dispatch<
+    React.SetStateAction<FavouriteNotificationState | null>
+  >
+) => {
+  try {
+    const occupationResponse = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/favourites/toggle`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          token: token,
+          data: career,
+          date: date
+        })
+      }
+    );
+
+    if (!occupationResponse.ok) {
+      throw new Error(
+        `Error saving occupation data for ${career.occupation.title}: ${occupationResponse.statusText}`
+      );
+    }
+
+    const responseData = await occupationResponse.json();
+    const type =
+      responseData.message === "Occupation added to favourites successfully."
+        ? "add"
+        : "remove";
+    setFavouriteNotification(getFavouriteNotificationState(type));
+  } catch (error) {
+    console.error("Error processing data:", error);
+    return "An error occurred while trying to save your favourite occupation.";
   }
 };

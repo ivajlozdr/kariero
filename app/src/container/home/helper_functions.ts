@@ -1,12 +1,5 @@
-// ==============================
-// Импортиране на типове и интерфейси
-// ==============================
 import { DataType, TopRecommendedOccupation } from "../../types_common";
 import { Option, QualitiesCategory } from "./home-types";
-
-// ==============================
-// Функции за работа с данни
-// ==============================
 
 /**
  * Извлича данни от API за платформата и ги запазва в състоянието.
@@ -143,7 +136,6 @@ export const fetchData = async (
 
     const responses = await Promise.all(fetchRequests);
 
-    // Organize data into structured format
     const statsData = responses.reduce<Record<string, any>>((acc, response) => {
       const { key, type, data } = response as {
         key: string;
@@ -167,6 +159,15 @@ export const fetchData = async (
   }
 };
 
+/**
+ * Генерира списък с опции за различни UI компоненти, базирани на предоставени данни.
+ *
+ * @param {string} componentName - Името на компонента, за който се генерират опциите.
+ * @param {"individual" | "platform"} dataType - Типът на данните (индивидуални или платформени).
+ * @param {DataType} data - Данни, от които се извличат опциите.
+ * @returns {Option[]} - Списък с генерирани опции за визуализация.
+ */
+
 export function generateOptions(
   componentName: string,
   dataType: "individual" | "platform",
@@ -175,7 +176,6 @@ export function generateOptions(
   let options: Option[];
   switch (componentName) {
     case "MostPreferredWorkstyleCards": {
-      console.log("16378912638126382", data);
       const mostPreferredWorkstyleWorkEnvironment =
         data?.mostPreferredWorkstyleWorkEnvironment?.[dataType]?.[0]
           ?.preference;
@@ -325,6 +325,19 @@ export function generateOptions(
   return options;
 }
 
+/**
+ * Извлича ключова информация за widget компонентите от обекта с данни.
+ *
+ * @param {DataType} data - Данни, от които се извлича обобщена информация.
+ * @returns {{
+ *   userCount: number,
+ *   distinctOccupations: number,
+ *   mostRecommendedOccupation: string | undefined,
+ *   mostRecommendedOccupationCount: number,
+ *   mostRecommendedRelatedOccupation: string | undefined,
+ *   mostRecommendedRelatedOccupationCount: number
+ * }} - Обект със стойности за визуализация във widget компоненти.
+ */
 export function extractWidgetCardData(data: DataType) {
   return {
     userCount: data?.usersCount[0]?.user_count ?? 0,
@@ -340,6 +353,13 @@ export function extractWidgetCardData(data: DataType) {
         ?.recommendation_count ?? 0
   };
 }
+
+/**
+ * Проверява дали подаденият обект е масив от тип TopRecommendedOccupation.
+ *
+ * @param {any} data - Данни за проверка.
+ * @returns {data is TopRecommendedOccupation[]} - Връща true, ако данните са валиден масив от TopRecommendedOccupation обекти.
+ */
 
 export function isTopRecommendedOccupationArray(
   data: any

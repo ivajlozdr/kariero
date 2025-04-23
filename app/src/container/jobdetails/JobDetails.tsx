@@ -36,7 +36,6 @@ const JobDetails: FC = () => {
     }
   }, [fullCareerDetails]);
 
-  console.log("jobOffers: ", jobOffers);
   if (!fullCareerDetails) {
     return (
       <Loader description="Зареждаме информация за избраната професия, моля изчакайте" />

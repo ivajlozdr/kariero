@@ -136,6 +136,7 @@ export interface FullCareerDetails {
   related_occupations: RelatedOccupations;
   additional_information: AdditionalInformation;
   translated: Translated;
+  date?: Date;
 }
 
 export interface ElementArray {
@@ -343,4 +344,13 @@ export interface Translated {
   technology_skills: string[];
   tasks: string[];
   related_occupations: string[];
+}
+
+export interface FavouriteCareer {
+  id: number;
+  code: string;
+  user_id: number;
+  title_bg: string;
+  title_en: string;
+  date: Date;
 }

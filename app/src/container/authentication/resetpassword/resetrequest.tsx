@@ -31,8 +31,6 @@ const ResetRequest: FC<ResetRequestProps> = () => {
       const result = await response.json();
 
       if (response.ok) {
-        console.log(result);
-
         setAlerts([
           {
             message: "Успешно изпратихме имейл за нулиране на паролата!",

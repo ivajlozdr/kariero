@@ -99,7 +99,9 @@ const MostNeededCards: FC<MostNeededCardsProps> = ({ dataType }) => {
               />
             </svg>
             <div className="accordion-title">
-              Най-често изисквани качества в платформата
+              {dataType === "individual"
+                ? "Моите качества"
+                : " Най-често изисквани качества в платформата"}
             </div>
           </button>
           <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300">
