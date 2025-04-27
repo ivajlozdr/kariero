@@ -1,5 +1,17 @@
 import { FavouriteCareer, FullCareerDetails } from "../../types_common";
 
+/**
+ * Извлича любими кариери на потребителя от API-то.
+ *
+ * Функцията първо взима списък с любими кариери (идентификатори) и след това
+ * за всеки идентификатор прави отделна заявка, за да вземе пълните данни за съответната кариера.
+ *
+ * @function fetchFavorites
+ * @async
+ * @param {string} token - Токен за автентикация на потребителя (Bearer токен).
+ * @param {React.Dispatch<React.SetStateAction<FullCareerDetails[]>>} setFavourites - Функция за обновяване на състоянието със списък от пълни кариерни детайли.
+ */
+
 export const fetchFavorites = async (
   token: string,
   setFavourites: React.Dispatch<React.SetStateAction<FullCareerDetails[]>>
