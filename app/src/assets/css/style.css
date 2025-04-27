@@ -2853,7 +2853,7 @@ footer svg {
   @apply w-full h-auto;
 }
 .authentication .authentication-cover {
-  @apply bg-[url("../images/authentication/1.jpg")] bg-cover bg-center bg-no-repeat w-full h-full flex items-center justify-center relative before:absolute before:w-full before:h-full before:inset-0 before:bg-primary/10;
+  @apply bg-cover bg-center bg-no-repeat w-full h-full flex items-center justify-center relative before:absolute before:w-full before:h-full before:inset-0 before:bg-primary/10;
 }
 .authentication .authentication-cover .aunthentication-cover-content {
   @apply w-[70%] h-[37.5rem] bg-black/20 p-8 backdrop-blur-[1.875rem] relative !important;

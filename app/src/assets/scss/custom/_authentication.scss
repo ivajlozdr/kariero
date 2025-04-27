@@ -14,8 +14,9 @@
   .swiper-button-next,
   .swiper-button-prev {
     @apply w-[1.563rem] h-[1.563rem] text-white bg-black/30 rounded-md #{!important};
-    &:after,&:before {
-        @apply text-white #{!important};
+    &:after,
+    &:before {
+      @apply text-white #{!important};
     }
   }
 
@@ -80,7 +81,7 @@
   }
 
   .authentication-cover {
-    @apply bg-[url('../images/authentication/1.jpg')] bg-cover bg-center bg-no-repeat w-full h-full flex items-center justify-center relative before:absolute before:w-full before:h-full before:inset-0 before:bg-primary/10;
+    @apply bg-cover bg-center bg-no-repeat w-full h-full flex items-center justify-center relative before:absolute before:w-full before:h-full before:inset-0 before:bg-primary/10;
 
     .aunthentication-cover-content {
       @apply w-[70%] h-[37.5rem] bg-black/20 p-8 backdrop-blur-[1.875rem] relative #{!important};
