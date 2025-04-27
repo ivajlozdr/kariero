@@ -52,29 +52,3 @@ export const fetchFavorites = async (
     throw error;
   }
 };
-
-export const fetchCareerDetails = async (
-  code: string
-): Promise<FullCareerDetails> => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/favourites/${code}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch details for ${code}`);
-    }
-
-    const details: FullCareerDetails = await response.json();
-    return details;
-  } catch (error: any) {
-    console.error(`Error fetching career details for ${code}:`, error.message);
-    throw error;
-  }
-};

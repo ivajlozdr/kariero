@@ -421,7 +421,7 @@ const Sidebar: FC = ({ local_varaiable, ThemeChanger }: any) => {
           let currentPath = location.pathname.endsWith("/")
             ? location.pathname.slice(0, -1)
             : location.pathname;
-          currentPath = !currentPath ? "/dashboard/ecommerce" : currentPath;
+          currentPath = !currentPath ? "/app/home" : currentPath;
           setMenuUsingUrl(currentPath);
         } else {
           closeMenuFn();
