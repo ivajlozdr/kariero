@@ -61,8 +61,8 @@ function App() {
             htmlAttributes={{
               lang: "en", // Език на приложението
               dir: "ltr", // Посока на текста
-              "data-menu-styles": "dark", // Стил на менюто
-              class: "light", // Стил на страницата
+              "data-menu-styles": "light",
+              class: "light",
               "data-nav-layout": "vertical", // Вертикално разположение на навигацията
               "data-header-styles": "light", // Светъл стил за хедъра
               "data-vertical-style": "overlay", // Стил за вертикалното меню

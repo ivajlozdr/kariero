@@ -111,3 +111,25 @@ export const filterHotTechnology = (
 
   return { hotTechnologies, regularTechnologies };
 };
+
+export const sanitizeTranslation = (text: string): string => {
+  const normalizedText = text.toLowerCase();
+
+  const variantMap: { [normalizedKey: string]: string[] } = {
+    "Професионален бакалавър": [
+      "степен на сътрудник",
+      "степен на сътрудника",
+      "степен на сътрудникът",
+      "сътрудническа степен"
+    ],
+    "Сертификат след средно образование": ["след средно сертификат"]
+  };
+
+  for (const [replacement, variants] of Object.entries(variantMap)) {
+    if (variants.includes(normalizedText)) {
+      return replacement;
+    }
+  }
+
+  return text;
+};

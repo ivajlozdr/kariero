@@ -3,7 +3,8 @@ import { CommonCareerProps } from "../../../types_common";
 import { updatePrimaryColor } from "../../../functions_common";
 import {
   extractLevelsAndPercentages,
-  generateColorScale
+  generateColorScale,
+  sanitizeTranslation
 } from "../helper-functions";
 
 export const EducationChart: FC<CommonCareerProps> = ({
@@ -54,10 +55,10 @@ export const EducationChart: FC<CommonCareerProps> = ({
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: colorScale[index] }}
-              aria-label={level.level}
+              aria-label={sanitizeTranslation(level.level)}
             ></div>
             <span className="ml-2">
-              {level.level}: {level.percentage}%
+              {sanitizeTranslation(level.level)}: {level.percentage}%
             </span>
           </li>
         ))}

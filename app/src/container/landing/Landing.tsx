@@ -186,7 +186,7 @@ const Landing: FC = ({ local_varaiable, ThemeChanger }: any) => {
         onClick={handleClick}
       >
         <div className="landing-banner !h-auto" id="home">
-          <section className="section !bg-primary/20 !pb-0 text-[0.813rem]">
+          <section className="section !bg-tertiary/20 !pb-0 text-[0.813rem]">
             <div className="container main-banner-container">
               <div className="grid grid-cols-12 justify-center text-center">
                 <div className="xxl:col-span-2 xl:col-span-2 lg:col-span-2 col-span-12"></div>
