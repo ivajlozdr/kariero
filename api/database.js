@@ -787,19 +787,27 @@ const getUsersTopRecommendedRelatedOccupations = (userId, limit, callback) => {
 
 const getUsersMostNeededAttributes = (tableName, userId, limit, callback) => {
   const query = `
-    SELECT 
-      t.onet_id, 
-      t.name_en, 
-      t.name_bg, 
-      COUNT(t.onet_id) AS occurrence_count
-    FROM ${tableName} t
-    WHERE t.occupation_code IN (
-      SELECT occupation_code 
-      FROM occupations 
-      WHERE user_id = ?
-    )
-    GROUP BY t.onet_id
-    ORDER BY occurrence_count DESC
+    WITH unique_user_attributes AS ( 
+      SELECT 
+        a.id AS ability_id, 
+        a.onet_id, 
+        MIN(o.user_id) AS user_id, 
+        MAX(a.name_en) AS name_en, 
+        MAX(a.name_bg) AS name_bg 
+      FROM ${tableName} a 
+      JOIN occupations o ON a.occupation_code = o.code 
+      GROUP BY a.id, a.onet_id 
+    ) 
+    SELECT  
+      user_id, 
+      onet_id, 
+      MAX(name_en) AS name_en, 
+      MAX(name_bg) AS name_bg, 
+      COUNT(*) AS occurrence_count 
+    FROM unique_user_attributes 
+    WHERE user_id = ?  -- Replace with the actual user ID
+    GROUP BY user_id, onet_id 
+    ORDER BY occurrence_count DESC    
     LIMIT ?;
   `;
   db.query(query, [userId, limit], callback);
