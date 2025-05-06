@@ -789,7 +789,7 @@ const getUsersMostNeededAttributes = (tableName, userId, limit, callback) => {
   const query = `
     WITH unique_user_attributes AS ( 
       SELECT 
-        a.id AS ability_id, 
+        a.id AS attribute_id,  
         a.onet_id, 
         MIN(o.user_id) AS user_id, 
         MAX(a.name_en) AS name_en, 
