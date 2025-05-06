@@ -805,12 +805,12 @@ const getUsersMostNeededAttributes = (tableName, userId, limit, callback) => {
       MAX(name_bg) AS name_bg, 
       COUNT(*) AS occurrence_count 
     FROM unique_user_attributes 
-    WHERE user_id = ?  -- Replace with the actual user ID
+    WHERE user_id = ${userId}  -- Replace with the actual user ID
     GROUP BY user_id, onet_id 
     ORDER BY occurrence_count DESC    
-    LIMIT ?;
+    LIMIT ${limit};
   `;
-  db.query(query, [userId, limit], callback);
+  db.query(query, callback);
 };
 
 const getUsersMostSelectedPreferences = (column, userId, limit, callback) => {
