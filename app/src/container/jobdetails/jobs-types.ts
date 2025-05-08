@@ -25,7 +25,6 @@ export interface JobOffer {
 // Интерфейс за пропс на карта с информация за професия
 export interface OccupationTitleCardProps {
   fullCareerDetails: FullCareerDetails; // Детайли за професията
-  favouriteNotification: FavouriteNotificationState | null; // Състояние на известието за любими
   setFavouriteNotification: React.Dispatch<
     React.SetStateAction<FavouriteNotificationState | null>
   >; // Функция за промяна на състоянието на известието

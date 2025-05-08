@@ -1,15 +1,48 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { OccupationTitleCardProps } from "../jobs-types";
 import { toggleFavouriteOccupation } from "../../../functions_common";
 
 const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
   fullCareerDetails,
-  favouriteNotification,
   setFavouriteNotification
 }) => {
   const token =
     localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   const date = new Date().toISOString();
+  const [favouriteStatus, setFavouriteStatus] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Check if the current occupation is in favourites when component mounts
+    const checkFavouriteStatus = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/favourites`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        if (response.ok) {
+          const favourites = await response.json();
+          // Check if this occupation exists in user's favourites
+          const isFavourited = favourites.some(
+            (fav: any) => fav.code === fullCareerDetails.occupation.code
+          );
+          setFavouriteStatus(isFavourited);
+        }
+      } catch (error) {
+        console.error("Error checking favourite status:", error);
+      }
+    };
+
+    if (token) {
+      checkFavouriteStatus();
+    }
+  }, [fullCareerDetails.occupation.code, favouriteStatus]);
 
   return (
     <div className="box custom-box">
@@ -42,21 +75,10 @@ const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
                     </span>
                   )}
                 </h4>
-                {/* 
-                <div className="sm:ms-6 mb-4">
-                  <p className="mb-1">
-                    <i className="bi bi-coin me-1"></i>
-                    <b>10,000 - 20,000</b> / per month (+incentives)
-                  </p>
-                  <p>
-                    <i className="bi bi-mortarboard  me-1"></i>Graduate
-                    and Above
-                  </p>
-                </div>
-                */}
               </div>
             </div>
           </div>
+
           <div>
             <div className="btn-list sm:flex items-center mb-2">
               <div
@@ -66,14 +88,21 @@ const OccupationTitleCard: FC<OccupationTitleCardProps> = ({
                     fullCareerDetails,
                     token,
                     date,
-                    setFavouriteNotification
+                    setFavouriteNotification,
+                    setFavouriteStatus
                   );
                 }}
-                className={`ti-btn ti-btn-icon ti-btn-primary me-[0.375rem] ${
-                  favouriteNotification ? "ti-btn-primary.ac" : ""
+                className={`ti-btn ti-btn-icon me-[0.375rem] transition-all duration-200 ${
+                  favouriteStatus
+                    ? "dark:bg-primary/60 dark:text-secondary dark:hover:bg-primary/50 bg-primary/40 text-primary/75 hover:bg-primary/30"
+                    : "ti-btn-primary"
                 }`}
               >
-                <i className="ri-heart-line"></i>
+                <i
+                  className={`${
+                    favouriteStatus ? "ri-heart-fill" : "ri-heart-line"
+                  } transition duration-200`}
+                ></i>
               </div>
             </div>
           </div>

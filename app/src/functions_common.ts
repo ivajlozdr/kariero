@@ -243,7 +243,8 @@ export const toggleFavouriteOccupation = async (
   date: string,
   setFavouriteNotification: React.Dispatch<
     React.SetStateAction<FavouriteNotificationState | null>
-  >
+  >,
+  setFavouriteStatus?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
     const occupationResponse = await fetch(
@@ -273,6 +274,7 @@ export const toggleFavouriteOccupation = async (
         ? "add"
         : "remove";
     setFavouriteNotification(getFavouriteNotificationState(type));
+    setFavouriteStatus && setFavouriteStatus(type === "add");
   } catch (error) {
     console.error("Error processing data:", error);
     return "An error occurred while trying to save your favourite occupation.";

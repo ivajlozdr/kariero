@@ -28,7 +28,8 @@ export const fetchFavorites = async (
       fetch(`${import.meta.env.VITE_API_BASE_URL}/favourites/${code}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         }
       })
     );

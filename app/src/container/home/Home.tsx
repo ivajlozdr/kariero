@@ -38,9 +38,9 @@ const Home: FC = () => {
           description="Открийте кои професии са най-препоръчвани към нашите потребители и кои имат най-голям потенциал за бъдещо развитие!"
         />
         <RedirectCard
-          href={`${import.meta.env.BASE_URL}app/global-stats/desired-qualities`}
-          title="Най-изисквани Качества"
-          description="Открийте кои качества са най-ценени и търсени от работодателите!"
+          href={`${import.meta.env.BASE_URL}app/favourites`}
+          title="Любими Професии"
+          description="Разгледайте пълната информация за Вашите любими професии!"
         />{" "}
         <RedirectCard
           href={`${import.meta.env.BASE_URL}app/contact`}

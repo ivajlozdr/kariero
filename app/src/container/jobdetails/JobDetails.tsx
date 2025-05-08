@@ -62,7 +62,6 @@ const JobDetails: FC = () => {
       <div className="px-10">
         <OccupationTitleCard
           fullCareerDetails={fullCareerDetails}
-          favouriteNotification={favouriteNotification}
           setFavouriteNotification={setFavouriteNotification}
         />
         <div className="grid grid-cols-12 gap-6">

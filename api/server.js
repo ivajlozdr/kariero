@@ -674,21 +674,48 @@ app.get("/favourites", (req, res) => {
         console.error("Error fetching favourites", err.message);
         return res.status(500).json({ error: "Internal server error" });
       }
-
       res.json(results);
     });
   });
 });
 
-app.get("/favourites/:code", async (req, res) => {
+app.get("/favourites/:code", (req, res) => {
   const code = req.params.code;
-  try {
-    const details = await hf.fetchDetails(db, code);
-    res.json(details);
-  } catch (err) {
-    console.error(`Failed to fetch details for ${code}`, err.message);
-    res.status(500).json({ error: "Could not fetch details" });
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ error: "Token is missing or invalid" });
   }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: "Невалиден или изтекъл token" });
+    }
+    const userId = decoded.id;
+    db.getAllFavouriteOccupations(userId, async (err, results) => {
+      if (err) {
+        console.error("Error fetching favourites", err.message);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      const isFavorited = results.some(
+        (occupation) => occupation.code === code
+      );
+
+      if (!isFavorited) {
+        return res
+          .status(404)
+          .json({ error: "Occupation not found in favorites" });
+      }
+      try {
+        const details = await hf.fetchDetails(db, code);
+        res.json(details);
+      } catch (err) {
+        console.error(`Failed to fetch details for ${code}`, err.message);
+        res.status(500).json({ error: "Could not fetch details" });
+      }
+    });
+  });
 });
 
 // Вземане на данни за общ брой на потребители в платформата
